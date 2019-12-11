@@ -19,6 +19,11 @@ use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException
 use Assetku\BankService\Exceptions\PermatabankExceptions\InquiryOverbookingException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\InquiryOnlineTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\InquiryStatusTransactionException;
+use Assetku\BankService\Investa\Permatabank\Document\Document;
+use Assetku\BankService\Investa\Permatabank\Registration;
+use Assetku\BankService\Investa\Permatabank\CheckRegistrationStatus\CheckRegistrationStatus;
+use Assetku\BankService\Investa\Permatabank\RiskRating\InquiryRiskRating;
+use Assetku\BankService\Investa\Permatabank\AccountValidation\InquiryAccountValidation;
 
 class Permatabank implements BankContract
 {
@@ -100,10 +105,8 @@ class Permatabank implements BankContract
         } else {
             $this->uri = config('bankservice.services.permata.endpoint.development');
         }
-        
-        $this->api = new HttpClient([
-            'base_uri' => $this->uri
-        ]);
+
+        $this->initHttpClient();
 
         $this->timesTamp = $this->generateTimesTamp();
 
@@ -426,9 +429,236 @@ class Permatabank implements BankContract
      */
     public function submitFintechAccount(array $data, string $custRefID)
     {
-        // 
+        $payload = [
+            'SubmitApplicationRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timesTamp,
+                    'CustRefID' => $custRefID
+                ],
+                'ApplicationInfo' => $data
+            ]
+        ];
+
+        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
+
+        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
+
+        $headers = [
+            'Authorization' => "Bearer ". $this->accessToken,
+            'permata-signature' => $this->generateSignature($message, $this->staticKey),
+            'organizationname' => $this->organizationName,
+            'permata-timestamp' => $this->timesTamp,
+        ];
+
+        try {
+            $response = $this->api->post('appldata_v2/add', $payload, $headers);
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            if ($response->getStatusCode() === 200) {
+                return new Registration($contents);
+            }
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
     }
 
+    /**
+     * Submit document registration
+     *
+     * @param array $data
+     * @param string $custRefID
+     * @return mixed
+     */
+    public function submitRegistrationDocument(array $data, string $custRefID)
+    {
+        $payload = [
+            'SubmitDocumentRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timesTamp,
+                    'CustRefID' => $custRefID
+                ],
+                'DocumentInfo' => $data
+            ]
+        ];
+
+        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
+
+        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
+
+        $headers = [
+            'Authorization' => "Bearer ". $this->accessToken,
+            'permata-signature' => $this->generateSignature($message, $this->staticKey),
+            'organizationname' => $this->organizationName,
+            'permata-timestamp' => $this->timesTamp,
+        ];
+
+        try {
+            $response = $this->api->post('appldoc/add', $payload, $headers);
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            if ($response->getStatusCode() === 200) {
+                return new Document($contents);
+            }
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Inquiry application status
+     *
+     * @param string $reffCode
+     * @param string $custRefID
+     * @return mixed
+     */
+    public function inquiryApplicationStatus(string $reffCode, string $custRefID)
+    {
+        $payload = [
+            'InquiryApplicationRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timesTamp,
+                    'CustRefID' => $custRefID
+                ],
+                'SubmitApplicationInfo' => [
+                    'ReffCode' => $reffCode
+                ]
+            ]
+        ];
+
+        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
+
+        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
+
+        $headers = [
+            'Authorization' => "Bearer ". $this->accessToken,
+            'permata-signature' => $this->generateSignature($message, $this->staticKey),
+            'organizationname' => $this->organizationName,
+            'permata-timestamp' => $this->timesTamp,
+        ];
+
+        try {
+            $response = $this->api->post('appldata_v2/inq', $payload, $headers);
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            if ($response->getStatusCode() === 200) {
+                return new CheckRegistrationStatus($contents);
+            }
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    public function inquiryRiskRating(array $data, string $custRefID)
+    {
+        $payload = [
+            'InquiryHighRiskRq'=> [
+                'MsgRqHdr'=> [
+                    'RequestTimestamp'=> $this->timesTamp,
+                    'CustRefID' => $custRefID
+                ],
+                'ApplicationInfo' => $data
+            ]
+        ];
+
+        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
+
+        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
+
+        $headers = [
+            'Authorization' => "Bearer ". $this->accessToken,
+            'permata-signature' => $this->generateSignature($message, $this->staticKey),
+            'organizationname' => $this->organizationName,
+            'permata-timestamp' => $this->timesTamp,
+        ];
+
+        try {
+            $response = $this->api->post('appldata_v2/riskrating/inq', $payload, $headers);
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            // if status code 200 or success
+            if ($response->getStatusCode() === 200) {
+                return new InquiryRiskRating($contents);
+            }
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    public function inquiryAccountValidation(array $data, string $custRefID)
+    {
+        $payload = [
+            'InquiryAccountValidationRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timesTamp,
+                    'CustRefID' => $custRefID
+                ],
+                'ApplicationInfo' => $data
+            ]
+        ];
+
+        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
+
+        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
+
+        $headers = [
+            'Authorization' => "Bearer ". $this->accessToken,
+            'permata-signature' => $this->generateSignature($message, $this->staticKey),
+            'organizationname' => $this->organizationName,
+            'permata-timestamp' => $this->timesTamp,
+        ];
+
+        try {
+            $response = $this->api->post('appldata_v2/acctvalidation/inq', $payload, $headers);
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            if ($response->getStatusCode() === 200) {
+                return new InquiryAccountValidation($contents);
+            }
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+
+    }
+
+    public function updateKycStatus(array $data, string $custRefID)
+    {
+        $payload = [
+            'UpdateKycFlagRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timesTamp,
+                    'CustRefID' => $custRefID,
+                ],
+                'ApplicationInfo' => $data
+            ]
+        ];
+        
+        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
+
+        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
+
+        $headers = [
+            'Authorization' => "Bearer ". $this->accessToken,
+            'permata-signature' => $this->generateSignature($message, $this->staticKey),
+            'organizationname' => $this->organizationName,
+            'permata-timestamp' => $this->timesTamp,
+        ];
+
+        try {
+            $response = $this->api->post('appldata_v2/kycstatus/add', $payload, $headers);
+
+            $contents = json_encode($response->getBody()->getContents());
+
+            return $contents;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+    
     /**
      * Inquiry status transaction
      * 
@@ -487,7 +717,7 @@ class Permatabank implements BankContract
      * @param string $message
      * @param string $staticKey
      */
-    public function generateSignature($message, $staticKey)
+    protected function generateSignature($message, $staticKey)
     {
         $hash = hash_hmac('sha256', $message, $staticKey, true);
 
@@ -501,7 +731,7 @@ class Permatabank implements BankContract
      *
      * @param GuzzleHttp\Psr7\Response
      */
-    public function parse(Response $response)
+    protected function parse(Response $response)
     {
         return json_decode($response->getBody()->getContents(), true);
     }
@@ -511,7 +741,7 @@ class Permatabank implements BankContract
      *
      * @return string timestamp
      */
-    public function generateTimesTamp()
+    protected function generateTimesTamp()
     {
         return date('o-m-d') . 'T' . date('H:i:s') . '.' . substr(date('u'), 0, 3) . date('P');
     }
@@ -522,8 +752,16 @@ class Permatabank implements BankContract
      * @param string $clientId
      * @param string $clienSecret
      */
-    public function generateAuthorizationKey($clientId, $clienSecret)
+    protected function generateAuthorizationKey($clientId, $clienSecret)
     {
         return base64_encode("$clientId:$clienSecret");
+    }
+
+    protected function initHttpClient($headers = [])
+    {
+        return $this->api = new HttpClient([
+            'base_uri' => $this->uri,
+            'headers' => $headers
+        ]);
     }
 }

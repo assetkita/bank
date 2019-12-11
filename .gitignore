@@ -1,4 +1,5 @@
 /.idea
 /vendor
+/logs
 .DS_Store
 .env.testing

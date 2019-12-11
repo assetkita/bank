@@ -12,8 +12,14 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class HttpClient
 {
+    /**
+     * @var string
+     */
     const FORM_PARAMS = 'form_params';
 
+    /**
+     * @var string
+     */
     const JSON_PARAMS = 'json';
 
     /**

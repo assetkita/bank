@@ -108,6 +108,104 @@ class Bank
     }
 
     /**
+     * Investa Account request
+     * 
+     * @param array $data
+     * @param string $custRefID
+     * @return mixed
+     */
+    public function submitFintechAccount(array $data, string $custRefID)
+    {
+        try {
+            $data = $this->bankProvider->submitFintechAccount($data, $custRefID);
+            return $data;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Investa Document upload
+     * 
+     * @param array $data
+     * @param string $custRefID
+     * @return mixed
+     */
+    public function submitDocument(array $data, string $custRefID)
+    {
+        try {
+            $data = $this->bankProvider->submitRegistrationDocument($data, $custRefID);
+            return $data;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Investa Check Registration status
+     * 
+     * @param string $reffCode
+     * @param string $custRefID
+     */
+    public function checkRegistrationStatus(string $reffCode, string $custRefID)
+    {
+        try {
+            $data = $this->bankProvider->inquiryApplicationStatus($reffCode, $custRefID);
+            return $data;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Investa Check User High Risk Rating
+     * 
+     * @param array $data
+     * @param string $custRefID
+     */
+    public function inquiryRiskRating(array $data, string $custRefID)
+    {
+        try {
+            $data = $this->bankProvider->inquiryRiskRating($data, $custRefID);
+            return $data;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Investa Account Validation
+     * 
+     * @param array $data
+     * @param string $custRefID
+     */
+    public function inquiryAccountValidation(array $data, string $custRefID)
+    {
+        try {
+            $data = $this->bankProvider->inquiryAccountValidation($data, $custRefID);
+            return $data;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Investa update KYC Status
+     * 
+     * @param array $data
+     * @param string $custRefID
+     */
+    public function updateKycStatus(array $data, string $custRefID)
+    {
+        try {
+            $data = $this->bankProvider->updateKycStatus($data, $custRefID);
+            return $data;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
      * Inquiry Transaction statuses
      * 
      * @param array $data
