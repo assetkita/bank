@@ -24,6 +24,7 @@ use Assetku\BankService\Investa\Permatabank\Registration;
 use Assetku\BankService\Investa\Permatabank\CheckRegistrationStatus\CheckRegistrationStatus;
 use Assetku\BankService\Investa\Permatabank\RiskRating\InquiryRiskRating;
 use Assetku\BankService\Investa\Permatabank\AccountValidation\InquiryAccountValidation;
+use Assetku\BankService\Investa\Permatabank\UpdateKycStatus\UpdateKycStatus;
 
 class Permatabank implements BankContract
 {
@@ -651,9 +652,11 @@ class Permatabank implements BankContract
         try {
             $response = $this->api->post('appldata_v2/kycstatus/add', $payload, $headers);
 
-            $contents = json_encode($response->getBody()->getContents());
+            $contents = json_decode($response->getBody()->getContents());
 
-            return $contents;
+            if ($response->getStatusCode() === 200) {
+                return new updateKycStatus($contents);
+            }
         } catch (GuzzleException $e) {
             throw $e;
         }

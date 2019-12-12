@@ -20,7 +20,10 @@ class UpdateKycStatusTest extends TestCase
         try {
             $updateKycRequest = \Bank::updateKycStatus($data, $custRefId);
 
-            dd($updateKycRequest);
+            $this->assertTrue(
+                $updateKycRequest->getStatusCode() === '00',
+                $updateKycRequest->getCustRefId() === $custRefId
+            );
         } catch (GuzzleException $e) {
             throw $e;
         }
