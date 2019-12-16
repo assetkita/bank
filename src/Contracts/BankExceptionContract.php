@@ -1,5 +1,7 @@
 <?php
 
+namespace Assetku\BankService\Contracts;
+
 interface BankExceptionContract
 {
     /**
@@ -8,5 +10,5 @@ interface BankExceptionContract
      * @param mixed $code
      * @return string
      */
-    public function TranslateError($code);
+    public static function TranslateError($code);
 }

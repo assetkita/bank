@@ -168,7 +168,7 @@ class PermatabankException extends Exception implements BankExceptionContract
                 $message = 'transportasi ke 3rd party error';
                 break;
 
-            case statc::STATUS_TIMEOUT:
+            case static::STATUS_TIMEOUT:
                 $message = 'Error timeout';
                 break;
 

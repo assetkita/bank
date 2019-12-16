@@ -42,16 +42,13 @@ class InvestaRegisterTest extends TestCase
         
         $application->setReffCode('');
 
-        // dd($application);
-
         try {
             $submitFintech = \Bank::submitFintechAccount($application->toArray(), $custRefId);
-            dd($submitFintech);
-            // $this->assertTrue(
-            //     $submitFintech->getCustRefId() === $custRefID,
-            //     $submitFintech->getStatusCode() === '00',
-            //     $submitFintech->getStatusDesc() === 'Success'
-            // );
+            $this->assertTrue(
+                $submitFintech->getCustRefId() === $custRefID,
+                $submitFintech->getStatusCode() === '00',
+                $submitFintech->getStatusDesc() === 'Success'
+            );
         } catch (GuzzleException $e) {
             throw $e;
         }

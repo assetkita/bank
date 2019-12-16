@@ -248,12 +248,12 @@ class Permatabank implements BankContract
 
             // on signature not valid error
             if ($response->getStatusCode() === 403) {
-                throw InquiryOverbookingExceptions::forbidden($contents->ErrorDescritpion);
+                throw InquiryOverbookingException::forbidden($contents->ErrorCode);
             }
 
             // on unauthorized request
             if ($response->getStatusCode() === 401) {
-                throw InquiryOverbookingExceptions::unauthorize($contents->ErrorDescritpion);
+                throw InquiryOverbookingException::unauthorize($contents->ErrorCode);
             }
         } catch (GuzzleException $e) {
             throw $e;
