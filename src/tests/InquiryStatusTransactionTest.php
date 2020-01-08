@@ -12,6 +12,7 @@ class InquiryStatusTransactionTest extends TestCase
 
         try {
             $inquiryStatusTransaction = \Bank::inquiryStatusTransaction($custRefID);
+
             $this->assertTrue(
                 $inquiryStatusTransaction->getCustRefId() === $custRefID,
                 $inquiryStatusTransaction->getStatusCode() === '00'

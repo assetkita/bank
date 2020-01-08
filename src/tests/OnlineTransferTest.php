@@ -2,72 +2,65 @@
 
 namespace Assetku\BankService\tests;
 
+use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
+use Assetku\BankService\Mocks\OnlineTransferMock;
 use GuzzleHttp\Exception\GuzzleException;
 
 class OnlineTransferTest extends TestCase
 {
+    /**
+     * @throws GuzzleException
+     */
     public function testSuccessInquiryOnlineTransferTest()
     {
-        $custRefID = 'ASSET'.mt_rand(00000, 99999);
-
-        $payload = [
-            'FromAccount' => '701075331',
-            'ToAccount' => '701075323',
-            'ToBankId' => '90010',
-            'ToBankName' => 'BNI',
-            'Amount' => 20001,
-            'ChargeTo' => '0',
-            'TrxDesc' => str_replace(' ', '', 'Coba 1'),
-            'TrxDesc2' => str_replace(' ', '', 'Desc 2'),
-            'BenefEmail' => 'john@gmail.com',
-            'BenefAcctName' => 'John',
-            'BenefPhoneNo' => '0821222333467',
-            'FromAcctName' => 'Doe',
-            'DatiII' => '',
-            'TkiFlag' => ''
-        ];
+        $mock = new OnlineTransferMock('701075331', 20001);
 
         try {
-            $onlineTransfer = \Bank::onlineTransfer($payload, $custRefID);
+            $onlineTransfer = \Bank::onlineTransfer($mock);
             $this->assertTrue(
-                $onlineTransfer->getStatusCode() === '00',
-                $onlineTransfer->getStatusDesc() === 'Success',
-                $onlineTransfer->getCustRefId() === $custRefID
+                $onlineTransfer->getStatusCode() === '00' &&
+                $onlineTransfer->getStatusDesc() === 'Success'
             );
         } catch (GuzzleException $e) {
             throw $e;
+        } catch (OnlineTransferException $e) {
+            dd($e->getCode(), $e->getMessage());
         }
     }
 
-    public function testInvalidAccountOnlineTransfer()
+    /**
+     * @throws GuzzleException
+     */
+    public function testInvalidFromAccountOnlineTransfer()
     {
-        $custRefID = 'ASSET'.mt_rand(00000, 99999);
-
-        $payload = [
-            'FromAccount' => '498908889',
-            'ToAccount' => '701075323',
-            'ToBankId' => '90010',
-            'ToBankName' => 'BNI',
-            'Amount' => 20001,
-            'ChargeTo' => '0',
-            'TrxDesc' => str_replace(' ', '', 'Coba 1'),
-            'TrxDesc2' => str_replace(' ', '', 'Desc 2'),
-            'BenefEmail' => 'john@gmail.com',
-            'BenefAcctName' => 'John',
-            'BenefPhoneNo' => '0821222333467',
-            'FromAcctName' => 'Doe',
-            'DatiII' => '',
-            'TkiFlag' => ''
-        ];
+        $mock = new OnlineTransferMock('498908889', 20001);
 
         try {
-            $onlineTransfer = \Bank::onlineTransfer($payload, $custRefID);
-            $this->assertTrue(
-                $onlineTransfer->getStatusCode() === '02',
-                $onlineTransfer->getStatusDesc() === 'Invalid Account',
-            );
+            $onlineTransfer = \Bank::onlineTransfer($mock);
+
+            $this->assertTrue($onlineTransfer->getStatusCode() === '02' && $onlineTransfer->getStatusDesc() === 'Invalid Account');
         } catch (GuzzleException $e) {
             throw $e;
+        } catch (OnlineTransferException $e) {
+            dd($e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    public function testInsufficientFundOnlineTransfer()
+    {
+        $mock = new OnlineTransferMock('701075331', 100000000);
+
+        try {
+            $onlineTransfer = \Bank::onlineTransfer($mock);
+
+            $this->assertTrue($onlineTransfer->getStatusCode() === '51' && $onlineTransfer->getStatusDesc() === 'Insufficient Fund ( from debited account )');
+        } catch (GuzzleException $e) {
+            throw $e;
+        } catch (OnlineTransferException $e) {
+            dd($e->getCode(), $e->getMessage());
         }
     }
 }

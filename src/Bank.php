@@ -2,6 +2,8 @@
 
 namespace Assetku\BankService;
 
+use Assetku\BankService\Contracts\OnlineTransferSubject;
+use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
 use GuzzleHttp\Exception\GuzzleException;
 use Assetku\BankService\Contracts\BankContract;
 
@@ -75,17 +77,19 @@ class Bank
 
     /**
      * online transder request
-     * 
-     * @param array $data
-     * @param string $custRefID
-     * @return mixed
+     *
+     * @param  \Assetku\BankService\Contracts\OnlineTransferSubject  $subject
+     * @return \Assetku\BankService\Transfer\OnlineTransfer\OnlineTransfer
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException
      */
-    public function onlineTransfer(array $data, string $custRefID)
+    public function onlineTransfer(OnlineTransferSubject $subject)
     {
         try {
-            $data = $this->bankProvider->onlineTransfer($data, $custRefID);
-            return $data;
+            return $this->bankProvider->onlineTransfer($subject);
         } catch (GuzzleException $e) {
+            throw $e;
+        } catch (OnlineTransferException $e) {
             throw $e;
         }
     }
@@ -109,16 +113,16 @@ class Bank
 
     /**
      * Investa Account request
-     * 
-     * @param array $data
-     * @param string $custRefID
+     *
+     * @param  array  $data
+     * @param  string  $custRefID
      * @return mixed
+     * @throws GuzzleException
      */
     public function submitFintechAccount(array $data, string $custRefID)
     {
         try {
-            $data = $this->bankProvider->submitFintechAccount($data, $custRefID);
-            return $data;
+            return $this->bankProvider->submitFintechAccount($data, $custRefID);
         } catch (GuzzleException $e) {
             throw $e;
         }

@@ -17,13 +17,13 @@
       }
     ],
     "require": {
-      "php": ">=7.0",
-      "guzzlehttp/guzzle": "6.3.3",
-      "illuminate/contracts": "5.5.*",
-      "illuminate/http": "5.5.*",
-      "illuminate/support": "5.5.*",
-      "illuminate/validation": "5.5.*",
-      "psr/http-message": "1.0.*"
+        "php": ">=7.0",
+        "guzzlehttp/guzzle": "6.3.3",
+        "illuminate/contracts": "5.5.*",
+        "illuminate/http": "5.5.*",
+        "illuminate/support": "5.5.*",
+        "illuminate/validation": "5.5.*",
+        "psr/http-message": "1.0.*"
     },
     "require-dev": {
       "fzaninotto/faker": "~1.4",
@@ -33,7 +33,10 @@
     "autoload": {
       "psr-4": {
         "Assetku\\BankService\\": "src/"
-      }
+      },
+      "files": [
+        "src/helpers.php"
+      ]
     },
     "extra": {
       "laravel": {

@@ -2,6 +2,10 @@
 
 namespace Assetku\BankService\Contracts;
 
+use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
+use Assetku\BankService\Transfer\OnlineTransfer\OnlineTransfer;
+use GuzzleHttp\Exception\GuzzleException;
+
 interface BankContract
 {
     /**
@@ -40,11 +44,12 @@ interface BankContract
     /**
      * Online Transfer Request
      *
-     * @param array $data
-     * @param string $custRefID
-     * @return mixed
+     * @param  OnlineTransferSubject  $subject
+     * @return OnlineTransfer
+     * @throws GuzzleException
+     * @throws OnlineTransferException
      */
-    public function onlineTransfer(array $data, string $custRefID);
+    public function onlineTransfer(OnlineTransferSubject $subject);
 
     /**
      * LLG Transfer Request

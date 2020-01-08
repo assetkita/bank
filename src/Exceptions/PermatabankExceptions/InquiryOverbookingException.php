@@ -8,9 +8,9 @@ class InquiryOverbookingException extends PermatabankException
 {
     /**
      * Catch error with status code 200 but invalid
-     * 
-     * @param string $code
-     * @return Exception
+     *
+     * @param  string  $code
+     * @return InquiryOverbookingException
      */
     public static function invalid($code)
     {
@@ -21,8 +21,8 @@ class InquiryOverbookingException extends PermatabankException
 
     /**
      * Catch the service unavailable
-     * 
-     * @return Exception
+     *
+     * @return InquiryOverbookingException
      */
     public static function serviceUnavailable()
     {
@@ -31,8 +31,8 @@ class InquiryOverbookingException extends PermatabankException
 
     /**
      * Catch the internal server error
-     * 
-     * @return Exception
+     *
+     * @return InquiryOverbookingException
      */
     public static function internalServerError()
     {
@@ -41,9 +41,9 @@ class InquiryOverbookingException extends PermatabankException
 
     /**
      * Catch HTTP forbidden
-     * 
-     * @param string $code
-     * @return Exception
+     *
+     * @param  string  $code
+     * @return InquiryOverbookingException
      */
     public static function forbidden($code)
     {
@@ -54,9 +54,9 @@ class InquiryOverbookingException extends PermatabankException
 
     /**
      * Catch the HTTP unauthorized
-     * 
-     * @param string $code
-     * @return Exception
+     *
+     * @param  string  $code
+     * @return InquiryOverbookingException
      */
     public static function unauthorize($code)
     {

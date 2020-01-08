@@ -9,6 +9,7 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Handler\CurlHandler;
 use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Message\ResponseInterface;
 
 class HttpClient
 {
@@ -56,19 +57,23 @@ class HttpClient
 
     /**
      * Guzzle post request
-     * 
-     * @param string $uri
-     * @param mixed $data
-     * @param array $headers
-     * 
-     * @return void
+     *
+     * @param  string  $uri
+     * @param  mixed  $data
+     * @param  array  $headers
+     * @return ResponseInterface
+     * @throws GuzzleException
      */
     public function post(string $uri, $data, $headers = [])
     {
-        $payload = [static::JSON_PARAMS => $data];
+        $payload = [
+            static::JSON_PARAMS => $data
+        ];
+
         if (isset($headers)) {
             $payload['headers'] = $headers;
         }
+
         try {
             return $this->http->request('post', $uri, $payload);
         } catch (GuzzleException $e) {

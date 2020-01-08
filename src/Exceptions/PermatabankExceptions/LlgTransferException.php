@@ -4,13 +4,13 @@ namespace Assetku\BankService\Exceptions\PermatabankExceptions;
 
 use Illuminate\Http\Response;
 
-class LlgTransferException extends PermatabankExceptions
+class LlgTransferException extends PermatabankException
 {
     /**
      * Catch error with status code 200 but invalid
-     * 
-     * @param string $code
-     * @return Exception
+     *
+     * @param  string  $code
+     * @return LlgTransferException
      */
     public static function invalid($code)
     {
@@ -18,11 +18,11 @@ class LlgTransferException extends PermatabankExceptions
 
         return new static($message, $code);
     }
-    
+
     /**
      * Catch the service unavailable
-     * 
-     * @return Exception
+     *
+     * @return LlgTransferException
      */
     public static function serviceUnavailable()
     {
@@ -31,8 +31,8 @@ class LlgTransferException extends PermatabankExceptions
 
     /**
      * Catch the internal server error
-     * 
-     * @return Exception
+     *
+     * @return LlgTransferException
      */
     public static function internalServerError()
     {
@@ -41,9 +41,9 @@ class LlgTransferException extends PermatabankExceptions
 
     /**
      * Catch HTTP forbidden
-     * 
-     * @param string $code
-     * @return Exception
+     *
+     * @param  string  $code
+     * @return LlgTransferException
      */
     public static function forbidden($code)
     {
@@ -54,9 +54,9 @@ class LlgTransferException extends PermatabankExceptions
 
     /**
      * Catch the HTTP unauthorized
-     * 
-     * @param string $code
-     * @return Exception
+     *
+     * @param  string  $code
+     * @return LlgTransferException
      */
     public static function unauthorize($code)
     {

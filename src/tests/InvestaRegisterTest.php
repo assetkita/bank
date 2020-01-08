@@ -34,7 +34,7 @@ class InvestaRegisterTest extends TestCase
 {
     public function testSuccessRegisterInvestaAccount()
     {
-        $custRefId = mt_rand(1111111111, 9999999999);
+        $custRefId = (string) mt_rand(1111111111, 9999999999);
 
         $application = new ApplicationInfo;
         
@@ -44,9 +44,10 @@ class InvestaRegisterTest extends TestCase
 
         try {
             $submitFintech = \Bank::submitFintechAccount($application->toArray(), $custRefId);
+
             $this->assertTrue(
-                $submitFintech->getCustRefId() === $custRefID,
-                $submitFintech->getStatusCode() === '00',
+                $submitFintech->getCustRefId() === $custRefId &&
+                $submitFintech->getStatusCode() === '00' &&
                 $submitFintech->getStatusDesc() === 'Success'
             );
         } catch (GuzzleException $e) {

@@ -4,7 +4,7 @@ namespace Assetku\BankService\Exceptions\PermatabankExceptions;
 
 use Illuminate\Http\Response;
 
-class InquiryStatusTransactionException extends PermatabankExceptions
+class InquiryStatusTransactionException extends PermatabankException
 {
     /**
      * Catch error with status code 200 but invalid

@@ -92,7 +92,7 @@ class LlgTransferTest extends TestCase
             $llgTransfer = \Bank::llgTransfer($payload, $custRefID);
             $this->assertTrue(
                 $llgTransfer->getStatusCode() === '14',
-                $llgTransfer->getStatusDesc() !== 'Success',
+                $llgTransfer->getStatusDesc() !== 'Success'
             );
         } catch (GuzzleException $e) {
             throw $e;

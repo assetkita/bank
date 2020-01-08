@@ -33,7 +33,7 @@ class InquiryOverbookingTest extends TestCase
             $data = \Bank::inquiryOverbooking($accountNumber, $custRefID);
             $this->assertTrue(
                 $data->getStatusCode() === '03',
-                $data->getStatusDesc() === 'Duplicate Customer Reference Number',
+                $data->getStatusDesc() === 'Duplicate Customer Reference Number'
             );
         } catch (GuzzleException $e) {
             throw $e;
