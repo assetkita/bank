@@ -3,6 +3,7 @@
 namespace Assetku\BankService;
 
 use Assetku\BankService\Contracts\OnlineTransferSubject;
+use Assetku\BankService\Contracts\BalanceInquirySubject;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
 use GuzzleHttp\Exception\GuzzleException;
 use Assetku\BankService\Contracts\BankContract;
@@ -93,6 +94,23 @@ class Bank
             throw $e;
         }
     }
+
+    /**
+     * balance inquiry request
+     *
+     * @param  \Assetku\BankService\Contracts\BalanceInquirySubject  $subject
+     * @return \Assetku\BankService\Transfer\OnlineTransfer\OnlineTransfer
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function balanceInquiry(BalanceInquirySubject $subject)
+    {
+        try {
+            return $this->bankProvider->balanceInquiry($subject);
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
 
     /**
      * LLG transfer request

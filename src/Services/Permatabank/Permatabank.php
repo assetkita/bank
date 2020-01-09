@@ -5,6 +5,7 @@ namespace Assetku\BankService\Services\Permatabank;
 use App;
 use Assetku\BankService\Contracts\BankContract;
 use Assetku\BankService\Contracts\OnlineTransferSubject;
+use Assetku\BankService\Contracts\BalanceInquirySubject;
 use Assetku\BankService\Exceptions\PermatabankExceptions\InquiryOverbookingException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
@@ -26,7 +27,7 @@ use Assetku\BankService\utils\TrimWhiteSpace;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
-use Webpatser\Uuid\Uuid;
+use Assetku\BankService\BalanceInquiry\BalanceInquiry;
 
 class Permatabank implements BankContract
 {
@@ -384,6 +385,45 @@ class Permatabank implements BankContract
             // on unauthorized request
             if ($response->getStatusCode() === 401) {
                 throw OnlineTransferException::unauthorize($contents->ErrorDescritpion);
+            }
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    public function balanceInquiry(BalanceInquirySubject $subject)
+    {
+        $payload = [
+            'BalInqRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timesTamp,
+                    'CustRefID' => random_alphanumeric(),
+                ],
+                'InqInfo' => [
+                    'AccountNumber' => $subject->accountNumber()
+                ]
+            ]
+        ];
+
+        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
+
+        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
+
+        $headers = [
+            'Authorization'     => "Bearer ".$this->accessToken,
+            'permata-signature' => $this->generateSignature($message, $this->staticKey),
+            'organizationname'  => $this->organizationName,
+            'permata-timestamp' => $this->timesTamp,
+        ];
+
+        try {
+            $response = $this->api->post('InquiryServices/BalanceInfo/inq', $payload, $headers);
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            // on success
+            if ($response->getStatusCode() === 200) {
+                return new BalanceInquiry($contents);
             }
         } catch (GuzzleException $e) {
             throw $e;

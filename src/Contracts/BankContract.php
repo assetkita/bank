@@ -52,6 +52,15 @@ interface BankContract
     public function onlineTransfer(OnlineTransferSubject $subject);
 
     /**
+     * Balance Inquiry Request
+     *
+     * @param  BalanceInquirySubject  $subject
+     * @return BalanceInquiry
+     * @throws GuzzleException
+     */
+    public function balanceInquiry(BalanceInquirySubject $subject);
+
+    /**
      * LLG Transfer Request
      *
      * @param array $data

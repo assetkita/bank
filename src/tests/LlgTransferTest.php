@@ -11,11 +11,11 @@ class LlgTransferTest extends TestCase
         $custRefID = 'ASSET'.mt_rand(00000, 99999);
 
         $payload = [
-            'FromAccount' => '701075331',
-            'ToAccount' => '701075323',
+            'FromAccount' => '701075323',
+            'ToAccount' => '701075331',
             'ToBankId' => '90010',
             'ToBankName' => 'BNI',
-            'Amount' => 22001,
+            'Amount' => 1000000000,
             'CurrencyCode' => 'IDR',
             'ChargeTo' => '0',
             'TrxDesc' => str_replace(' ', '', 'Coba 1'),
@@ -43,6 +43,7 @@ class LlgTransferTest extends TestCase
 
         try {
             $llgTransfer = \Bank::llgTransfer($payload, $custRefID);
+            dd($llgTransfer);
             $this->assertTrue(
                 $llgTransfer->getStatusCode() === '00',
                 $llgTransfer->getStatusDesc() === 'Success',
