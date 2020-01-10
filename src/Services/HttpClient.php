@@ -3,12 +3,10 @@
 namespace Assetku\BankService\Services;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Handler\CurlHandler;
-use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class HttpClient
@@ -24,27 +22,27 @@ class HttpClient
     const JSON_PARAMS = 'json';
 
     /**
-     * @var $http
+     * @var Client
      */
-    protected $http;
+    protected $client;
 
     /**
-     * @var $request
+     * @var RequestInterface
      */
     protected $request;
 
     /**
-     * init
-     * 
-     * @param array $config
+     * HttpClient constructor.
+     *
+     * @param  array  $config
      */
     public function __construct($config = [])
     {
         $config['timeout'] = 30;
 
         if (empty($config['handler'])) {
-            $stack = new HandlerStack();
-            $stack->setHandler(new CurlHandler());
+            $stack = new HandlerStack;
+            $stack->setHandler(new CurlHandler);
             $config['handler'] = $stack;
         }
 
@@ -52,7 +50,7 @@ class HttpClient
             $this->appendRequest()
         );
 
-        $this->http = new Client($config);
+        $this->client = new Client($config);
     }
 
     /**
@@ -61,13 +59,14 @@ class HttpClient
      * @param  string  $uri
      * @param  mixed  $data
      * @param  array  $headers
+     * @param  string  $mode
      * @return ResponseInterface
      * @throws GuzzleException
      */
-    public function post(string $uri, $data, $headers = [])
+    public function post(string $uri, $data, $headers = [], $mode = self::JSON_PARAMS)
     {
         $payload = [
-            static::JSON_PARAMS => $data
+            $mode => $data,
         ];
 
         if (isset($headers)) {
@@ -75,29 +74,7 @@ class HttpClient
         }
 
         try {
-            return $this->http->request('post', $uri, $payload);
-        } catch (GuzzleException $e) {
-            throw $e;
-        }
-    }
-
-    /**
-     * Guzzle post for authorization bearer token
-     * 
-     * @param string $token
-     * @param mixed $data
-     * @param array $headers
-     * 
-     * @return void
-     */
-    public function postToken(string $uri, $data, $headers = [])
-    {
-        $payload = [static::FORM_PARAMS => $data];
-        if (isset($headers)) {
-            $payload['headers'] = $headers;
-        }
-        try {
-            return $this->http->request('post', $uri, $payload);
+            return $this->client->request('post', $uri, $payload);
         } catch (GuzzleException $e) {
             throw $e;
         }

@@ -2,54 +2,54 @@
 
 namespace Assetku\BankService\Transfer\OnlineTransfer;
 
-class InquiryOnlineTransfer
+class OnlineTransferInquiry
 {
     /**
-     * @var string $custRefId
+     * @var string
      */
     protected $custRefId;
 
     /**
-     * @var string $statusCode
+     * @var string
      */
     protected $statusCode;
 
     /**
-     * @var string $statusDesc
+     * @var string|null
      */
     protected $statusDesc;
 
     /**
-     * @var string $trxReffNo
+     * @var string
      */
     protected $trxReffNo;
 
     /**
-     * @var string $toAccount
+     * @var string
      */
     protected $toAccount;
 
     /**
-     * @var string $toAccountFullName
+     * @var string
      */
     protected $toAccountFullName;
 
     /**
-     * @var string $bankId
+     * @var string
      */
     protected $bankId;
 
     /**
-     * @var string $bankName
+     * @var string
      */
     protected $bankName;
 
     /**
-     * init
-     * 
-     * @param object $inquiryOverbooking
+     * OnlineTransferInquiry constructor.
+     *
+     * @param $inquiryOnlineTransfer
      */
-    public function __construct($inquiryOnlineTransfer) 
+    public function __construct($inquiryOnlineTransfer)
     {
         $messageHeader = $inquiryOnlineTransfer->OlXferInqRs->MsgRsHdr;
         
@@ -57,7 +57,7 @@ class InquiryOnlineTransfer
         
         $this->statusCode = $messageHeader->StatusCode;
         
-        $this->statusDesc = $messageHeader->StatusDesc;
+        $this->statusDesc = $messageHeader->StatusDesc ?? null;
 
         $this->toAccount = $inquiryOnlineTransfer->OlXferInqRs->XferInfo->ToAccount;
 
@@ -71,9 +71,9 @@ class InquiryOnlineTransfer
     }
 
     /**
-     * Get customer refferences id
+     * Get customer reference identifier
      * 
-     * @return string $custRefId
+     * @return string
      */
     public function getCustRefId()
     {
@@ -82,8 +82,8 @@ class InquiryOnlineTransfer
 
     /**
      * Get status code
-     * 
-     * @return $statusCode
+     *
+     * @return string
      */
     public function getStatusCode()
     {
@@ -92,8 +92,8 @@ class InquiryOnlineTransfer
 
     /**
      * Get status description
-     * 
-     * @return $statusDesc
+     *
+     * @return string|null
      */
     public function getStatusDesc()
     {
@@ -101,30 +101,50 @@ class InquiryOnlineTransfer
     }
 
     /**
-     * Get transfer reff number
-     * 
-     * @return $trxReffNo
+     * Get transaction reference number
+     *
+     * @return string
      */
     public function getTrxReffNo()
     {
         return $this->trxReffNo;
     }
 
+    /**
+     * Get account
+     *
+     * @return string
+     */
     public function getAccount()
     {
         return $this->toAccount;
     }
 
+    /**
+     * Get account full name
+     *
+     * @return string
+     */
     public function getAccountFullName()
     {
         return $this->toAccountFullName;
     }
 
+    /**
+     * Get bank identifier
+     *
+     * @return string
+     */
     public function getBankId()
     {
         return $this->bankId;
     }
 
+    /**
+     * Get bank name
+     *
+     * @return string
+     */
     public function getBankName()
     {
         return $this->bankName;

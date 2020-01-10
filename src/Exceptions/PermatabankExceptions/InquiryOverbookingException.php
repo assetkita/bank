@@ -20,27 +20,27 @@ class InquiryOverbookingException extends PermatabankException
     }
 
     /**
-     * Catch the service unavailable
+     * Display error for service unavailable
      *
      * @return InquiryOverbookingException
      */
     public static function serviceUnavailable()
     {
-        return new static('Server permatabank sedang dalam perbaikan', Response::HTTP_SERVICE_UNAVAILABLE);
+        return new static('Server permata bank sedang dalam perbaikan.', Response::HTTP_SERVICE_UNAVAILABLE);
     }
 
     /**
-     * Catch the internal server error
+     * Display error for internal server error
      *
      * @return InquiryOverbookingException
      */
     public static function internalServerError()
     {
-        return new static('Kesalahan dari server permatabank', Response::HTTP_INTERNAL_SERVER_ERROR);
+        return new static('Kesalahan dari server permata bank.', Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
-     * Catch HTTP forbidden
+     * Display error for forbidden
      *
      * @param  string  $code
      * @return InquiryOverbookingException
@@ -53,7 +53,7 @@ class InquiryOverbookingException extends PermatabankException
     }
 
     /**
-     * Catch the HTTP unauthorized
+     * Display error for unauthorized
      *
      * @param  string  $code
      * @return InquiryOverbookingException

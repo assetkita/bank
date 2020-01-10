@@ -5,31 +5,31 @@ namespace Assetku\BankService\Transfer\LlgTransfer;
 class LlgTransfer
 {
     /**
-     * @var string $custRefId
+     * @var string
      */
     protected $custRefId;
 
     /**
-     * @var string $statusCode
+     * @var string
      */
     protected $statusCode;
 
     /**
-     * @var string $statusDesc
+     * @var string|null
      */
     protected $statusDesc;
 
     /**
-     * @var string $trxReffNo
+     * @var string
      */
     protected $trxReffNo;
 
     /**
-     * init
-     * 
-     * @param object $inquiryOverbooking
+     * LlgTransfer constructor.
+     *
+     * @param $llgTransfer
      */
-    public function __construct($llgTransfer) 
+    public function __construct($llgTransfer)
     {
         $messageHeader = $llgTransfer->LlgXferAddRs->MsgRsHdr;
         
@@ -37,15 +37,15 @@ class LlgTransfer
         
         $this->statusCode = $messageHeader->StatusCode;
         
-        $this->statusDesc = $messageHeader->StatusDesc;
+        $this->statusDesc = $messageHeader->StatusDesc ?? null;
 
         $this->trxReffNo = $llgTransfer->LlgXferAddRs->TrxReffNo;
     }
 
     /**
-     * Get customer refferences id
+     * Get customer reference identifier
      * 
-     * @return string $custRefId
+     * @return string
      */
     public function getCustRefId()
     {
@@ -54,8 +54,8 @@ class LlgTransfer
 
     /**
      * Get status code
-     * 
-     * @return $statusCode
+     *
+     * @return string
      */
     public function getStatusCode()
     {
@@ -64,8 +64,8 @@ class LlgTransfer
 
     /**
      * Get status description
-     * 
-     * @return $statusDesc
+     *
+     * @return string|null
      */
     public function getStatusDesc()
     {
@@ -73,9 +73,9 @@ class LlgTransfer
     }
 
     /**
-     * Get transfer reff number
-     * 
-     * @return $trxReffNo
+     * Get transaction reference number
+     *
+     * @return string
      */
     public function getTrxReffNo()
     {

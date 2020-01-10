@@ -2,7 +2,9 @@
 
 namespace Assetku\BankService\Contracts;
 
+use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
+use Assetku\BankService\Transfer\LlgTransfer\LlgTransfer;
 use Assetku\BankService\Transfer\OnlineTransfer\OnlineTransfer;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -46,8 +48,8 @@ interface BankContract
      *
      * @param  OnlineTransferSubject  $subject
      * @return OnlineTransfer
-     * @throws GuzzleException
      * @throws OnlineTransferException
+     * @throws GuzzleException
      */
     public function onlineTransfer(OnlineTransferSubject $subject);
 
@@ -63,11 +65,12 @@ interface BankContract
     /**
      * LLG Transfer Request
      *
-     * @param array $data
-     * @param string $custRefID
-     * @return mixed
+     * @param  LlgTransferSubject  $subject
+     * @return LlgTransfer
+     * @throws LlgTransferException
+     * @throws GuzzleException
      */
-    public function llgTransfer(array $data, string $custRefID);
+    public function llgTransfer(LlgTransferSubject $subject);
 
     /**
      * Submit Fintech Account Request

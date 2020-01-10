@@ -16,6 +16,7 @@ class BalanceInquiryTest extends TestCase
 
         try {
             $balanceInquiry = \Bank::balanceInquiry($mock);
+            dd($balanceInquiry);
 
             $this->assertTrue(
                 $balanceInquiry->getStatusCode() === '00'

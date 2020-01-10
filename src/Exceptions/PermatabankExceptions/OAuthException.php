@@ -4,25 +4,12 @@ namespace Assetku\BankService\Exceptions\PermatabankExceptions;
 
 use Illuminate\Http\Response;
 
-class OverbookingException extends PermatabankException
+class OAuthException extends PermatabankException
 {
-    /**
-     * Catch error with status code 200 but invalid
-     *
-     * @param  string  $code
-     * @return OverbookingException
-     */
-    public static function invalid($code)
-    {
-        $message = static::TranslateError($code);
-
-        return new static($message, $code);
-    }
-
     /**
      * Display error for service unavailable
      *
-     * @return OverbookingException
+     * @return OAuthException
      */
     public static function serviceUnavailable()
     {
@@ -32,7 +19,7 @@ class OverbookingException extends PermatabankException
     /**
      * Display error for internal server error
      *
-     * @return OverbookingException
+     * @return OAuthException
      */
     public static function internalServerError()
     {
@@ -43,7 +30,7 @@ class OverbookingException extends PermatabankException
      * Display error for forbidden
      *
      * @param  string  $code
-     * @return OverbookingException
+     * @return OAuthException
      */
     public static function forbidden($code)
     {
@@ -56,9 +43,9 @@ class OverbookingException extends PermatabankException
      * Display error for unauthorized
      *
      * @param  string  $code
-     * @return OverbookingException
+     * @return OAuthException
      */
-    public static function unauthorize($code)
+    public static function unauthorized($code)
     {
         $message = static::TranslateError($code);
 
