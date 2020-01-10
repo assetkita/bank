@@ -4,6 +4,7 @@ namespace Assetku\BankService;
 
 use Assetku\BankService\Contracts\OnlineTransferSubject;
 use Assetku\BankService\Contracts\BalanceInquirySubject;
+use Assetku\BankService\Contracts\RtgsTransferSubject;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
 use GuzzleHttp\Exception\GuzzleException;
 use Assetku\BankService\Contracts\BankContract;
@@ -124,6 +125,22 @@ class Bank
         try {
             $data = $this->bankProvider->llgTransfer($data, $custRefID);
             return $data;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * RTGS transfer request
+     * 
+     * @param RtgsTransferSubject $subject
+     * @throws GuzzleException
+     * @return mixed
+     */
+    public function rtgsTransfer(RtgsTransferSubject $subject)
+    {
+        try {
+            return $this->bankProvider->rtgsTransfer($subject);
         } catch (GuzzleException $e) {
             throw $e;
         }

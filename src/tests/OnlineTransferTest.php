@@ -13,7 +13,7 @@ class OnlineTransferTest extends TestCase
      */
     public function testSuccessInquiryOnlineTransferTest()
     {
-        $mock = new OnlineTransferMock('701075331', 20001);
+        $mock = new OnlineTransferMock('701075323', 1);
 
         try {
             $onlineTransfer = \Bank::onlineTransfer($mock);

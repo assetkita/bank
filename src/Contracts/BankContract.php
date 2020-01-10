@@ -70,6 +70,15 @@ interface BankContract
     public function llgTransfer(array $data, string $custRefID);
 
     /**
+     * Do RTGS Transfer request
+     * 
+     * @param RtgsTransferSubject $subject
+     * @throws GuzzleException
+     * @return mixed
+     */
+    public function rtgsTransfer(RtgsTransferSubject $subject);
+
+    /**
      * Submit Fintech Account Request
      *
      * @param array $data

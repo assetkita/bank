@@ -6,6 +6,7 @@ use App;
 use Assetku\BankService\Contracts\BankContract;
 use Assetku\BankService\Contracts\OnlineTransferSubject;
 use Assetku\BankService\Contracts\BalanceInquirySubject;
+use Assetku\BankService\Contracts\RtgsTransferSubject;
 use Assetku\BankService\Exceptions\PermatabankExceptions\InquiryOverbookingException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
@@ -481,6 +482,62 @@ class Permatabank implements BankContract
         } catch (GuzzleException $e) {
             throw $e;
         }
+    }
+
+    public function rtgsTransfer(RtgsTransferSubject $subject)
+    {
+        $payload = [
+            'RtgsXferAddRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timesTamp,
+                    'CustRefID' => random_alphanumeric(),
+                ],
+                'XferInfo' => [
+                    'FromAccount' => $subject->fromAccount(),
+                    'ToAccount' => $subject->toAccount(),
+                    'ToBankId' => $subject->toBankId(),
+                    'ToBankName' => $subject->toBankName(),
+                    'Amount' => $subject->amount(),
+                    'CurrencyCode' => $subject->fromCurrencyCode(),
+                    'ChargeTo' => '0',
+                    'CitizenStatus' => '0',
+                    'ResidentStatus' => '0',
+                    'FromAcctName' => $subject->fromAccountName(),
+                    'BenefType' => '1',
+                    'BenefEmail' => $subject->benefEmail(),
+                    'BenefAcctName' => $subject->benefAccountName(),
+                    'BenefPhoneNo' => $subject->benefPhoneNo(),
+                    'BenefBankAddress' => $subject->benefBankAddress(),
+                    'BenefBankBranchName' => $subject->benefBankBranchName(),
+                    'BenefBankCity' => $subject->benefBankCity(),
+                    'BenefAddress1' => $subject->benefAddress1(), 
+                    'BenefAddress2' => $subject->benefAddress2(),
+                    'BenefAddress3' => $subject->benefAddress3() 
+                ]
+            ]
+        ];
+
+        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
+
+        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
+
+        $headers = [
+            'Authorization'     => "Bearer ".$this->accessToken,
+            'permata-signature' => $this->generateSignature($message, $this->staticKey),
+            'organizationname'  => $this->organizationName,
+            'permata-timestamp' => $this->timesTamp,
+        ];
+
+        try {
+            $response = $this->api->post('BankingServices/RtgsTransfer/add', $payload, $headers);
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            return $contents;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+
     }
 
     /**
