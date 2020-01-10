@@ -1,8 +1,10 @@
 <?php
 
-namespace Assetku\BankService\tests;
+namespace Assetku\BankService\tests\Feature;
 
 use GuzzleHttp\Exception\GuzzleException;
+
+use Assetku\BankService\tests\TestCase;
 
 class UpdateKycStatusTest extends TestCase
 {

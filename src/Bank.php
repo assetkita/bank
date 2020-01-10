@@ -8,6 +8,7 @@ use Assetku\BankService\Contracts\OnlineTransferInquirySubject;
 use Assetku\BankService\Contracts\OnlineTransferSubject;
 use Assetku\BankService\Contracts\OverbookingInquirySubject;
 use Assetku\BankService\Contracts\OverbookingSubject;
+use Assetku\BankService\Contracts\RtgsTransferSubject;
 use Assetku\BankService\Contracts\StatusTransactionInquirySubject;
 use Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
@@ -15,6 +16,7 @@ use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingInquiryException;
+use Assetku\BankService\Exceptions\PermatabankExceptions\RtgsTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\StatusTransactionInquiryException;
 use Assetku\BankService\Services\BankProvider;
 use GuzzleHttp\Exception\GuzzleException;
@@ -161,6 +163,25 @@ class Bank
         try {
             return $this->bank->llgTransfer($subject);
         } catch (LlgTransferException $e) {
+            throw $e;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Perform RTGS transfer
+     *
+     * @param  \Assetku\BankService\Contracts\RtgsTransferSubject  $subject
+     * @return \Assetku\BankService\Transfer\Permatabank\RtgsTransfer
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\RtgsTransferException
+     */
+    public function rtgsTransfer(RtgsTransferSubject $subject)
+    {
+        try {
+            return $this->bank->rtgsTransfer($subject);
+        } catch (RtgsTransferException $e) {
             throw $e;
         } catch (GuzzleException $e) {
             throw $e;

@@ -1,10 +1,12 @@
 <?php
 
-namespace Assetku\BankService\tests;
+namespace Assetku\BankService\tests\Feature;
 
 use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingException;
 use Assetku\BankService\Mocks\OverbookingMock;
 use GuzzleHttp\Exception\GuzzleException;
+
+use Assetku\BankService\tests\TestCase;
 
 class OverbookingTest extends TestCase
 {

@@ -1,10 +1,12 @@
 <?php
 
-namespace Assetku\BankService\tests;
+namespace Assetku\BankService\tests\Feature;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Exception\GuzzleException;
+
+use Assetku\BankService\tests\TestCase;
 
 class SubmitDocumentTest extends TestCase
 {

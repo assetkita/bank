@@ -8,6 +8,7 @@ use Assetku\BankService\Contracts\OnlineTransferInquirySubject;
 use Assetku\BankService\Contracts\OnlineTransferSubject;
 use Assetku\BankService\Contracts\OverbookingInquirySubject;
 use Assetku\BankService\Contracts\OverbookingSubject;
+use Assetku\BankService\Contracts\RtgsTransferSubject;
 use Assetku\BankService\Contracts\StatusTransactionInquirySubject;
 use Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
@@ -15,6 +16,7 @@ use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingInquiryException;
+use Assetku\BankService\Exceptions\PermatabankExceptions\RtgsTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\StatusTransactionInquiryException;
 use Assetku\BankService\Inquiry\Permatabank\Disbursement\BalanceInquiry;
 use Assetku\BankService\Inquiry\Permatabank\Disbursement\OnlineTransferInquiry;
@@ -23,6 +25,7 @@ use Assetku\BankService\Inquiry\Permatabank\Disbursement\StatusTransactionInquir
 use Assetku\BankService\Transfer\Permatabank\LlgTransfer;
 use Assetku\BankService\Transfer\Permatabank\OnlineTransfer;
 use Assetku\BankService\Transfer\Permatabank\Overbooking;
+use Assetku\BankService\Transfer\Permatabank\RtgsTransfer;
 use GuzzleHttp\Exception\GuzzleException;
 
 interface Disbursement
@@ -96,4 +99,14 @@ interface Disbursement
      * @throws LlgTransferException
      */
     public function llgTransfer(LlgTransferSubject $subject);
+
+    /**
+     * Perform RTGS transfer
+     *
+     * @param  RtgsTransferSubject  $subject
+     * @return RtgsTransfer
+     * @throws GuzzleException
+     * @throws RtgsTransferException
+     */
+    public function rtgsTransfer(RtgsTransferSubject $subject);
 }

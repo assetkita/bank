@@ -1,10 +1,11 @@
 <?php
 
-namespace Assetku\BankService\tests;
+namespace Assetku\BankService\tests\Feature;
 
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
 use Assetku\BankService\Mocks\OnlineTransferMock;
 use GuzzleHttp\Exception\GuzzleException;
+use Assetku\BankService\tests\TestCase;
 
 class OnlineTransferTest extends TestCase
 {

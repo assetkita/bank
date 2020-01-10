@@ -1,10 +1,11 @@
 <?php
 
-namespace Assetku\BankService\tests;
+namespace Assetku\BankService\tests\Feature;
 
 use Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException;
 use Assetku\BankService\Mocks\BalanceInquiryMock;
 use GuzzleHttp\Exception\GuzzleException;
+use Assetku\BankService\tests\TestCase;
 
 class BalanceInquiryTest extends TestCase
 {

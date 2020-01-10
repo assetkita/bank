@@ -1,10 +1,11 @@
 <?php
 
-namespace Assetku\BankService\tests;
+namespace Assetku\BankService\tests\Feature;
 
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
 use Assetku\BankService\Mocks\LlgTransferMock;
 use GuzzleHttp\Exception\GuzzleException;
+use Assetku\BankService\tests\TestCase;
 
 class LlgTransferTest extends TestCase
 {

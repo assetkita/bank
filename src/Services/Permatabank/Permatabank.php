@@ -8,6 +8,7 @@ use Assetku\BankService\Contracts\OnlineTransferInquirySubject;
 use Assetku\BankService\Contracts\OnlineTransferSubject;
 use Assetku\BankService\Contracts\OverbookingInquirySubject;
 use Assetku\BankService\Contracts\OverbookingSubject;
+use Assetku\BankService\Contracts\RtgsTransferSubject;
 use Assetku\BankService\Contracts\StatusTransactionInquirySubject;
 use Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
@@ -16,6 +17,7 @@ use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingInquiryException;
+use Assetku\BankService\Exceptions\PermatabankExceptions\RtgsTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\StatusTransactionInquiryException;
 use Assetku\BankService\Inquiry\Permatabank\Disbursement\BalanceInquiry;
 use Assetku\BankService\Inquiry\Permatabank\Disbursement\OnlineTransferInquiry;
@@ -32,6 +34,7 @@ use Assetku\BankService\Services\HttpClient;
 use Assetku\BankService\Transfer\Permatabank\LlgTransfer;
 use Assetku\BankService\Transfer\Permatabank\OnlineTransfer;
 use Assetku\BankService\Transfer\Permatabank\Overbooking;
+use Assetku\BankService\Transfer\Permatabank\RtgsTransfer;
 use Assetku\BankService\utils\TrimWhitespace;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Response;
@@ -582,6 +585,93 @@ class Permatabank implements BankProvider
         } catch (GuzzleException $e) {
             throw $e;
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function rtgsTransfer(RtgsTransferSubject $subject)
+    {
+        $data = [
+            'RtgsXferAddRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timestamp,
+                    'CustRefID'        => random_alphanumeric(),
+                ],
+                'XferInfo' => $this->trim->setToBeTrimmed([
+                    'FromAccount',
+                    'ToAccount',
+                    'FromAcctName',
+                    'BenefEmail',
+                    'BenefAcctName',
+                    'BenefBankAddress',
+                    'BenefBankBranchName',
+                    'BenefBankCity',
+                    'BenefAddress1',
+                    'BenefAddress2',
+                    'BenefAddress3',
+                ])
+                    ->setData([
+                        'FromAccount'         => $subject->fromAccount(),
+                        'ToAccount'           => $subject->toAccount(),
+                        'ToBankId'            => $subject->toBankId(),
+                        'ToBankName'          => $subject->toBankName(),
+                        'Amount'              => $subject->amount(),
+                        'CurrencyCode'        => $subject->fromCurrencyCode(),
+                        'ChargeTo'            => '0',
+                        'CitizenStatus'       => '0',
+                        'ResidentStatus'      => '0',
+                        'FromAcctName'        => $subject->fromAccountName(),
+                        'BenefType'           => '1',
+                        'BenefEmail'          => $subject->benefEmail(),
+                        'BenefAcctName'       => $subject->benefAccountName(),
+                        'BenefPhoneNo'        => $subject->benefPhoneNo(),
+                        'BenefBankAddress'    => $subject->benefBankAddress(),
+                        'BenefBankBranchName' => $subject->benefBankBranchName(),
+                        'BenefBankCity'       => $subject->benefBankCity(),
+                        'BenefAddress1'       => $subject->benefAddress1(),
+                        'BenefAddress2'       => $subject->benefAddress2(),
+                        'BenefAddress3'       => $subject->benefAddress3(),
+                    ])
+                    ->handle(),
+            ]
+        ];
+
+        try {
+            $response = $this->api->post('BankingServices/RtgsTransfer/add', $data, $this->header($data));
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            // on ok
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                return new RtgsTransfer($contents);
+            }
+
+            // on unauthorized
+            if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                throw RtgsTransferException::unauthorized($contents->ErrorDescription);
+            }
+
+            // on forbidden
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                throw RtgsTransferException::forbidden($contents->ErrorDescription);
+            }
+
+            // on internal server error
+            if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                throw RtgsTransferException::internalServerError();
+            }
+
+            // on service unavailable
+            if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                throw RtgsTransferException::serviceUnavailable();
+            }
+
+            throw RtgsTransferException::unknownError();
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+
     }
 
     /**
