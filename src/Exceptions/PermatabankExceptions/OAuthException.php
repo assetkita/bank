@@ -51,4 +51,14 @@ class OAuthException extends PermatabankException
 
         return new static($message, Response::HTTP_UNAUTHORIZED);
     }
+
+    /**
+     * Display error for unknown error
+     *
+     * @return OAuthException
+     */
+    public static function unknownError()
+    {
+        return new static('Kesalahan tidak dikenali.', Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 }

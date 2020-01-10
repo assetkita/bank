@@ -24,7 +24,7 @@ class BalanceInquiryMock implements BalanceInquirySubject
     /**
      * @inheritDoc
      */
-    public function accountNumber()
+    public function balanceInquiryAccountNumber()
     {
         return $this->accountNumber;
     }

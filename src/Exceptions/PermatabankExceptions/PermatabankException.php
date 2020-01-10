@@ -4,6 +4,7 @@ namespace Assetku\BankService\Exceptions\PermatabankExceptions;
 
 use Exception;
 use Assetku\BankService\Contracts\BankExceptionContract;
+use Illuminate\Http\Response;
 
 class PermatabankException extends Exception implements BankExceptionContract
 {
@@ -64,7 +65,7 @@ class PermatabankException extends Exception implements BankExceptionContract
     const STATUS_SIGNATURE_NOT_VALID = '403';
 
     /**
-     * get translated error from Bank Provider
+     * get translated error from BankProvider Provider
      * 
      * @param mixed $code
      * @return string
@@ -81,7 +82,7 @@ class PermatabankException extends Exception implements BankExceptionContract
                 break;
             
             case static::STATUS_DUPLICATE_CUST_REF_ID:
-                $message = 'CustReffId tidak boleh sama.';
+                $message = 'CustRefId tidak boleh sama.';
                 break;
             
             case static::STATUS_DAILY_LIMIT_EXCEEDS:

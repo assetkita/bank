@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 class OnlineTransferException extends PermatabankException
 {
     /**
-     * Catch error with status code 200 but invalid
+     * Display error for invalid
      *
      * @param  string  $code
      * @return OnlineTransferException
@@ -63,5 +63,15 @@ class OnlineTransferException extends PermatabankException
         $message = static::TranslateError($code);
 
         return new static($message, Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * Display error for unknown error
+     *
+     * @return OnlineTransferException
+     */
+    public static function unknownError()
+    {
+        return new static('Kesalahan tidak dikenali.', Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

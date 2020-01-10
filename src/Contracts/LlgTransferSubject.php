@@ -26,7 +26,7 @@ interface LlgTransferSubject
     public function llgTransferToAccount();
 
     /**
-     * Get llg transfer's to bank identifier
+     * Get llg transfer's to bank id
      *
      * @return string
      */
@@ -42,7 +42,7 @@ interface LlgTransferSubject
     /**
      * Get llg transfer's amount
      *
-     * @return int
+     * @return int|float|double
      */
     public function llgTransferAmount();
 

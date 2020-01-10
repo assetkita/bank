@@ -1,13 +1,13 @@
 <?php
 
-namespace Assetku\BankService\Transfer\OnlineTransfer;
+namespace Assetku\BankService\Transfer\Permatabank;
 
 class OnlineTransfer
 {
     /**
      * @var string
      */
-    protected $custRefId;
+    protected $customerReferenceId;
 
     /**
      * @var string
@@ -22,7 +22,7 @@ class OnlineTransfer
     /**
      * @var string
      */
-    protected $trxReffNo;
+    protected $transferReferenceNumber;
 
     /**
      * OnlineTransfer constructor.
@@ -33,27 +33,27 @@ class OnlineTransfer
     {
         $messageHeader = $onlineTransfer->OlXferAddRs->MsgRsHdr;
         
-        $this->custRefId =  $messageHeader->CustRefID;
+        $this->customerReferenceId =  $messageHeader->CustRefID;
         
         $this->statusCode = $messageHeader->StatusCode;
         
         $this->statusDesc = $messageHeader->StatusDesc ?? null;
 
-        $this->trxReffNo = $onlineTransfer->OlXferAddRs->TrxReffNo;
+        $this->transferReferenceNumber = $onlineTransfer->OlXferAddRs->TrxReffNo;
     }
 
     /**
-     * Get customer references identifier
+     * Get online transfer's customer references id
      * 
      * @return string
      */
-    public function getCustRefId()
+    public function getCustomerReferenceId()
     {
-        return $this->custRefId;
+        return $this->customerReferenceId;
     }
 
     /**
-     * Get status code
+     * Get online transfer's status code
      *
      * @return string
      */
@@ -63,22 +63,22 @@ class OnlineTransfer
     }
 
     /**
-     * Get status description
+     * Get online transfer's status description
      *
      * @return string|null
      */
-    public function getStatusDesc()
+    public function getStatusDescription()
     {
         return $this->statusDesc;
     }
 
     /**
-     * Get transfer reference number
+     * Get online transfer's transaction reference number
      *
      * @return string
      */
-    public function getTrxReffNo()
+    public function getTransactionReferenceNumber()
     {
-        return $this->trxReffNo;
+        return $this->transferReferenceNumber;
     }
 }

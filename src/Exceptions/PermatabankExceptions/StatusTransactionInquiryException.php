@@ -4,13 +4,13 @@ namespace Assetku\BankService\Exceptions\PermatabankExceptions;
 
 use Illuminate\Http\Response;
 
-class InquiryOverbookingException extends PermatabankException
+class StatusTransactionInquiryException extends PermatabankException
 {
     /**
-     * Catch error with status code 200 but invalid
+     * Display error for invalid
      *
      * @param  string  $code
-     * @return InquiryOverbookingException
+     * @return StatusTransactionInquiryException
      */
     public static function invalid($code)
     {
@@ -22,7 +22,7 @@ class InquiryOverbookingException extends PermatabankException
     /**
      * Display error for service unavailable
      *
-     * @return InquiryOverbookingException
+     * @return StatusTransactionInquiryException
      */
     public static function serviceUnavailable()
     {
@@ -32,7 +32,7 @@ class InquiryOverbookingException extends PermatabankException
     /**
      * Display error for internal server error
      *
-     * @return InquiryOverbookingException
+     * @return StatusTransactionInquiryException
      */
     public static function internalServerError()
     {
@@ -43,7 +43,7 @@ class InquiryOverbookingException extends PermatabankException
      * Display error for forbidden
      *
      * @param  string  $code
-     * @return InquiryOverbookingException
+     * @return StatusTransactionInquiryException
      */
     public static function forbidden($code)
     {
@@ -56,12 +56,22 @@ class InquiryOverbookingException extends PermatabankException
      * Display error for unauthorized
      *
      * @param  string  $code
-     * @return InquiryOverbookingException
+     * @return StatusTransactionInquiryException
      */
-    public static function unauthorize($code)
+    public static function unauthorized($code)
     {
         $message = static::TranslateError($code);
 
         return new static($message, Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * Display error for unknown error
+     *
+     * @return StatusTransactionInquiryException
+     */
+    public static function unknownError()
+    {
+        return new static('Kesalahan tidak dikenali.', Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

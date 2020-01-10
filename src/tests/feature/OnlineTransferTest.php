@@ -18,7 +18,7 @@ class OnlineTransferTest extends TestCase
         try {
             $onlineTransfer = \Bank::onlineTransfer($mock);
 
-            $this->assertTrue($onlineTransfer->getStatusCode() === '00' && $onlineTransfer->getStatusDesc() === 'Success'
+            $this->assertTrue($onlineTransfer->getStatusCode() === '00' && $onlineTransfer->getStatusDescription() === 'Success'
             );
         } catch (OnlineTransferException $e) {
             dd($e->getCode(), $e->getMessage());
@@ -37,7 +37,7 @@ class OnlineTransferTest extends TestCase
         try {
             $onlineTransfer = \Bank::onlineTransfer($mock);
 
-            $this->assertTrue($onlineTransfer->getStatusCode() === '02' && $onlineTransfer->getStatusDesc() === 'Invalid Account');
+            $this->assertTrue($onlineTransfer->getStatusCode() === '02' && $onlineTransfer->getStatusDescription() === 'Invalid Account');
         } catch (OnlineTransferException $e) {
             dd($e->getCode(), $e->getMessage());
         } catch (GuzzleException $e) {
@@ -55,7 +55,7 @@ class OnlineTransferTest extends TestCase
         try {
             $onlineTransfer = \Bank::onlineTransfer($mock);
 
-            $this->assertTrue($onlineTransfer->getStatusCode() === '51' && $onlineTransfer->getStatusDesc() === 'Insufficient Fund ( from debited account )');
+            $this->assertTrue($onlineTransfer->getStatusCode() === '51' && $onlineTransfer->getStatusDescription() === 'Insufficient Fund ( from debited account )');
         } catch (OnlineTransferException $e) {
             dd($e->getCode(), $e->getMessage());
         } catch (GuzzleException $e) {

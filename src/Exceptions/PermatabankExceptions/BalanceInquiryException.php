@@ -4,13 +4,13 @@ namespace Assetku\BankService\Exceptions\PermatabankExceptions;
 
 use Illuminate\Http\Response;
 
-class LlgTransferException extends PermatabankException
+class BalanceInquiryException extends PermatabankException
 {
     /**
      * Display error for invalid
      *
      * @param  string  $code
-     * @return LlgTransferException
+     * @return BalanceInquiryException
      */
     public static function invalid($code)
     {
@@ -22,7 +22,7 @@ class LlgTransferException extends PermatabankException
     /**
      * Display error for service unavailable
      *
-     * @return LlgTransferException
+     * @return BalanceInquiryException
      */
     public static function serviceUnavailable()
     {
@@ -32,7 +32,7 @@ class LlgTransferException extends PermatabankException
     /**
      * Display error for internal server error
      *
-     * @return LlgTransferException
+     * @return BalanceInquiryException
      */
     public static function internalServerError()
     {
@@ -43,7 +43,7 @@ class LlgTransferException extends PermatabankException
      * Display error for forbidden
      *
      * @param  string  $code
-     * @return LlgTransferException
+     * @return BalanceInquiryException
      */
     public static function forbidden($code)
     {
@@ -56,7 +56,7 @@ class LlgTransferException extends PermatabankException
      * Display error for unauthorized
      *
      * @param  string  $code
-     * @return LlgTransferException
+     * @return BalanceInquiryException
      */
     public static function unauthorized($code)
     {
@@ -68,7 +68,7 @@ class LlgTransferException extends PermatabankException
     /**
      * Display error for unknown error
      *
-     * @return LlgTransferException
+     * @return BalanceInquiryException
      */
     public static function unknownError()
     {

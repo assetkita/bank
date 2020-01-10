@@ -2,57 +2,63 @@
 
 namespace Assetku\BankService\Services\Permatabank;
 
-use Assetku\BankService\BalanceInquiry\BalanceInquiry;
 use Assetku\BankService\Contracts\BalanceInquirySubject;
-use Assetku\BankService\Contracts\BankContract;
 use Assetku\BankService\Contracts\LlgTransferSubject;
+use Assetku\BankService\Contracts\OnlineTransferInquirySubject;
 use Assetku\BankService\Contracts\OnlineTransferSubject;
-use Assetku\BankService\Exceptions\PermatabankExceptions\InquiryOverbookingException;
+use Assetku\BankService\Contracts\OverbookingInquirySubject;
+use Assetku\BankService\Contracts\OverbookingSubject;
+use Assetku\BankService\Contracts\StatusTransactionInquirySubject;
+use Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OAuthException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
+use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingException;
+use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingInquiryException;
+use Assetku\BankService\Exceptions\PermatabankExceptions\StatusTransactionInquiryException;
+use Assetku\BankService\Inquiry\Permatabank\Disbursement\BalanceInquiry;
+use Assetku\BankService\Inquiry\Permatabank\Disbursement\OnlineTransferInquiry;
+use Assetku\BankService\Inquiry\Permatabank\Disbursement\OverbookingInquiry;
+use Assetku\BankService\Inquiry\Permatabank\Disbursement\StatusTransactionInquiry;
 use Assetku\BankService\Investa\Permatabank\AccountValidation\InquiryAccountValidation;
 use Assetku\BankService\Investa\Permatabank\CheckRegistrationStatus\CheckRegistrationStatus;
 use Assetku\BankService\Investa\Permatabank\Document\Document;
 use Assetku\BankService\Investa\Permatabank\Registration;
 use Assetku\BankService\Investa\Permatabank\RiskRating\InquiryRiskRating;
 use Assetku\BankService\Investa\Permatabank\UpdateKycStatus\UpdateKycStatus;
-use Assetku\BankService\Overbooking\InquiryOverbooking;
-use Assetku\BankService\Overbooking\Overbooking;
+use Assetku\BankService\Services\BankProvider;
 use Assetku\BankService\Services\HttpClient;
-use Assetku\BankService\Transaction\InquiryStatusTransaction;
-use Assetku\BankService\Transfer\LlgTransfer\LlgTransfer;
-use Assetku\BankService\Transfer\OnlineTransfer\OnlineTransfer;
-use Assetku\BankService\Transfer\OnlineTransfer\OnlineTransferInquiry;
+use Assetku\BankService\Transfer\Permatabank\LlgTransfer;
+use Assetku\BankService\Transfer\Permatabank\OnlineTransfer;
+use Assetku\BankService\Transfer\Permatabank\Overbooking;
 use Assetku\BankService\utils\TrimWhitespace;
-use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
-class Permatabank implements BankContract
+class Permatabank implements BankProvider
 {
     /**
      * permata bank api key
      *
      * @var string
      */
-    private $apiKey;
+    protected $apiKey;
 
     /**
      * client id
      *
      * @var string
      */
-    private $clientId;
+    protected $clientId;
 
     /**
      * client secret
      *
      * @var string
      */
-    private $clientSecret;
+    protected $clientSecret;
 
     /**
      * permata bank timestamps
@@ -66,7 +72,7 @@ class Permatabank implements BankContract
      *
      * @var string
      */
-    private $staticKey;
+    protected $staticKey;
 
     /**
      * API uri
@@ -76,23 +82,16 @@ class Permatabank implements BankContract
     protected $uri;
 
     /**
-     * access token
-     *
-     * @var string
-     */
-    private $accessToken;
-
-    /**
      * organization name
      *
      * @var string
      */
-    private $organizationName;
+    protected $organizationName;
 
     /**
      * @var string
      */
-    private $instcode;
+    protected $instcode;
 
     /**
      * @var HttpClient
@@ -103,6 +102,11 @@ class Permatabank implements BankContract
      * @var TrimWhitespace
      */
     protected $trim;
+
+    /**
+     * @var string
+     */
+    protected $accessToken;
 
     /**
      * Permatabank constructor.
@@ -140,135 +144,124 @@ class Permatabank implements BankContract
         }
     }
 
-
     /**
-     * Perform get token
-     *
-     * @return string
-     * @throws GuzzleException
-     * @throws OAuthException
+     * @inheritDoc
      */
-    public function getToken()
-    {
-        try {
-            // remember the access token in cache for 150 minutes (2.5 hours)
-            return Cache::remember('permatabank.access_token', 150, function () {
-                $message = "{$this->apiKey}:{$this->timestamp}:grant_type=client_credentials";
-
-                $headers = [
-                    'OAUTH-Signature' => $this->generateSignature($message, $this->staticKey),
-                    'OAUTH-Timestamp' => $this->timestamp,
-                    'API-Key'         => $this->apiKey,
-                    'Authorization'   => "Basic {$this->generateAuthorizationKey($this->clientId, $this->clientSecret)}",
-                ];
-
-                $data = [
-                    'grant_type' => 'client_credentials',
-                ];
-
-                try {
-                    $response = $this->api->post('oauth/token', $data, $headers, HttpClient::FORM_PARAMS);
-
-                    $contents = json_decode($response->getBody()->getContents());
-
-                    // on success
-                    if ($response->getStatusCode() === Response::HTTP_OK) {
-                        return $contents->access_token;
-                    }
-
-                    // on unauthorized
-                    if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
-                        throw OAuthException::forbidden($contents->ErrorDescription);
-                    }
-
-                    // on forbidden
-                    if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
-                        throw OAuthException::forbidden($contents->ErrorDescription);
-                    }
-
-                    // on internal server error
-                    if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
-                        throw OAuthException::internalServerError();
-                    }
-
-                    // on service unavailable
-                    if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
-                        throw OAuthException::serviceUnavailable();
-                    }
-                } catch (GuzzleException $e) {
-                    throw $e;
-                }
-            });
-        } catch (OAuthException $e) {
-            throw $e;
-        } catch (GuzzleException $e) {
-            throw $e;
-        }
-    }
-
-    /**
-     * overbooking request
-     *
-     * @param  array  $data
-     * @param  string  $custRefID
-     * @return GuzzleHttp\Psr7\Response
-     */
-    public function overbooking(array $data, string $custRefID)
+    public function statusTransactionInquiry(StatusTransactionInquirySubject $subject)
     {
         $data = [
-            'XferAddRq' => [
-                'MsgRqHdr' => [
-                    'RequestTimestamp' => $this->timestamp,
-                    'CustRefID'        => $custRefID
-                ],
-                'XferInfo' => $data
-            ]
+            'StatusTransactionRq' => [
+                'CorpID'    => $this->organizationName,
+                'CustRefID' => $subject->statusTransactionInquiryCustomerReferenceId(),
+            ],
         ];
 
         try {
-            $response = $this->api->post('BankingServices/FundsTransfer/add', $data, $this->header($data));
+            $response = $this->api->post('InquiryServices/StatusTransaction/Service/inq', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
             // on success
-            if ($response->getStatusCode() === 200) {
-                return new Overbooking($contents);
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                return new StatusTransactionInquiry($contents);
+            }
+
+            // on unauthorized
+            if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                throw StatusTransactionInquiryException::unauthorized($contents->ErrorDescription);
             }
 
             // on forbidden
-            if ($response->getStatusCode() === 403) {
-                throw OverbookingException::forbidden($contents->ErrorDescription);
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                throw StatusTransactionInquiryException::forbidden($contents->ErrorDescription);
             }
 
-            // on unauthorized request
-            if ($response->getStatusCode() === 401) {
-                throw OverbookingException::unauthorize($contents->ErrorDescription);
+            // on internal server error
+            if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                throw StatusTransactionInquiryException::internalServerError();
             }
 
+            // on service unavailable
+            if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                throw StatusTransactionInquiryException::serviceUnavailable();
+            }
+
+            // on unknown error
+            throw StatusTransactionInquiryException::unknownError();
         } catch (GuzzleException $e) {
             throw $e;
         }
     }
 
     /**
-     * Inquiry overbooking request
-     *
-     * @param  string  $custRefID
-     * @param  string  $accountNumber
-     * @return GuzzleHttp\Psr7\Response
+     * @inheritDoc
      */
-    public function inquiryOverbooking(string $accountNumber, string $custRefID)
+    public function balanceInquiry(BalanceInquirySubject $subject)
+    {
+        $data = [
+            'BalInqRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timestamp,
+                    'CustRefID'        => random_alphanumeric(),
+                ],
+                'InqInfo'  => [
+                    'AccountNumber' => $subject->balanceInquiryAccountNumber(),
+                ],
+            ],
+        ];
+
+        try {
+            $response = $this->api->post('InquiryServices/BalanceInfo/inq', $data, $this->header($data));
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            // on success
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                return new BalanceInquiry($contents);
+            }
+
+            // on unauthorized
+            if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                throw BalanceInquiryException::unauthorized($contents->ErrorDescription);
+            }
+
+            // on forbidden
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                throw BalanceInquiryException::forbidden($contents->ErrorDescription);
+            }
+
+            // on internal server error
+            if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                throw BalanceInquiryException::internalServerError();
+            }
+
+            // on service unavailable
+            if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                throw BalanceInquiryException::serviceUnavailable();
+            }
+
+            // on unknown error
+            throw BalanceInquiryException::unknownError();
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function overbookingInquiry(OverbookingInquirySubject $subject)
     {
         $data = [
             'AcctInqRq' => [
                 'MsgRqHdr' => [
                     'RequestTimestamp' => $this->timestamp,
-                    'CustRefID'        => $custRefID
+                    'CustRefID'        => random_alphanumeric(),
                 ],
                 'InqInfo'  => [
-                    'AccountNumber' => $accountNumber
-                ]
-            ]
+                    'AccountNumber' => $subject->overbookingInquiryAccountNumber(),
+                ],
+            ],
         ];
 
         try {
@@ -277,41 +270,57 @@ class Permatabank implements BankContract
             $contents = json_decode($response->getBody()->getContents());
 
             // on success
-            if ($response->getStatusCode() === 200) {
-                return new InquiryOverbooking($contents);
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                return new OverbookingInquiry($contents);
+            }
+
+            // on unauthorized
+            if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                throw OverbookingInquiryException::unauthorized($contents->ErrorDescription);
             }
 
             // on forbidden
-            if ($response->getStatusCode() === 403) {
-                throw InquiryOverbookingException::forbidden($contents->ErrorCode);
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                throw OverbookingInquiryException::forbidden($contents->ErrorDescription);
             }
 
-            // on unauthorized request
-            if ($response->getStatusCode() === 401) {
-                throw InquiryOverbookingException::unauthorize($contents->ErrorCode);
+            // on internal server error
+            if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                throw OverbookingInquiryException::internalServerError();
             }
+
+            // on service unavailable
+            if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                throw OverbookingInquiryException::serviceUnavailable();
+            }
+
+            // on unknown error
+            throw OverbookingInquiryException::unknownError();
         } catch (GuzzleException $e) {
             throw $e;
         }
     }
 
     /**
-     * Inquiry Online Transfer Request
-     *
-     * @param  array  $data
-     * @param  string  $custRefID
-     * @return mixed
+     * @inheritDoc
      */
-    public function onlineTransferInquiry(array $data, string $custRefID)
+    public function onlineTransferInquiry(OnlineTransferInquirySubject $subject)
     {
         $data = [
             'OlXferInqRq' => [
                 'MsgRqHdr' => [
                     'RequestTimestamp' => $this->timestamp,
-                    'CustRefID'        => $custRefID
+                    'CustRefID'        => random_alphanumeric(),
                 ],
-                'XferInfo' => $data
-            ]
+                'XferInfo' => $this->trim
+                    ->setToBeTrimmed('BankName')
+                    ->setData([
+                        'ToAccount' => $subject->onlineTransferInquiryToAccount(),
+                        'BankId'    => $subject->onlineTransferInquiryBankId(),
+                        'BankName'  => $subject->onlineTransferInquiryBankName(),
+                    ])
+                    ->handle(),
+            ],
         ];
 
         try {
@@ -320,74 +329,146 @@ class Permatabank implements BankContract
             $contents = json_decode($response->getBody()->getContents());
 
             // on success
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new OnlineTransferInquiry($contents);
             }
 
-            // on forbidden
-            if ($response->getStatusCode() === 403) {
-                throw InquiryOnlineTransferExceptions::forbidden($contents->ErrorDescription);
+            // on unauthorized
+            if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                throw OnlineTransferInquiryException::unauthorized($contents->ErrorDescription);
             }
 
-            // on unauthorized request
-            if ($response->getStatusCode() === 401) {
-                throw InquiryOnlineTransferExceptions::unauthorize($contents->ErrorDescription);
+            // on forbidden
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                throw OnlineTransferInquiryException::forbidden($contents->ErrorDescription);
             }
+
+            // on internal server error
+            if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                throw OnlineTransferInquiryException::internalServerError();
+            }
+
+            // on service unavailable
+            if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                throw OnlineTransferInquiryException::serviceUnavailable();
+            }
+
+            // on unknown error
+            throw OnlineTransferInquiryException::unknownError();
         } catch (GuzzleException $e) {
             throw $e;
         }
     }
 
     /**
-     * Online Transfer Request
-     *
-     * @param  OnlineTransferSubject  $subject
-     * @return OnlineTransfer
-     * @throws GuzzleException
-     * @throws OnlineTransferException
-     * @throws Exception
+     * @inheritDoc
+     */
+    public function overbooking(OverbookingSubject $subject)
+    {
+        $data = [
+            'XferAddRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timestamp,
+                    'CustRefID'        => random_alphanumeric(),
+                ],
+                'XferInfo' => $this->trim
+                    ->setToBeTrimmed([
+                        'FromAcctName',
+                        'BenefAcctName',
+                        'BenefEmail',
+                        'BenefPhoneNo',
+                    ])
+                    ->setData([
+                        'FromAccount'   => $subject->overbookingFromAccount(),
+                        'FromAcctName'  => $subject->overbookingFromAccountName(),
+                        'ToAccount'     => $subject->overbookingToAccount(),
+                        'Amount'        => $subject->overbookingAmount(),
+                        'BenefAcctName' => $subject->overbookingFromAccountName(),
+                        'BenefEmail'    => $subject->overbookingBeneficiaryEmail(),
+                        'BenefPhoneNo'  => $subject->overbookingBeneficiaryPhoneNumber(),
+                        'CurrencyCode'  => 'IDR',
+                        'ChargeTo'      => '0',
+                    ])
+                    ->handle(),
+            ],
+        ];
+
+        try {
+            $response = $this->api->post('BankingServices/FundsTransfer/add', $data, $this->header($data));
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            // on ok
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                return new Overbooking($contents);
+            }
+
+            // on unauthorized
+            if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                throw OverbookingException::unauthorized($contents->ErrorDescription);
+            }
+
+            // on forbidden
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                throw OverbookingException::forbidden($contents->ErrorDescription);
+            }
+
+            // on internal server error
+            if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                throw OverbookingException::internalServerError();
+            }
+
+            // on service unavailable
+            if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                throw OverbookingException::serviceUnavailable();
+            }
+
+            throw OverbookingException::unknownError();
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * @inheritDoc
      */
     public function onlineTransfer(OnlineTransferSubject $subject)
     {
-        try {
-            $data = [
-                'OlXferAddRq' => [
-                    'MsgRqHdr' => [
-                        'RequestTimestamp' => $this->timestamp,
-                        'CustRefID'        => random_alphanumeric(),
-                    ],
-                    'XferInfo' => $this->trim
-                        ->setToBeTrimmed([
-                            'FromAcctName',
-                            'BenefAcctName',
-                            'BenefEmail',
-                            'BenefPhoneNo',
-                        ])
-                        ->setData([
-                            'FromAccount'   => $subject->onlineTransferFromAccount(),
-                            'FromAcctName'  => $subject->onlineTransferFromAccountName(),
-                            'ToBankId'      => $subject->onlineTransferToBankIdentifier(),
-                            'ToAccount'     => $subject->onlineTransferToAccount(),
-                            'ToBankName'    => $subject->onlineTransferToBankName(),
-                            'Amount'        => $subject->onlineTransferAmount(),
-                            'BenefAcctName' => $subject->onlineTransferBeneficiaryAccountName(),
-                            'BenefEmail'    => $subject->onlineTransferBeneficiaryEmail(),
-                            'BenefPhoneNo'  => $subject->onlineTransferBeneficiaryPhoneNumber(),
-                            'ChargeTo'      => '0',
-                        ])
-                        ->handle(),
-                ]
-            ];
-        } catch (Exception $e) {
-            throw $e;
-        }
+        $data = [
+            'OlXferAddRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timestamp,
+                    'CustRefID'        => random_alphanumeric(),
+                ],
+                'XferInfo' => $this->trim
+                    ->setToBeTrimmed([
+                        'FromAcctName',
+                        'BenefAcctName',
+                        'BenefEmail',
+                        'BenefPhoneNo',
+                    ])
+                    ->setData([
+                        'FromAccount'   => $subject->onlineTransferFromAccount(),
+                        'FromAcctName'  => $subject->onlineTransferFromAccountName(),
+                        'ToBankId'      => $subject->onlineTransferToBankIdentifier(),
+                        'ToAccount'     => $subject->onlineTransferToAccount(),
+                        'ToBankName'    => $subject->onlineTransferToBankName(),
+                        'Amount'        => $subject->onlineTransferAmount(),
+                        'BenefAcctName' => $subject->onlineTransferBeneficiaryAccountName(),
+                        'BenefEmail'    => $subject->onlineTransferBeneficiaryEmail(),
+                        'BenefPhoneNo'  => $subject->onlineTransferBeneficiaryPhoneNumber(),
+                        'ChargeTo'      => '0',
+                    ])
+                    ->handle(),
+            ]
+        ];
 
         try {
             $response = $this->api->post('BankingServices/InterBankTransfer/add', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
-            // on success
+            // on ok
             if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new OnlineTransfer($contents);
             }
@@ -397,7 +478,7 @@ class Permatabank implements BankContract
                 throw OnlineTransferException::unauthorized($contents->ErrorDescription);
             }
 
-            // on signature not valid
+            // on forbidden
             if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
                 throw OnlineTransferException::forbidden($contents->ErrorDescription);
             }
@@ -411,18 +492,15 @@ class Permatabank implements BankContract
             if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
                 throw OnlineTransferException::serviceUnavailable();
             }
+
+            throw OnlineTransferException::unknownError();
         } catch (GuzzleException $e) {
             throw $e;
         }
     }
 
     /**
-     * LLG Transfer Request
-     *
-     * @param  LlgTransferSubject  $subject
-     * @return LlgTransfer
-     * @throws GuzzleException
-     * @throws LlgTransferException
+     * @inheritDoc
      */
     public function llgTransfer(LlgTransferSubject $subject)
     {
@@ -475,7 +553,7 @@ class Permatabank implements BankContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            // on success
+            // on ok
             if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new LlgTransfer($contents);
             }
@@ -485,7 +563,7 @@ class Permatabank implements BankContract
                 throw LlgTransferException::unauthorized($contents->ErrorDescription);
             }
 
-            // on signature not valid
+            // on forbidden
             if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
                 throw LlgTransferException::forbidden($contents->ErrorDescription);
             }
@@ -499,34 +577,8 @@ class Permatabank implements BankContract
             if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
                 throw LlgTransferException::serviceUnavailable();
             }
-        } catch (GuzzleException $e) {
-            throw $e;
-        }
-    }
 
-    public function balanceInquiry(BalanceInquirySubject $subject)
-    {
-        $data = [
-            'BalInqRq' => [
-                'MsgRqHdr' => [
-                    'RequestTimestamp' => $this->timestamp,
-                    'CustRefID'        => random_alphanumeric(),
-                ],
-                'InqInfo'  => [
-                    'AccountNumber' => $subject->accountNumber()
-                ]
-            ]
-        ];
-
-        try {
-            $response = $this->api->post('InquiryServices/BalanceInfo/inq', $data, $this->header($data));
-
-            $contents = json_decode($response->getBody()->getContents());
-
-            // on success
-            if ($response->getStatusCode() === 200) {
-                return new BalanceInquiry($contents);
-            }
+            throw LlgTransferException::unknownError();
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -556,7 +608,7 @@ class Permatabank implements BankContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new Registration($contents);
             }
         } catch (GuzzleException $e) {
@@ -588,7 +640,7 @@ class Permatabank implements BankContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new Document($contents);
             }
         } catch (GuzzleException $e) {
@@ -622,7 +674,7 @@ class Permatabank implements BankContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new CheckRegistrationStatus($contents);
             }
         } catch (GuzzleException $e) {
@@ -648,7 +700,7 @@ class Permatabank implements BankContract
             $contents = json_decode($response->getBody()->getContents());
 
             // if status code 200 or success
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new InquiryRiskRating($contents);
             }
         } catch (GuzzleException $e) {
@@ -673,7 +725,7 @@ class Permatabank implements BankContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new InquiryAccountValidation($contents);
             }
         } catch (GuzzleException $e) {
@@ -699,7 +751,7 @@ class Permatabank implements BankContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new updateKycStatus($contents);
             }
         } catch (GuzzleException $e) {
@@ -708,41 +760,68 @@ class Permatabank implements BankContract
     }
 
     /**
-     * Inquiry status transaction
+     * Get permata bank access token
      *
-     * @param  array  $data
-     * @param  string  $custRefID
-     * @return mixed
+     * @return string
+     * @throws GuzzleException
+     * @throws OAuthException
      */
-    public function inquiryStatusTransaction(string $custRefID)
+    protected function getToken()
     {
-        $data = [
-            'StatusTransactionRq' => [
-                'CorpID'    => $this->organizationName,
-                'CustRefID' => $custRefID
-            ]
-        ];
-
         try {
-            $response = $this->api->post('InquiryServices/StatusTransaction/Service/inq', $data, $this->header($data));
+            // remember the access token in cache for 150 minutes (2.5 hours)
+            return Cache::remember('permatabank.access_token', 150, function () {
+                $message = "{$this->apiKey}:{$this->timestamp}:grant_type=client_credentials";
 
-            $contents = json_decode($response->getBody()->getContents());
+                $headers = [
+                    'OAUTH-Signature' => $this->generateSignature($message, $this->staticKey),
+                    'OAUTH-Timestamp' => $this->timestamp,
+                    'API-Key'         => $this->apiKey,
+                    'Authorization'   => "Basic {$this->generateAuthorizationKey($this->clientId, $this->clientSecret)}",
+                ];
 
-            // on success
-            if ($response->getStatusCode() === 200) {
-                return new InquiryStatusTransaction($contents);
-            }
+                $data = [
+                    'grant_type' => 'client_credentials',
+                ];
 
-            // on forbidden
-            if ($response->getStatusCode() === 403) {
-                throw InquiryStatusTransactionExceptions::forbidden($contents->ErrorDescription);
-            }
+                try {
+                    $response = $this->api->post('oauth/token', $data, $headers, HttpClient::FORM_PARAMS);
 
-            // on unauthorized request
-            if ($response->getStatusCode() === 401) {
-                throw InquiryStatusTransactionExceptions::unauthorize($contents->ErrorDescription);
-            }
+                    $contents = json_decode($response->getBody()->getContents());
 
+                    // on success
+                    if ($response->getStatusCode() === Response::HTTP_OK) {
+                        return $contents->access_token;
+                    }
+
+                    // on unauthorized
+                    if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                        throw OAuthException::forbidden($contents->ErrorDescription);
+                    }
+
+                    // on forbidden
+                    if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                        throw OAuthException::forbidden($contents->ErrorDescription);
+                    }
+
+                    // on internal server error
+                    if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                        throw OAuthException::internalServerError();
+                    }
+
+                    // on service unavailable
+                    if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                        throw OAuthException::serviceUnavailable();
+                    }
+
+                    // on unknown error
+                    throw OAuthException::unknownError();
+                } catch (GuzzleException $e) {
+                    throw $e;
+                }
+            });
+        } catch (OAuthException $e) {
+            throw $e;
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -759,7 +838,7 @@ class Permatabank implements BankContract
     }
 
     /**
-     * generate and encode the authorization key
+     * Generate authorization key
      *
      * @param  string  $clientId
      * @param  string  $clientSecret
@@ -767,7 +846,7 @@ class Permatabank implements BankContract
      */
     protected function generateAuthorizationKey(string $clientId, string $clientSecret)
     {
-        return base64_encode("$clientId:$clientSecret");
+        return base64_encode("{$clientId}:{$clientSecret}");
     }
 
     /**
@@ -780,7 +859,7 @@ class Permatabank implements BankContract
     {
         return $this->api = new HttpClient([
             'base_uri' => $this->uri,
-            'headers'  => $headers
+            'headers'  => $headers,
         ]);
     }
 
@@ -790,7 +869,7 @@ class Permatabank implements BankContract
      * @param  array  $data
      * @return array
      */
-    protected function header(array $data): array
+    protected function header(array $data)
     {
         $payload = json_encode($data, JSON_UNESCAPED_SLASHES);
 
@@ -813,8 +892,6 @@ class Permatabank implements BankContract
      */
     protected function generateSignature($message, string $staticKey)
     {
-        $hash = hash_hmac('sha256', $message, $staticKey, true);
-
-        return base64_encode($hash);
+        return base64_encode(hash_hmac('sha256', $message, $staticKey, true));
     }
 }

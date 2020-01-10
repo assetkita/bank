@@ -1,33 +1,33 @@
 <?php 
 
-namespace Assetku\BankService\Overbooking;
+namespace Assetku\BankService\Transfer\Permatabank;
 
 class Overbooking
 {
     /**
-     * @var string $custRefId
+     * @var string
      */
     protected $custRefId;
 
     /**
-     * @var string $statusCode
+     * @var string
      */
     protected $statusCode;
 
     /**
-     * @var string $statusDesc
+     * @var string|null
      */
     protected $statusDesc;
 
     /**
-     * @var string $trxReffNo
+     * @var string
      */
     protected $trxReffNo;
 
     /**
-     * init
-     * 
-     * @param object $overbooking
+     * Overbooking constructor.
+     *
+     * @param $overbooking
      */
     public function __construct($overbooking)
     {
@@ -37,26 +37,26 @@ class Overbooking
         
         $this->statusCode = $messageHeader->StatusCode;
         
-        $this->statusDesc = $messageHeader->StatusDesc;
+        $this->statusDesc = $messageHeader->StatusDesc ?? null;
 
         $this->trxReffNo = $overbooking->XferAddRs->TrxReffNo;
 
     }
 
     /**
-     * Get customer refferences id
+     * Get overbooking's customer reference id
      * 
-     * @return string $custRefId
+     * @return string
      */
-    public function getCustRefId()
+    public function getCustomerReferenceId()
     {
         return $this->custRefId;
     }
 
     /**
-     * Get status code
+     * Get overbooking's status code
      * 
-     * @return $statusCode
+     * @return string
      */
     public function getStatusCode()
     {
@@ -64,21 +64,21 @@ class Overbooking
     }
 
     /**
-     * Get status description
+     * Get overbooking's status description
      * 
-     * @return $statusDesc
+     * @return string
      */
-    public function getStatusDesc()
+    public function getStatusDescription()
     {
         return $this->statusDesc;
     }
 
     /**
-     * Get transfer reff number
+     * Get overbooking's transaction reference number
      * 
-     * @return $trxReffNo
+     * @return string
      */
-    public function getTrxReffNo()
+    public function getTransactionReferenceNumber()
     {
         return $this->trxReffNo;
     }

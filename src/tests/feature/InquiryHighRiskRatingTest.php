@@ -22,7 +22,7 @@ class InquiryHighRiskRatingTest extends TestCase
 
             $this->assertTrue(
                 $inquiryRiskRating->getStatusCode() === '00',
-                $inquiryRiskRating->getStatusDesc() === 'Success',
+                $inquiryRiskRating->getStatusDescription() === 'Success',
                 $inquiryRiskRating->getRiskStatus() === '2',
                 $inquiryRiskRating->getRiskStatusDesc() === 'High Risk'
             );

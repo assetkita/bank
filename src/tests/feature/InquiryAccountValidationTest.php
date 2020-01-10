@@ -23,7 +23,7 @@ class InquiryAccountValidationTest extends TestCase
             $inquiryAccountValidation = \Bank::inquiryAccountValidation($data, $custRefId);
             $this->assertTrue(
                 $inquiryAccountValidation->getStatusCode() === '00',
-                $inquiryAccountValidation->getStatusDesc() === 'Success',
+                $inquiryAccountValidation->getStatusDescription() === 'Success',
                 $inquiryAccountValidation->getValidationStatus() === '2'
             );
         } catch (GuzzleException $e) {

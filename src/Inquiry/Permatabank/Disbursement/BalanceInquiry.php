@@ -1,13 +1,13 @@
 <?php
 
-namespace Assetku\BankService\BalanceInquiry;
+namespace Assetku\BankService\Inquiry\Permatabank\Disbursement;
 
 class BalanceInquiry
 {
     /**
      * @var string
      */
-    protected $custRefId;
+    protected $customerReferenceId;
 
     /**
      * @var string
@@ -15,9 +15,9 @@ class BalanceInquiry
     protected $statusCode;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $statusDesc;
+    protected $statusDescription;
 
     /**
      * @var string
@@ -40,9 +40,9 @@ class BalanceInquiry
     protected $balanceType;
 
     /**
-     * init
-     * 
-     * @param object $balanceInquiryResponse
+     * BalanceInquiry constructor.
+     *
+     * @param $balanceInquiryResponse
      */
     public function __construct($balanceInquiryResponse)
     {
@@ -50,30 +50,34 @@ class BalanceInquiry
 
         $responseBody = $balanceInquiryResponse->BalInqRs->InqInfo;
 
-        $this->custRefId = $messageHeader->CustRefID ?? null;
+        $this->customerReferenceId = $messageHeader->CustRefID;
 
-        $this->statusCode = $messageHeader->StatusCode ?? null;
+        $this->statusCode = $messageHeader->StatusCode;
         
-        $this->statusDesc = $messageHeader->statusDesc ?? null;
+        $this->statusDescription = $messageHeader->statusDesc ?? null;
 
-        $this->accountNumber = $responseBody->AccountNumber ?? null;
+        $this->accountNumber = $responseBody->AccountNumber;
 
-        $this->accountCurrency = $responseBody->AccountCurrency ?? null;
+        $this->accountCurrency = $responseBody->AccountCurrency;
 
-        $this->accountBalanceAmount = $responseBody->AccountBalanceAmount ?? null;
+        $this->accountBalanceAmount = $responseBody->AccountBalanceAmount;
 
-        $this->balanceType = $responseBody->BalanceType ?? null;
+        $this->balanceType = $responseBody->BalanceType;
     }
 
     /**
+     * Get balance inquiry's customer reference id
+     *
      * @return string
      */
-    public function getCustRefId()
+    public function getCustomerReferenceId()
     {
-        return $this->custRefId;
+        return $this->customerReferenceId;
     }
 
     /**
+     * Get balance inquiry's status code
+     *
      * @return string
      */
     public function getStatusCode()
@@ -82,14 +86,18 @@ class BalanceInquiry
     }
 
     /**
-     * @return string
+     * Get balance inquiry's status description
+     *
+     * @return string|null
      */
-    public function getStatusDesc()
+    public function getStatusDescription()
     {
-        return $this->statusDesc;
+        return $this->statusDescription;
     }
 
     /**
+     * Get balance inquiry's account number
+     *
      * @return string
      */
     public function getAccountNumber()
@@ -98,6 +106,8 @@ class BalanceInquiry
     }
 
     /**
+     * Get balance inquiry's account currency
+     *
      * @return string
      */
     public function getAccountCurrency()
@@ -106,6 +116,8 @@ class BalanceInquiry
     }
 
     /**
+     * Get balance inquiry's account balance amount
+     *
      * @return string
      */
     public function getAccountBalanceAmount()
@@ -114,6 +126,8 @@ class BalanceInquiry
     }
 
     /**
+     * Get balance inquiry's balance type
+     *
      * @return string
      */
     public function getBalanceType()

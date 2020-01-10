@@ -19,7 +19,7 @@ interface OnlineTransferSubject
     public function onlineTransferFromAccountName();
 
     /**
-     * Get online transfer's to bank identifier
+     * Get online transfer's to bank id
      *
      * @return string
      */
@@ -42,7 +42,7 @@ interface OnlineTransferSubject
     /**
      * Get online transfer's amount
      *
-     * @return int
+     * @return int|float|double
      */
     public function onlineTransferAmount();
 

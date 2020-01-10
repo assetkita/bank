@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 class OverbookingException extends PermatabankException
 {
     /**
-     * Catch error with status code 200 but invalid
+     * Display error for invalid
      *
      * @param  string  $code
      * @return OverbookingException
@@ -58,10 +58,20 @@ class OverbookingException extends PermatabankException
      * @param  string  $code
      * @return OverbookingException
      */
-    public static function unauthorize($code)
+    public static function unauthorized($code)
     {
         $message = static::TranslateError($code);
 
         return new static($message, Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * Display error for unknown error
+     *
+     * @return OverbookingException
+     */
+    public static function unknownError()
+    {
+        return new static('Kesalahan tidak dikenali.', Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

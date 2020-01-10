@@ -26,7 +26,7 @@ class SubmitDocumentTest extends TestCase
             $submitDocument = \Bank::submitDocument($payload, $cusRefId);
             $this->assertTrue(
                 $submitDocument->getStatusCode() === '00',
-                $submitDocument->getStatusDesc() === 'Success'
+                $submitDocument->getStatusDescription() === 'Success'
             );
         } catch (GuzzleException $e) {
             throw $e;

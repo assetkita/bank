@@ -45,7 +45,7 @@ class UpdateKycStatus
      * 
      * @return string
      */
-    public function getCustRefId()
+    public function getCustomerReferenceId()
     {
         return $this->custRefId;
     }
@@ -65,7 +65,7 @@ class UpdateKycStatus
      * 
      * @return string
      */
-    public function getStatusDesc()
+    public function getStatusDescription()
     {
         return $this->statusDesc;
     }

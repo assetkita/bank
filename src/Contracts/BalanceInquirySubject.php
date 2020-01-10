@@ -5,7 +5,9 @@ namespace Assetku\BankService\Contracts;
 interface BalanceInquirySubject
 {
     /**
+     * Get balance inquiry's account number
+     *
      * @return string
      */
-    public function accountNumber();   
+    public function balanceInquiryAccountNumber();
 }

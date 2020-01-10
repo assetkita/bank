@@ -46,9 +46,9 @@ class InvestaRegisterTest extends TestCase
             $submitFintech = \Bank::submitFintechAccount($application->toArray(), $custRefId);
 
             $this->assertTrue(
-                $submitFintech->getCustRefId() === $custRefId &&
+                $submitFintech->getCustomerReferenceId() === $custRefId &&
                 $submitFintech->getStatusCode() === '00' &&
-                $submitFintech->getStatusDesc() === 'Success'
+                $submitFintech->getStatusDescription() === 'Success'
             );
         } catch (GuzzleException $e) {
             throw $e;

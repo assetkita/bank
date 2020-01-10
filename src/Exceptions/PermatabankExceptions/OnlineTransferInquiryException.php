@@ -4,25 +4,12 @@ namespace Assetku\BankService\Exceptions\PermatabankExceptions;
 
 use Illuminate\Http\Response;
 
-class InquiryOnlineTransferException extends PermatabankException
+class OnlineTransferInquiryException extends PermatabankException
 {
-    /**
-     * Catch error with status code 200 but invalid
-     *
-     * @param  string  $code
-     * @return InquiryOnlineTransferException
-     */
-    public static function invalid($code)
-    {
-        $message = static::TranslateError($code);
-
-        return new static($message, $code);
-    }
-
     /**
      * Display error for service unavailable
      *
-     * @return InquiryOnlineTransferException
+     * @return OnlineTransferInquiryException
      */
     public static function serviceUnavailable()
     {
@@ -32,7 +19,7 @@ class InquiryOnlineTransferException extends PermatabankException
     /**
      * Display error for internal server error
      *
-     * @return InquiryOnlineTransferException
+     * @return OnlineTransferInquiryException
      */
     public static function internalServerError()
     {
@@ -43,7 +30,7 @@ class InquiryOnlineTransferException extends PermatabankException
      * Display error for forbidden
      *
      * @param  string  $code
-     * @return InquiryOnlineTransferException
+     * @return OnlineTransferInquiryException
      */
     public static function forbidden($code)
     {
@@ -56,12 +43,22 @@ class InquiryOnlineTransferException extends PermatabankException
      * Display error for unauthorized
      *
      * @param  string  $code
-     * @return InquiryOnlineTransferException
+     * @return OnlineTransferInquiryException
      */
-    public static function unauthorize($code)
+    public static function unauthorized($code)
     {
         $message = static::TranslateError($code);
 
         return new static($message, Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * Display error for unknown error
+     *
+     * @return OnlineTransferInquiryException
+     */
+    public static function unknownError()
+    {
+        return new static('Kesalahan tidak dikenali.', Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }
