@@ -73,119 +73,119 @@ class PermatabankException extends Exception implements BankExceptionContract
     {
         switch ($code) {
             case static::STATUS_REJECTED:
-                $message = 'Ditolak';
+                $message = 'Ditolak.';
                 break;
             
             case static::STATUS_IN_PROGRESS:
-                $message = 'Dalam Progress Transaction. menunggu status rekonsiliasi';
+                $message = 'Dalam Progress Transaction. menunggu status rekonsiliasi.';
                 break;
             
             case static::STATUS_DUPLICATE_CUST_REF_ID:
-                $message = 'CustReffId tidak boleh sama';
+                $message = 'CustReffId tidak boleh sama.';
                 break;
             
             case static::STATUS_DAILY_LIMIT_EXCEEDS:
-                $message = 'Batas Harian Melebihi';
+                $message = 'Batas Harian Melebihi.';
                 break;
 
             case static::STATUS_DISALLOWED_TRANSACTION:
-                $message = 'Transaksi tidak diperbolehkan';
+                $message = 'Transaksi tidak diperbolehkan.';
                 break;
             
             case static::STATUS_INVALID_TRX_TYPE:
-                $message = 'Jenis Transfer tidak valid';
+                $message = 'Jenis Transfer tidak valid.';
                 break;
             
             case static::STATUS_GENERIC_EXCEPTION:
-                $message = 'Generic Exception';
+                $message = 'Generic Exception.';
                 break;
             
             case static::STATUS_INVALID_AMOUNT:
-                $message = 'Jumlah Transfer tidak valid';
+                $message = 'Jumlah Transfer tidak valid.';
                 break;
             
             case static::STATUS_ACCOUNT_NOT_FOUND:
-                $message = 'akun tidak ditemukan';
+                $message = 'akun tidak ditemukan.';
                 break;
             
             case static::STATUS_DISALLOWED_TRANSACTION_TWO:
-                $message = 'Transaksi tidak diperbolehkan';
+                $message = 'Transaksi tidak diperbolehkan.';
                 break;
             
             case static::STATUS_AMOUNT_TRANSACTION_IS_UNDER_RTGS_LIMIT_AMOUNT:
-                $message = 'Jumlah Transaksi Di Bawah Jumlah Batas RTGS';
+                $message = 'Jumlah Transaksi Di Bawah Jumlah Batas RTGS.';
                 break;
             
             case static::STATUS_INVALID_TO_ACCOUNT:
-                $message = 'Akun tidak valid';
+                $message = 'Akun tidak valid.';
                 break;
             
             case static::STATUS_INVALID_FORMAT:
-                $message = 'Format tidak valid';
+                $message = 'Format tidak valid.';
                 break;
             
             case static::STATUS_INVALID_BANK_CODE:
-                $message = 'Kode bank tidak valid';
+                $message = 'Kode bank tidak valid.';
                 break;
             
             case static::STATUS_INSUFFICIENT_FUND:
-                $message = 'Dana tidak cukup';
+                $message = 'Dana tidak cukup.';
                 break;
 
             case static::STATUS_EXCEEDS_WITHDRAWL_AMOUNT_LIMIT:
-                $message = 'Jumlah penarikan dana terbatas';
+                $message = 'Jumlah penarikan dana terbatas.';
                 break;
             
             case static::STATUS_RESTRICTED_CARD: 
-                $message = 'kartu dilarang';
+                $message = 'kartu dilarang.';
                 break;
 
             case static::STATUS_SECURITY_VIOLATION:
-                $message = 'Pelanggaran keamanan';
+                $message = 'Pelanggaran keamanan.';
                 break;
 
             case static::STATUS_GENERIC_ERROR:
-                $message = 'Generic error';
+                $message = 'Generic error.';
                 break;
 
             case static::STATUS_TIMEOUT_BILL_PAYMENT:
-                $message = 'Billing timeout';
+                $message = 'Billing timeout.';
                 break;
 
             case static::STATUS_BILL_ALREADY_PAID:
-                $message = 'Billing telah dibayar';
+                $message = 'Billing telah dibayar.';
                 break;
 
             case static::STATUS_INVALID_BENEFICIARY_OR_CURRENCY:
-                $message = 'Penerimaan atau mata uang tidak valid';
+                $message = 'Penerimaan atau mata uang tidak valid.';
                 break;
 
             case static::STATUS_TRANSPORT_ERROR_TO_BACKEND:
-                $message = 'transportasi ke backend error';
+                $message = 'transportasi ke backend error.';
                 break;
 
             case static::STATUS_TRANSPORT_ERROR_TO_3RD_PARTY:
-                $message = 'transportasi ke 3rd party error';
+                $message = 'transportasi ke 3rd party error.';
                 break;
 
             case static::STATUS_TIMEOUT:
-                $message = 'Error timeout';
+                $message = 'Error timeout.';
                 break;
 
             case static::STATUS_PRIVATE_KEY_IS_NOT_FOUND:
-                $message = 'Private key salah atau tidak tersedia';
+                $message = 'Private key salah atau tidak tersedia.';
                 break;
 
             case static::STATUS_UNAUTHORIZED:
-                $message = 'Tidak memiliki hak akses';
+                $message = 'Tidak memiliki hak akses.';
                 break;
 
             case static::STATUS_SIGNATURE_NOT_VALID:
-                $message = 'Signature code tidak cocok';
+                $message = 'Signature code tidak cocok.';
                 break;
             
             default:
-                $message = 'Error tidak dikenali';
+                $message = 'Kesalahan tidak dikenali.';
                 break;
         }
 

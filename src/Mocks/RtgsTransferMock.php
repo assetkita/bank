@@ -35,7 +35,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function toBankName()
     {
-        return str_replace(' ', '', 'BNI');
+        return 'BNI';
     }
 
     /**
@@ -75,7 +75,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function benefBankAddress()
     {
-        return str_replace(' ', '', 'JALAN JEND SUDIRMAN');
+        return 'JALAN JEND SUDIRMAN';
     }
 
     /**
@@ -83,7 +83,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function benefBankBranchName()
     {
-        return str_replace(' ', '', 'SUDIRMAN');
+        return 'SUDIRMAN';
     }
 
     /**
@@ -115,7 +115,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function benefAddress1()
     {
-        return str_replace(' ', '', 'jl Berkah no.14');
+        return 'jl Berkah no.14';
     }
 
     /**
@@ -123,7 +123,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function benefAddress2()
     {
-        return str_replace(' ', '', 'jl Berkah no.14');
+        return 'jl Berkah no.14';
     }
 
     /**
@@ -131,6 +131,6 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function benefAddress3()
     {
-        return str_replace(' ', '', 'jl Berkah no.14');
+        return 'jl Berkah no.14';
     }
 }

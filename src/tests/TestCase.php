@@ -4,6 +4,7 @@ namespace Assetku\BankService\tests;
 
 use Assetku\BankService\Facades\Bank;
 use Faker\Factory;
+use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Assetku\BankService\Providers\BankServiceProvider;
 use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
@@ -16,7 +17,7 @@ abstract class TestCase extends OrchestraTestCase
     protected $faker;
 
     /**
-     * TestCase Contruct
+     * TestCase constructor.
      *
      * @param  null  $name
      * @param  array  $data
@@ -31,22 +32,22 @@ abstract class TestCase extends OrchestraTestCase
 
 
     /**
-     * get package service provider
+     * Get package service provider
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
     {
         return [
-            BankServiceProvider::class
+            BankServiceProvider::class,
         ];
     }
 
     /**
-     * get package alias
+     * Get package alias
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageAliases($app)
@@ -59,7 +60,7 @@ abstract class TestCase extends OrchestraTestCase
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
      * @return void
      */
     protected function getEnvironmentSetUp($app)
@@ -71,6 +72,7 @@ abstract class TestCase extends OrchestraTestCase
             ]);
 
         $app['config']->set('bankservice.default', env('BANK_SERVICES_DRIVER'));
+
         $app['config']->set('bankservice.services.permata', [
             'api_key'                   => env('PERMATABANK_API_KEY'),
             'client_id'                 => env('PERMATABANK_CLIENT_ID'),

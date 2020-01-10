@@ -1,6 +1,6 @@
 <?php
 
-namespace Assetku\BankService\tests;
+namespace Assetku\BankService\tests\Feature;
 
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -29,6 +29,8 @@ use Assetku\BankService\Investa\Permatabank\PersonalInfo\AdditionalCasaInfo;
 use Assetku\BankService\Investa\Permatabank\PersonalInfo\KycOption;
 
 use Assetku\BankService\Investa\Permatabank\PersonalInfo\PhoneInfo;
+
+use Assetku\BankService\tests\TestCase;
 
 class InvestaRegisterTest extends TestCase
 {

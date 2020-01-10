@@ -2,13 +2,15 @@
 
 namespace Assetku\BankService\Services\Permatabank;
 
-use App;
-use Assetku\BankService\Contracts\BankContract;
-use Assetku\BankService\Contracts\OnlineTransferSubject;
+use Assetku\BankService\BalanceInquiry\BalanceInquiry;
 use Assetku\BankService\Contracts\BalanceInquirySubject;
+use Assetku\BankService\Contracts\BankContract;
+use Assetku\BankService\Contracts\LlgTransferSubject;
+use Assetku\BankService\Contracts\OnlineTransferSubject;
 use Assetku\BankService\Contracts\RtgsTransferSubject;
 use Assetku\BankService\Exceptions\PermatabankExceptions\InquiryOverbookingException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
+use Assetku\BankService\Exceptions\PermatabankExceptions\OAuthException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingException;
 use Assetku\BankService\Investa\Permatabank\AccountValidation\InquiryAccountValidation;
@@ -22,13 +24,14 @@ use Assetku\BankService\Overbooking\Overbooking;
 use Assetku\BankService\Services\HttpClient;
 use Assetku\BankService\Transaction\InquiryStatusTransaction;
 use Assetku\BankService\Transfer\LlgTransfer\LlgTransfer;
-use Assetku\BankService\Transfer\OnlineTransfer\InquiryOnlineTransfer;
+use Assetku\BankService\Transfer\RtgsTransfer\RtgsTransfer;
 use Assetku\BankService\Transfer\OnlineTransfer\OnlineTransfer;
-use Assetku\BankService\utils\TrimWhiteSpace;
+use Assetku\BankService\Transfer\OnlineTransfer\OnlineTransferInquiry;
+use Assetku\BankService\utils\TrimWhitespace;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Response;
-use Assetku\BankService\BalanceInquiry\BalanceInquiry;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class Permatabank implements BankContract
 {
@@ -42,54 +45,54 @@ class Permatabank implements BankContract
     /**
      * client id
      *
-     * @var string $clientId
+     * @var string
      */
     private $clientId;
 
     /**
      * client secret
      *
-     * @var string $clienSecret
+     * @var string
      */
-    private $clienSecret;
+    private $clientSecret;
 
     /**
-     * Permatabank timestamps
+     * permata bank timestamps
      *
-     * @var string $timesTamp
+     * @var string
      */
-    protected $timesTamp;
+    protected $timestamp;
 
     /**
-     * Permatabank static key
+     * permata bank static key
      *
-     * @var string $staticKey
+     * @var string
      */
     private $staticKey;
 
     /**
      * API uri
      *
-     * @var string $uri
+     * @var string
      */
     protected $uri;
 
     /**
      * access token
      *
-     * @var string $access_token
+     * @var string
      */
-    private $accessToken = null;
+    private $accessToken;
 
     /**
      * organization name
      *
-     * @var string $organizationName
+     * @var string
      */
     private $organizationName;
 
     /**
-     * @var string $instcode
+     * @var string
      */
     private $instcode;
 
@@ -99,13 +102,19 @@ class Permatabank implements BankContract
     protected $api;
 
     /**
-     * @var $trim
+     * @var TrimWhitespace
      */
     protected $trim;
 
+    /**
+     * Permatabank constructor.
+     *
+     * @throws GuzzleException
+     * @throws OAuthException
+     */
     public function __construct()
     {
-        if (App::environment('production')) {
+        if (\App::environment('production')) {
             $this->uri = config('bankservice.services.permata.endpoint.production');
         } else {
             $this->uri = config('bankservice.services.permata.endpoint.development');
@@ -113,42 +122,87 @@ class Permatabank implements BankContract
 
         $this->initHttpClient();
 
-        $this->timesTamp = $this->generateTimesTamp();
+        $this->timestamp = $this->generateTimestamp();
 
         $this->clientId = config('bankservice.services.permata.client_id');
-        $this->clienSecret = config('bankservice.services.permata.client_secret');
+        $this->clientSecret = config('bankservice.services.permata.client_secret');
         $this->apiKey = config('bankservice.services.permata.api_key');
         $this->staticKey = config('bankservice.services.permata.permata_static_key');
         $this->organizationName = config('bankservice.services.permata.permata_organization_name');
         $this->instcode = config('bankservice.services.permata.instcode');
 
-        $this->trim = new TrimWhiteSpace;
+        $this->trim = new TrimWhitespace;
 
-        $this->accessToken = $this->getToken();
+        try {
+            $this->accessToken = $this->getToken();
+        } catch (OAuthException $e) {
+            throw $e;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
     }
 
+
     /**
-     * Oauth token request
+     * Perform get token
      *
-     * @return GuzzleHttp\Psr7\Response
+     * @return string
+     * @throws GuzzleException
+     * @throws OAuthException
      */
     public function getToken()
     {
-        $message = "{$this->apiKey}:{$this->timesTamp}:grant_type=client_credentials";
-
-        $headers = [
-            'OAUTH-Signature' => $this->generateSignature($message, $this->staticKey),
-            'OAUTH-Timestamp' => $this->timesTamp,
-            'API-Key'         => $this->apiKey,
-            'Authorization'   => 'Basic '.$this->generateAuthorizationKey($this->clientId, $this->clienSecret),
-        ];
-
-        $data = ['grant_type' => 'client_credentials'];
-
         try {
-            $response = $this->api->postToken('oauth/token', $data, $headers);
+            // remember the access token in cache for 150 minutes (2.5 hours)
+            return Cache::remember('permatabank.access_token', 150, function () {
+                $message = "{$this->apiKey}:{$this->timestamp}:grant_type=client_credentials";
 
-            return $this->parse($response)['access_token'];
+                $headers = [
+                    'OAUTH-Signature' => $this->generateSignature($message, $this->staticKey),
+                    'OAUTH-Timestamp' => $this->timestamp,
+                    'API-Key'         => $this->apiKey,
+                    'Authorization'   => "Basic {$this->generateAuthorizationKey($this->clientId, $this->clientSecret)}",
+                ];
+
+                $data = [
+                    'grant_type' => 'client_credentials',
+                ];
+
+                try {
+                    $response = $this->api->post('oauth/token', $data, $headers, HttpClient::FORM_PARAMS);
+
+                    $contents = json_decode($response->getBody()->getContents());
+
+                    // on success
+                    if ($response->getStatusCode() === Response::HTTP_OK) {
+                        return $contents->access_token;
+                    }
+
+                    // on unauthorized
+                    if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                        throw OAuthException::forbidden($contents->ErrorDescription);
+                    }
+
+                    // on forbidden
+                    if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                        throw OAuthException::forbidden($contents->ErrorDescription);
+                    }
+
+                    // on internal server error
+                    if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                        throw OAuthException::internalServerError();
+                    }
+
+                    // on service unavailable
+                    if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                        throw OAuthException::serviceUnavailable();
+                    }
+                } catch (GuzzleException $e) {
+                    throw $e;
+                }
+            });
+        } catch (OAuthException $e) {
+            throw $e;
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -163,29 +217,18 @@ class Permatabank implements BankContract
      */
     public function overbooking(array $data, string $custRefID)
     {
-        $payload = [
+        $data = [
             'XferAddRq' => [
                 'MsgRqHdr' => [
-                    'RequestTimestamp' => $this->timesTamp,
+                    'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $custRefID
                 ],
                 'XferInfo' => $data
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:$encodeData";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('BankingServices/FundsTransfer/add', $payload, $headers);
+            $response = $this->api->post('BankingServices/FundsTransfer/add', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
@@ -194,14 +237,14 @@ class Permatabank implements BankContract
                 return new Overbooking($contents);
             }
 
-            // on signature not valid error
+            // on forbidden
             if ($response->getStatusCode() === 403) {
-                throw OverbookingException::forbidden($contents->ErrorDescritpion);
+                throw OverbookingException::forbidden($contents->ErrorDescription);
             }
 
             // on unauthorized request
             if ($response->getStatusCode() === 401) {
-                throw OverbookingException::unauthorize($contents->ErrorDescritpion);
+                throw OverbookingException::unauthorize($contents->ErrorDescription);
             }
 
         } catch (GuzzleException $e) {
@@ -218,10 +261,10 @@ class Permatabank implements BankContract
      */
     public function inquiryOverbooking(string $accountNumber, string $custRefID)
     {
-        $payload = [
+        $data = [
             'AcctInqRq' => [
                 'MsgRqHdr' => [
-                    'RequestTimestamp' => $this->timesTamp,
+                    'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $custRefID
                 ],
                 'InqInfo'  => [
@@ -230,19 +273,8 @@ class Permatabank implements BankContract
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('InquiryServices/AccountInfo/inq', $payload, $headers);
+            $response = $this->api->post('InquiryServices/AccountInfo/inq', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
@@ -251,7 +283,7 @@ class Permatabank implements BankContract
                 return new InquiryOverbooking($contents);
             }
 
-            // on signature not valid error
+            // on forbidden
             if ($response->getStatusCode() === 403) {
                 throw InquiryOverbookingException::forbidden($contents->ErrorCode);
             }
@@ -274,45 +306,34 @@ class Permatabank implements BankContract
      */
     public function onlineTransferInquiry(array $data, string $custRefID)
     {
-        $payload = [
+        $data = [
             'OlXferInqRq' => [
                 'MsgRqHdr' => [
-                    'RequestTimestamp' => $this->timesTamp,
+                    'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $custRefID
                 ],
                 'XferInfo' => $data
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('InquiryServices/OnlineXferInfo/inq', $payload, $headers);
+            $response = $this->api->post('InquiryServices/OnlineXferInfo/inq', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
             // on success
             if ($response->getStatusCode() === 200) {
-                return new InquiryOnlineTransfer($contents);
+                return new OnlineTransferInquiry($contents);
             }
 
-            // on signature not valid error
+            // on forbidden
             if ($response->getStatusCode() === 403) {
-                throw InquiryOnlineTransferExceptions::forbidden($contents->ErrorDescritpion);
+                throw InquiryOnlineTransferExceptions::forbidden($contents->ErrorDescription);
             }
 
             // on unauthorized request
             if ($response->getStatusCode() === 401) {
-                throw InquiryOnlineTransferExceptions::unauthorize($contents->ErrorDescritpion);
+                throw InquiryOnlineTransferExceptions::unauthorize($contents->ErrorDescription);
             }
         } catch (GuzzleException $e) {
             throw $e;
@@ -331,61 +352,154 @@ class Permatabank implements BankContract
     public function onlineTransfer(OnlineTransferSubject $subject)
     {
         try {
-            $payload = [
+            $data = [
                 'OlXferAddRq' => [
                     'MsgRqHdr' => [
-                        'RequestTimestamp' => $this->timesTamp,
+                        'RequestTimestamp' => $this->timestamp,
                         'CustRefID'        => random_alphanumeric(),
                     ],
-                    'XferInfo' => [
-                        'FromAccount'   => $subject->onlineTransferFromAccount(),
-                        'FromAcctName'  => $subject->onlineTransferFromAccountName(),
-                        'ToBankId'      => $subject->onlineTransferToBankId(),
-                        'ToAccount'     => $subject->onlineTransferToAccount(),
-                        'ToBankName'    => $subject->onlineTransferToBankName(),
-                        'Amount'        => $subject->onlineTransferAmount(),
-                        'BenefEmail'    => $subject->onlineTransferBeneficiaryEmail(),
-                        'BenefAcctName' => $subject->onlineTransferBeneficiaryAccountName(),
-                        'BenefPhoneNo'  => $subject->onlineTransferBeneficiaryPhoneNumber(),
-                        'ChargeTo'      => '0',
-                        'DatiII'        => '',
-                        'TkiFlag'       => ''
-                    ],
+                    'XferInfo' => $this->trim
+                        ->setToBeTrimmed([
+                            'FromAcctName',
+                            'BenefAcctName',
+                            'BenefEmail',
+                            'BenefPhoneNo',
+                        ])
+                        ->setData([
+                            'FromAccount'   => $subject->onlineTransferFromAccount(),
+                            'FromAcctName'  => $subject->onlineTransferFromAccountName(),
+                            'ToBankId'      => $subject->onlineTransferToBankIdentifier(),
+                            'ToAccount'     => $subject->onlineTransferToAccount(),
+                            'ToBankName'    => $subject->onlineTransferToBankName(),
+                            'Amount'        => $subject->onlineTransferAmount(),
+                            'BenefAcctName' => $subject->onlineTransferBeneficiaryAccountName(),
+                            'BenefEmail'    => $subject->onlineTransferBeneficiaryEmail(),
+                            'BenefPhoneNo'  => $subject->onlineTransferBeneficiaryPhoneNumber(),
+                            'ChargeTo'      => '0',
+                        ])
+                        ->handle(),
                 ]
             ];
         } catch (Exception $e) {
             throw $e;
         }
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('BankingServices/InterBankTransfer/add', $payload, $headers);
+            $response = $this->api->post('BankingServices/InterBankTransfer/add', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
             // on success
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === Response::HTTP_OK) {
                 return new OnlineTransfer($contents);
             }
 
-            // on signature not valid error
-            if ($response->getStatusCode() === 403) {
-                throw OnlineTransferException::forbidden($contents->ErrorDescritpion);
+            // on unauthorized
+            if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                throw OnlineTransferException::unauthorized($contents->ErrorDescription);
             }
 
-            // on unauthorized request
-            if ($response->getStatusCode() === 401) {
-                throw OnlineTransferException::unauthorize($contents->ErrorDescritpion);
+            // on signature not valid
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                throw OnlineTransferException::forbidden($contents->ErrorDescription);
+            }
+
+            // on internal server error
+            if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                throw OnlineTransferException::internalServerError();
+            }
+
+            // on service unavailable
+            if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                throw OnlineTransferException::serviceUnavailable();
+            }
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * LLG Transfer Request
+     *
+     * @param  LlgTransferSubject  $subject
+     * @return LlgTransfer
+     * @throws GuzzleException
+     * @throws LlgTransferException
+     */
+    public function llgTransfer(LlgTransferSubject $subject)
+    {
+        $data = [
+            'LlgXferAddRq' => [
+                'MsgRqHdr' => [
+                    'RequestTimestamp' => $this->timestamp,
+                    'CustRefID'        => random_alphanumeric(),
+                ],
+                'XferInfo' => $this->trim
+                    ->setToBeTrimmed([
+                        'FromAcctName',
+                        'BenefEmail',
+                        'BenefAcctName',
+                        'BenefPhoneNo',
+                        'BenefBankAddress',
+                        'BenefBankBranchName',
+                        'BenefBankCity',
+                        'BenefAddress1',
+                        'BenefAddress2',
+                        'BenefAddress3',
+                    ])
+                    ->setData([
+                        'FromAccount'         => $subject->llgTransferFromAccount(),
+                        'FromAcctName'        => $subject->llgTransferFromAccountName(),
+                        'ToAccount'           => $subject->llgTransferToAccount(),
+                        'ToBankId'            => $subject->llgTransferToBankIdentifier(),
+                        'ToBankName'          => $subject->llgTransferToBankName(),
+                        'Amount'              => $subject->llgTransferAmount(),
+                        'CitizenStatus'       => '0',
+                        'ResidentStatus'      => '0',
+                        'BenefType'           => '1',
+                        'BenefEmail'          => $subject->llgTransferBeneficiaryEmail(),
+                        'BenefAcctName'       => $subject->llgTransferBeneficiaryAccountName(),
+                        'BenefPhoneNo'        => $subject->llgTransferBeneficiaryPhoneNumber(),
+                        'BenefBankAddress'    => $subject->llgTransferBeneficiaryBankAddress(),
+                        'BenefBankBranchName' => $subject->llgTransferBeneficiaryBankBranchName(),
+                        'BenefBankCity'       => $subject->llgTransferBeneficiaryBankCity(),
+                        'BenefAddress1'       => $subject->llgTransferBeneficiaryAddress1(),
+                        'BenefAddress2'       => $subject->llgTransferBeneficiaryAddress2(),
+                        'BenefAddress3'       => $subject->llgTransferBeneficiaryAddress3(),
+                        'ChargeTo'            => '0',
+                    ])
+                    ->handle(),
+            ]
+        ];
+
+        try {
+            $response = $this->api->post('BankingServices/LlgTransfer/add', $data, $this->header($data));
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            // on success
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                return new LlgTransfer($contents);
+            }
+
+            // on unauthorized
+            if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                throw LlgTransferException::unauthorized($contents->ErrorDescription);
+            }
+
+            // on signature not valid
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                throw LlgTransferException::forbidden($contents->ErrorDescription);
+            }
+
+            // on internal server error
+            if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                throw LlgTransferException::internalServerError();
+            }
+
+            // on service unavailable
+            if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                throw LlgTransferException::serviceUnavailable();
             }
         } catch (GuzzleException $e) {
             throw $e;
@@ -394,31 +508,20 @@ class Permatabank implements BankContract
 
     public function balanceInquiry(BalanceInquirySubject $subject)
     {
-        $payload = [
+        $data = [
             'BalInqRq' => [
                 'MsgRqHdr' => [
-                    'RequestTimestamp' => $this->timesTamp,
-                    'CustRefID' => random_alphanumeric(),
+                    'RequestTimestamp' => $this->timestamp,
+                    'CustRefID'        => random_alphanumeric(),
                 ],
-                'InqInfo' => [
+                'InqInfo'  => [
                     'AccountNumber' => $subject->accountNumber()
                 ]
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('InquiryServices/BalanceInfo/inq', $payload, $headers);
+            $response = $this->api->post('InquiryServices/BalanceInfo/inq', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
@@ -431,68 +534,28 @@ class Permatabank implements BankContract
         }
     }
 
-    /**
-     * LLG Transfer Request
-     *
-     * @param  array  $data
-     * @param  string  $custRefID
-     * @return mixed
-     */
-    public function llgTransfer(array $data, string $custRefID)
-    {
-        $payload = [
-            'LlgXferAddRq' => [
-                'MsgRqHdr' => [
-                    'RequestTimestamp' => $this->timesTamp,
-                    'CustRefID'        => $custRefID
-                ],
-                'XferInfo' => $data
-            ]
-        ];
-
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
-        try {
-            $response = $this->api->post('BankingServices/LlgTransfer/add', $payload, $headers);
-
-            $contents = json_decode($response->getBody()->getContents());
-
-            if ($response->getStatusCode() === 200) {
-                return new LlgTransfer($contents);
-            }
-
-            // on signature not valid error
-            if ($response->getStatusCode() === 403) {
-                throw LlgTransferException::forbidden($contents->ErrorDescritpion);
-            }
-
-            // on unauthorized request
-            if ($response->getStatusCode() === 401) {
-                throw LlgTransferException::unauthorize($contents->ErrorDescritpion);
-            }
-        } catch (GuzzleException $e) {
-            throw $e;
-        }
-    }
-
     public function rtgsTransfer(RtgsTransferSubject $subject)
     {
         $payload = [
             'RtgsXferAddRq' => [
                 'MsgRqHdr' => [
-                    'RequestTimestamp' => $this->timesTamp,
+                    'RequestTimestamp' => $this->timestamp,
                     'CustRefID' => random_alphanumeric(),
                 ],
-                'XferInfo' => [
+                'XferInfo' => $this->trim->setToBeTrimmed([
+                    'FromAccount',
+                    'ToAccount',
+                    'FromAcctName',
+                    'BenefEmail',
+                    'BenefAcctName',
+                    'BenefBankAddress',
+                    'BenefBankBranchName',
+                    'BenefBankCity',
+                    'BenefAddress1',
+                    'BenefAddress2',
+                    'BenefAddress3',
+                ])
+                ->setData([
                     'FromAccount' => $subject->fromAccount(),
                     'ToAccount' => $subject->toAccount(),
                     'ToBankId' => $subject->toBankId(),
@@ -513,19 +576,20 @@ class Permatabank implements BankContract
                     'BenefAddress1' => $subject->benefAddress1(), 
                     'BenefAddress2' => $subject->benefAddress2(),
                     'BenefAddress3' => $subject->benefAddress3() 
-                ]
+                ])
+                ->handle()
             ]
         ];
 
         $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
 
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
+        $message = "{$this->accessToken}:{$this->timestamp}:{$encodeData}";
 
         $headers = [
             'Authorization'     => "Bearer ".$this->accessToken,
             'permata-signature' => $this->generateSignature($message, $this->staticKey),
             'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
+            'permata-timestamp' => $this->timestamp,
         ];
 
         try {
@@ -533,7 +597,9 @@ class Permatabank implements BankContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            return $contents;
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                return new RtgsTransfer($contents);
+            }
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -549,29 +615,18 @@ class Permatabank implements BankContract
      */
     public function submitFintechAccount(array $data, string $custRefID)
     {
-        $payload = [
+        $data = [
             'SubmitApplicationRq' => [
                 'MsgRqHdr'        => [
-                    'RequestTimestamp' => $this->timesTamp,
+                    'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $custRefID
                 ],
                 'ApplicationInfo' => $data
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('appldata_v2/add', $payload, $headers);
+            $response = $this->api->post('appldata_v2/add', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
@@ -592,29 +647,18 @@ class Permatabank implements BankContract
      */
     public function submitRegistrationDocument(array $data, string $custRefID)
     {
-        $payload = [
+        $data = [
             'SubmitDocumentRq' => [
                 'MsgRqHdr'     => [
-                    'RequestTimestamp' => $this->timesTamp,
+                    'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $custRefID
                 ],
                 'DocumentInfo' => $data
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('appldoc/add', $payload, $headers);
+            $response = $this->api->post('appldoc/add', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
@@ -635,10 +679,10 @@ class Permatabank implements BankContract
      */
     public function inquiryApplicationStatus(string $reffCode, string $custRefID)
     {
-        $payload = [
+        $data = [
             'InquiryApplicationRq' => [
                 'MsgRqHdr'              => [
-                    'RequestTimestamp' => $this->timesTamp,
+                    'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $custRefID
                 ],
                 'SubmitApplicationInfo' => [
@@ -647,19 +691,8 @@ class Permatabank implements BankContract
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('appldata_v2/inq', $payload, $headers);
+            $response = $this->api->post('appldata_v2/inq', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
@@ -673,29 +706,18 @@ class Permatabank implements BankContract
 
     public function inquiryRiskRating(array $data, string $custRefID)
     {
-        $payload = [
+        $data = [
             'InquiryHighRiskRq' => [
                 'MsgRqHdr'        => [
-                    'RequestTimestamp' => $this->timesTamp,
+                    'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $custRefID
                 ],
                 'ApplicationInfo' => $data
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('appldata_v2/riskrating/inq', $payload, $headers);
+            $response = $this->api->post('appldata_v2/riskrating/inq', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
@@ -710,29 +732,18 @@ class Permatabank implements BankContract
 
     public function inquiryAccountValidation(array $data, string $custRefID)
     {
-        $payload = [
+        $data = [
             'InquiryAccountValidationRq' => [
                 'MsgRqHdr'        => [
-                    'RequestTimestamp' => $this->timesTamp,
+                    'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $custRefID
                 ],
                 'ApplicationInfo' => $data
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('appldata_v2/acctvalidation/inq', $payload, $headers);
+            $response = $this->api->post('appldata_v2/acctvalidation/inq', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
@@ -747,29 +758,18 @@ class Permatabank implements BankContract
 
     public function updateKycStatus(array $data, string $custRefID)
     {
-        $payload = [
+        $data = [
             'UpdateKycFlagRq' => [
                 'MsgRqHdr'        => [
-                    'RequestTimestamp' => $this->timesTamp,
+                    'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $custRefID,
                 ],
                 'ApplicationInfo' => $data
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('appldata_v2/kycstatus/add', $payload, $headers);
+            $response = $this->api->post('appldata_v2/kycstatus/add', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
@@ -790,26 +790,15 @@ class Permatabank implements BankContract
      */
     public function inquiryStatusTransaction(string $custRefID)
     {
-        $payload = [
+        $data = [
             'StatusTransactionRq' => [
                 'CorpID'    => $this->organizationName,
                 'CustRefID' => $custRefID
             ]
         ];
 
-        $encodeData = json_encode($payload, JSON_UNESCAPED_SLASHES);
-
-        $message = "{$this->accessToken}:{$this->timesTamp}:{$encodeData}";
-
-        $headers = [
-            'Authorization'     => "Bearer ".$this->accessToken,
-            'permata-signature' => $this->generateSignature($message, $this->staticKey),
-            'organizationname'  => $this->organizationName,
-            'permata-timestamp' => $this->timesTamp,
-        ];
-
         try {
-            $response = $this->api->post('InquiryServices/StatusTransaction/Service/inq', $payload, $headers);
+            $response = $this->api->post('InquiryServices/StatusTransaction/Service/inq', $data, $this->header($data));
 
             $contents = json_decode($response->getBody()->getContents());
 
@@ -818,14 +807,14 @@ class Permatabank implements BankContract
                 return new InquiryStatusTransaction($contents);
             }
 
-            // on signature not valid error
+            // on forbidden
             if ($response->getStatusCode() === 403) {
-                throw InquiryStatusTransactionExceptions::forbidden($contents->ErrorDescritpion);
+                throw InquiryStatusTransactionExceptions::forbidden($contents->ErrorDescription);
             }
 
             // on unauthorized request
             if ($response->getStatusCode() === 401) {
-                throw InquiryStatusTransactionExceptions::unauthorize($contents->ErrorDescritpion);
+                throw InquiryStatusTransactionExceptions::unauthorize($contents->ErrorDescription);
             }
 
         } catch (GuzzleException $e) {
@@ -834,36 +823,11 @@ class Permatabank implements BankContract
     }
 
     /**
-     * generate signature code required for request header
-     *
-     * @param  string  $message
-     * @param  string  $staticKey
-     */
-    protected function generateSignature($message, $staticKey)
-    {
-        $hash = hash_hmac('sha256', $message, $staticKey, true);
-
-        $signature = base64_encode($hash);
-
-        return $signature;
-    }
-
-    /**
-     * Parse the json response from requested API
-     *
-     * @param  GuzzleHttp\Psr7\Response
-     */
-    protected function parse(Response $response)
-    {
-        return json_decode($response->getBody()->getContents(), true);
-    }
-
-    /**
      * Generate the timestamp required for request headers
      *
      * @return string timestamp
      */
-    protected function generateTimesTamp()
+    protected function generateTimestamp()
     {
         return date('o-m-d').'T'.date('H:i:s').'.'.substr(date('u'), 0, 3).date('P');
     }
@@ -872,11 +836,12 @@ class Permatabank implements BankContract
      * generate and encode the authorization key
      *
      * @param  string  $clientId
-     * @param  string  $clienSecret
+     * @param  string  $clientSecret
+     * @return string
      */
-    protected function generateAuthorizationKey($clientId, $clienSecret)
+    protected function generateAuthorizationKey(string $clientId, string $clientSecret)
     {
-        return base64_encode("$clientId:$clienSecret");
+        return base64_encode("$clientId:$clientSecret");
     }
 
     /**
@@ -891,5 +856,39 @@ class Permatabank implements BankContract
             'base_uri' => $this->uri,
             'headers'  => $headers
         ]);
+    }
+
+    /**
+     * Build header for permata bank API request
+     *
+     * @param  array  $data
+     * @return array
+     */
+    protected function header(array $data): array
+    {
+        $payload = json_encode($data, JSON_UNESCAPED_SLASHES);
+
+        $message = "{$this->accessToken}:{$this->timestamp}:{$payload}";
+
+        return [
+            'Authorization'     => "Bearer {$this->accessToken}",
+            'permata-signature' => $this->generateSignature($message, $this->staticKey),
+            'organizationname'  => $this->organizationName,
+            'permata-timestamp' => $this->timestamp,
+        ];
+    }
+
+    /**
+     * Generate signature code required for request header
+     *
+     * @param  string  $message
+     * @param  string  $staticKey
+     * @return string
+     */
+    protected function generateSignature($message, string $staticKey)
+    {
+        $hash = hash_hmac('sha256', $message, $staticKey, true);
+
+        return base64_encode($hash);
     }
 }

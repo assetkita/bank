@@ -19,5 +19,56 @@ class RtgsTransfer
      */
     protected $statusDesc;
 
-    protected $
+    /**
+     * @var string
+     */
+    protected $trxRefNo;
+
+    /**
+     * init Rtgs
+     * 
+     * @param object $rtgsTransferResponse
+     */
+    public function __construct($rtgsTransferResponse)
+    {
+        $this->custRefId = $rtgsTransferResponse->RtgsXferAddRs->MsgRsHdr->CustRefID;
+
+        $this->statusCode = $rtgsTransferResponse->RtgsXferAddRs->MsgRsHdr->StatusCode;
+        
+        $this->statusDesc = $rtgsTransferResponse->RtgsXferAddRs->MsgRsHdr->StatusDesc;
+
+        $this->trxRefNo = $rtgsTransferResponse->RtgsXferAddRs->TrxReffNo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusDesc()
+    {
+        return $this->statusDesc;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustRefId()
+    {
+        return $this->custRefId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrxRefNo()
+    {
+        return $this->trxRefNo;
+    }
 }

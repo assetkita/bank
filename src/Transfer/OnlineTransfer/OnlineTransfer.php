@@ -5,31 +5,31 @@ namespace Assetku\BankService\Transfer\OnlineTransfer;
 class OnlineTransfer
 {
     /**
-     * @var string $custRefId
+     * @var string
      */
     protected $custRefId;
 
     /**
-     * @var string $statusCode
+     * @var string
      */
     protected $statusCode;
 
     /**
-     * @var string $statusDesc
+     * @var string|null
      */
     protected $statusDesc;
 
     /**
-     * @var string $trxReffNo
+     * @var string
      */
     protected $trxReffNo;
 
     /**
-     * init
-     * 
-     * @param object $inquiryOverbooking
+     * OnlineTransfer constructor.
+     *
+     * @param $onlineTransfer
      */
-    public function __construct($onlineTransfer) 
+    public function __construct($onlineTransfer)
     {
         $messageHeader = $onlineTransfer->OlXferAddRs->MsgRsHdr;
         
@@ -37,15 +37,15 @@ class OnlineTransfer
         
         $this->statusCode = $messageHeader->StatusCode;
         
-        $this->statusDesc = $messageHeader->StatusDesc;
+        $this->statusDesc = $messageHeader->StatusDesc ?? null;
 
         $this->trxReffNo = $onlineTransfer->OlXferAddRs->TrxReffNo;
     }
 
     /**
-     * Get customer refferences id
+     * Get customer references identifier
      * 
-     * @return string $custRefId
+     * @return string
      */
     public function getCustRefId()
     {
@@ -54,8 +54,8 @@ class OnlineTransfer
 
     /**
      * Get status code
-     * 
-     * @return $statusCode
+     *
+     * @return string
      */
     public function getStatusCode()
     {
@@ -64,8 +64,8 @@ class OnlineTransfer
 
     /**
      * Get status description
-     * 
-     * @return $statusDesc
+     *
+     * @return string|null
      */
     public function getStatusDesc()
     {
@@ -73,9 +73,9 @@ class OnlineTransfer
     }
 
     /**
-     * Get transfer reff number
-     * 
-     * @return $trxReffNo
+     * Get transfer reference number
+     *
+     * @return string
      */
     public function getTrxReffNo()
     {

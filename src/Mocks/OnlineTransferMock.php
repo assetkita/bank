@@ -10,6 +10,7 @@ class OnlineTransferMock implements OnlineTransferSubject
      * @var string
      */
     protected $fromAccount;
+
     /**
      * @var int
      */
@@ -46,7 +47,7 @@ class OnlineTransferMock implements OnlineTransferSubject
     /**
      * @inheritDoc
      */
-    public function onlineTransferToBankId()
+    public function onlineTransferToBankIdentifier()
     {
         return '90010';
     }
@@ -56,7 +57,7 @@ class OnlineTransferMock implements OnlineTransferSubject
      */
     public function onlineTransferToAccount()
     {
-        return '701075323';
+        return '701075331';
     }
 
     /**
@@ -78,17 +79,17 @@ class OnlineTransferMock implements OnlineTransferSubject
     /**
      * @inheritDoc
      */
-    public function onlineTransferBeneficiaryEmail()
+    public function onlineTransferBeneficiaryAccountName()
     {
-        return 'john@gmail.com';
+        return 'John';
     }
 
     /**
      * @inheritDoc
      */
-    public function onlineTransferBeneficiaryAccountName()
+    public function onlineTransferBeneficiaryEmail()
     {
-        return 'John';
+        return 'john@gmail.com';
     }
 
     /**

@@ -2,28 +2,28 @@
 
 namespace Assetku\BankService;
 
-use Assetku\BankService\Contracts\OnlineTransferSubject;
 use Assetku\BankService\Contracts\BalanceInquirySubject;
 use Assetku\BankService\Contracts\RtgsTransferSubject;
+use Assetku\BankService\Contracts\BankContract;
+use Assetku\BankService\Contracts\LlgTransferSubject;
+use Assetku\BankService\Contracts\OnlineTransferSubject;
+use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
 use GuzzleHttp\Exception\GuzzleException;
-use Assetku\BankService\Contracts\BankContract;
 
 class Bank
 {
     /**
-     * initiate bank provider
-     * 
-     * @var $bankProvider
+     * @var BankContract
      */
-    protected $bankProvider;
-    
+    protected $bank;
+
     /**
-     * contructor of bank service
+     * Bank constructor.
      */
     public function __construct()
     {
-        $this->bankProvider = resolve(BankContract::class);
+        $this->bank = \App::make(BankContract::class);
     }
 
     /**
@@ -36,7 +36,7 @@ class Bank
     public function overbooking(array $data, string $custRefID)
     {
         try {
-            $data = $this->bankProvider->overbooking($data, $custRefID);
+            $data = $this->bank->overbooking($data, $custRefID);
             return $data;
         } catch (GuzzleException $e) {
             throw $e;
@@ -53,7 +53,7 @@ class Bank
     public function inquiryOverbooking(string $accountNumber, string $custRefID)
     {
         try {
-            $data = $this->bankProvider->inquiryOverbooking($accountNumber, $custRefID);
+            $data = $this->bank->inquiryOverbooking($accountNumber, $custRefID);
             return $data;
         } catch (GuzzleException $e) {
             throw $e;
@@ -70,7 +70,7 @@ class Bank
     public function onlineTransferInquiry(array $data, string $custRefID)
     {
         try {
-            $data = $this->bankProvider->onlineTransferInquiry($data, $custRefID);
+            $data = $this->bank->onlineTransferInquiry($data, $custRefID);
             return $data;
         } catch (GuzzleException $e) {
             throw $e;
@@ -78,7 +78,7 @@ class Bank
     }
 
     /**
-     * online transder request
+     * Perform online transfer
      *
      * @param  \Assetku\BankService\Contracts\OnlineTransferSubject  $subject
      * @return \Assetku\BankService\Transfer\OnlineTransfer\OnlineTransfer
@@ -88,10 +88,29 @@ class Bank
     public function onlineTransfer(OnlineTransferSubject $subject)
     {
         try {
-            return $this->bankProvider->onlineTransfer($subject);
+            return $this->bank->onlineTransfer($subject);
+        } catch (OnlineTransferException $e) {
+            throw $e;
         } catch (GuzzleException $e) {
             throw $e;
-        } catch (OnlineTransferException $e) {
+        }
+    }
+
+    /**
+     * Perform LLG transfer
+     *
+     * @param  \Assetku\BankService\Contracts\LlgTransferSubject  $subject
+     * @return \Assetku\BankService\Transfer\LlgTransfer\LlgTransfer
+     * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function llgTransfer(LlgTransferSubject $subject)
+    {
+        try {
+            return $this->bank->llgTransfer($subject);
+        } catch (LlgTransferException $e) {
+            throw $e;
+        } catch (GuzzleException $e) {
             throw $e;
         }
     }
@@ -106,25 +125,7 @@ class Bank
     public function balanceInquiry(BalanceInquirySubject $subject)
     {
         try {
-            return $this->bankProvider->balanceInquiry($subject);
-        } catch (GuzzleException $e) {
-            throw $e;
-        }
-    }
-
-
-    /**
-     * LLG transfer request
-     * 
-     * @param array $data
-     * @param string $custRefID
-     * @return mixed
-     */
-    public function llgTransfer(array $data, string $custRefID)
-    {
-        try {
-            $data = $this->bankProvider->llgTransfer($data, $custRefID);
-            return $data;
+            return $this->bank->balanceInquiry($subject);
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -140,7 +141,7 @@ class Bank
     public function rtgsTransfer(RtgsTransferSubject $subject)
     {
         try {
-            return $this->bankProvider->rtgsTransfer($subject);
+            return $this->bank->rtgsTransfer($subject);
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -157,7 +158,7 @@ class Bank
     public function submitFintechAccount(array $data, string $custRefID)
     {
         try {
-            return $this->bankProvider->submitFintechAccount($data, $custRefID);
+            return $this->bank->submitFintechAccount($data, $custRefID);
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -173,7 +174,7 @@ class Bank
     public function submitDocument(array $data, string $custRefID)
     {
         try {
-            $data = $this->bankProvider->submitRegistrationDocument($data, $custRefID);
+            $data = $this->bank->submitRegistrationDocument($data, $custRefID);
             return $data;
         } catch (GuzzleException $e) {
             throw $e;
@@ -189,7 +190,7 @@ class Bank
     public function checkRegistrationStatus(string $reffCode, string $custRefID)
     {
         try {
-            $data = $this->bankProvider->inquiryApplicationStatus($reffCode, $custRefID);
+            $data = $this->bank->inquiryApplicationStatus($reffCode, $custRefID);
             return $data;
         } catch (GuzzleException $e) {
             throw $e;
@@ -205,7 +206,7 @@ class Bank
     public function inquiryRiskRating(array $data, string $custRefID)
     {
         try {
-            $data = $this->bankProvider->inquiryRiskRating($data, $custRefID);
+            $data = $this->bank->inquiryRiskRating($data, $custRefID);
             return $data;
         } catch (GuzzleException $e) {
             throw $e;
@@ -221,7 +222,7 @@ class Bank
     public function inquiryAccountValidation(array $data, string $custRefID)
     {
         try {
-            $data = $this->bankProvider->inquiryAccountValidation($data, $custRefID);
+            $data = $this->bank->inquiryAccountValidation($data, $custRefID);
             return $data;
         } catch (GuzzleException $e) {
             throw $e;
@@ -237,7 +238,7 @@ class Bank
     public function updateKycStatus(array $data, string $custRefID)
     {
         try {
-            $data = $this->bankProvider->updateKycStatus($data, $custRefID);
+            $data = $this->bank->updateKycStatus($data, $custRefID);
             return $data;
         } catch (GuzzleException $e) {
             throw $e;
@@ -254,7 +255,7 @@ class Bank
     public function inquiryStatusTransaction(string $custRefID)
     {
         try {
-            $data = $this->bankProvider->inquiryStatusTransaction($custRefID);
+            $data = $this->bank->inquiryStatusTransaction($custRefID);
             return $data;
         } catch (GuzzleException $e) {
             throw $e;
