@@ -29,7 +29,7 @@ use Assetku\BankService\Investa\Permatabank\Document\Document;
 use Assetku\BankService\Investa\Permatabank\Registration;
 use Assetku\BankService\Investa\Permatabank\RiskRating\InquiryRiskRating;
 use Assetku\BankService\Investa\Permatabank\UpdateKycStatus\UpdateKycStatus;
-use Assetku\BankService\Services\BankProvider;
+use Assetku\BankService\Services\BankService;
 use Assetku\BankService\Services\HttpClient;
 use Assetku\BankService\Transfer\Permatabank\LlgTransfer;
 use Assetku\BankService\Transfer\Permatabank\OnlineTransfer;
@@ -40,7 +40,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
-class Permatabank implements BankProvider
+class Service implements BankService
 {
     /**
      * permata bank api key
@@ -112,7 +112,7 @@ class Permatabank implements BankProvider
     protected $accessToken;
 
     /**
-     * Permatabank constructor.
+     * Service constructor.
      *
      * @throws GuzzleException
      * @throws OAuthException
@@ -142,55 +142,6 @@ class Permatabank implements BankProvider
             $this->accessToken = $this->getToken();
         } catch (OAuthException $e) {
             throw $e;
-        } catch (GuzzleException $e) {
-            throw $e;
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function statusTransactionInquiry(StatusTransactionInquirySubject $subject)
-    {
-        $data = [
-            'StatusTransactionRq' => [
-                'CorpID'    => $this->organizationName,
-                'CustRefID' => $subject->statusTransactionInquiryCustomerReferenceId(),
-            ],
-        ];
-
-        try {
-            $response = $this->api->post('InquiryServices/StatusTransaction/Service/inq', $data, $this->header($data));
-
-            $contents = json_decode($response->getBody()->getContents());
-
-            // on success
-            if ($response->getStatusCode() === Response::HTTP_OK) {
-                return new StatusTransactionInquiry($contents);
-            }
-
-            // on unauthorized
-            if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
-                throw StatusTransactionInquiryException::unauthorized($contents->ErrorDescription);
-            }
-
-            // on forbidden
-            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
-                throw StatusTransactionInquiryException::forbidden($contents->ErrorDescription);
-            }
-
-            // on internal server error
-            if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
-                throw StatusTransactionInquiryException::internalServerError();
-            }
-
-            // on service unavailable
-            if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
-                throw StatusTransactionInquiryException::serviceUnavailable();
-            }
-
-            // on unknown error
-            throw StatusTransactionInquiryException::unknownError();
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -358,6 +309,55 @@ class Permatabank implements BankProvider
 
             // on unknown error
             throw OnlineTransferInquiryException::unknownError();
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function statusTransactionInquiry(StatusTransactionInquirySubject $subject)
+    {
+        $data = [
+            'StatusTransactionRq' => [
+                'CorpID'    => $this->organizationName,
+                'CustRefID' => $subject->statusTransactionInquiryCustomerReferenceId(),
+            ],
+        ];
+
+        try {
+            $response = $this->api->post('InquiryServices/StatusTransaction/Service/inq', $data, $this->header($data));
+
+            $contents = json_decode($response->getBody()->getContents());
+
+            // on success
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                return new StatusTransactionInquiry($contents);
+            }
+
+            // on unauthorized
+            if ($response->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
+                throw StatusTransactionInquiryException::unauthorized($contents->ErrorDescription);
+            }
+
+            // on forbidden
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                throw StatusTransactionInquiryException::forbidden($contents->ErrorDescription);
+            }
+
+            // on internal server error
+            if ($response->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR) {
+                throw StatusTransactionInquiryException::internalServerError();
+            }
+
+            // on service unavailable
+            if ($response->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE) {
+                throw StatusTransactionInquiryException::serviceUnavailable();
+            }
+
+            // on unknown error
+            throw StatusTransactionInquiryException::unknownError();
         } catch (GuzzleException $e) {
             throw $e;
         }

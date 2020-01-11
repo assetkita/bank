@@ -12,7 +12,7 @@ class RtgsTransferTest extends TestCase
     /**
      * @throws GuzzleException
      */
-    public function testSuccessfulRtgsTransfer()
+    public function testSuccessRtgsTransfer()
     {
         $mock = new RtgsTransferMock;
 

@@ -11,37 +11,36 @@ class OnlineTransferInquiryTest extends TestCase
     /**
      * @throws GuzzleException
      */
-    public function testSuccessInquiryOnlineTransferTest()
+    public function testSuccessInquiryOnlineTransfer()
     {
         $mock = new OnlineTransferInquiryMock('90010');
 
         try {
-            $inquiryOnlineTransfer = \Bank::onlineTransferInquiry($mock);
+            $onlineTransferInquiry = \Bank::onlineTransferInquiry($mock);
 
             $this->assertTrue(
-                $inquiryOnlineTransfer->getStatusCode() === '00' &&
-                $inquiryOnlineTransfer->getBankId() === '90010'
+                $onlineTransferInquiry->isSuccess()
             );
         } catch (OnlineTransferInquiryException $e) {
             dd($e->getCode(), $e->getMessage());
         } catch (GuzzleException $e) {
             throw $e;
         }
+
     }
 
     /**
      * @throws GuzzleException
      */
-    public function testInvalidBankCodeOnlineTransferTest()
+    public function testInvalidBankCodeOnlineTransfer()
     {
-        $mock = new OnlineTransferInquiryMock('48234');
+        $mock = new OnlineTransferInquiryMock( '12345');
 
         try {
-            $inquiryOnlineTransfer = \Bank::onlineTransferInquiry($mock);
+            $onlineTransferInquiry = \Bank::onlineTransferInquiry($mock);
 
             $this->assertTrue(
-                $inquiryOnlineTransfer->getStatusCode() === '31' &&
-                $inquiryOnlineTransfer->getBankId() === '48234'
+                $onlineTransferInquiry->getMeta()->getStatusCode() === '31'
             );
         } catch (OnlineTransferInquiryException $e) {
             dd($e->getCode(), $e->getMessage());

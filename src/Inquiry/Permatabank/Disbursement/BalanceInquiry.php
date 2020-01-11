@@ -2,23 +2,10 @@
 
 namespace Assetku\BankService\Inquiry\Permatabank\Disbursement;
 
-class BalanceInquiry
+use Assetku\BankService\Services\Permatabank\Response;
+
+class BalanceInquiry extends Response
 {
-    /**
-     * @var string
-     */
-    protected $customerReferenceId;
-
-    /**
-     * @var string
-     */
-    protected $statusCode;
-
-    /**
-     * @var string|null
-     */
-    protected $statusDescription;
-
     /**
      * @var string
      */
@@ -42,57 +29,21 @@ class BalanceInquiry
     /**
      * BalanceInquiry constructor.
      *
-     * @param $balanceInquiryResponse
+     * @param $response
      */
-    public function __construct($balanceInquiryResponse)
+    public function __construct($response)
     {
-        $messageHeader = $balanceInquiryResponse->BalInqRs->MsgRsHdr;
+        parent::__construct($response->BalInqRs->MsgRsHdr);
 
-        $responseBody = $balanceInquiryResponse->BalInqRs->InqInfo;
+        $this->accountNumber = $response->BalInqRs->InqInfo->AccountNumber;
+        $this->accountCurrency = $response->BalInqRs->InqInfo->AccountCurrency;
+        $this->accountBalanceAmount = $response->BalInqRs->InqInfo->AccountBalanceAmount;
+        $this->balanceType = $response->BalInqRs->InqInfo->BalanceType;
 
-        $this->customerReferenceId = $messageHeader->CustRefID;
-
-        $this->statusCode = $messageHeader->StatusCode;
-        
-        $this->statusDescription = $messageHeader->statusDesc ?? null;
-
-        $this->accountNumber = $responseBody->AccountNumber;
-
-        $this->accountCurrency = $responseBody->AccountCurrency;
-
-        $this->accountBalanceAmount = $responseBody->AccountBalanceAmount;
-
-        $this->balanceType = $responseBody->BalanceType;
-    }
-
-    /**
-     * Get balance inquiry's customer reference id
-     *
-     * @return string
-     */
-    public function getCustomerReferenceId()
-    {
-        return $this->customerReferenceId;
-    }
-
-    /**
-     * Get balance inquiry's status code
-     *
-     * @return string
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
-    /**
-     * Get balance inquiry's status description
-     *
-     * @return string|null
-     */
-    public function getStatusDescription()
-    {
-        return $this->statusDescription;
+        $this->success = $response->BalInqRs->MsgRsHdr->StatusCode === '00'
+            && isset($this->accountCurrency)
+            && isset($this->accountBalanceAmount)
+            && isset($this->balanceType);
     }
 
     /**

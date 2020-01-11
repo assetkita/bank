@@ -4,7 +4,7 @@ namespace Assetku\BankService\Exceptions\PermatabankExceptions;
 
 use Illuminate\Http\Response;
 
-class OnlineTransferInquiryException extends PermatabankException
+class OnlineTransferInquiryException extends DisbursementException
 {
     /**
      * Display error for service unavailable
@@ -34,7 +34,7 @@ class OnlineTransferInquiryException extends PermatabankException
      */
     public static function forbidden($code)
     {
-        $message = static::TranslateError($code);
+        $message = static::translateError($code);
 
         return new static($message, Response::HTTP_FORBIDDEN);
     }
@@ -47,7 +47,7 @@ class OnlineTransferInquiryException extends PermatabankException
      */
     public static function unauthorized($code)
     {
-        $message = static::TranslateError($code);
+        $message = static::translateError($code);
 
         return new static($message, Response::HTTP_UNAUTHORIZED);
     }

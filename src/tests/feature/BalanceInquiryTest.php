@@ -20,7 +20,7 @@ class BalanceInquiryTest extends TestCase
             $balanceInquiry = \Bank::balanceInquiry($mock);
 
             $this->assertTrue(
-                $balanceInquiry->getStatusCode() === '00'
+                $balanceInquiry->isSuccess()
             );
         } catch (BalanceInquiryException $e) {
             dd($e->getCode(), $e->getMessage());
@@ -32,15 +32,15 @@ class BalanceInquiryTest extends TestCase
     /**
      * @throws GuzzleException
      */
-    public function testAccountNotFoundBalanceInquiry()
+    public function testInvalidAccountBalanceInquiry()
     {
-        $mock = new BalanceInquiryMock('701075329');
+        $mock = new BalanceInquiryMock('12345');
 
         try {
             $balanceInquiry = \Bank::balanceInquiry($mock);
 
             $this->assertTrue(
-                $balanceInquiry->getStatusCode() === '02'
+                $balanceInquiry->getMeta()->getStatusCode() === '02'
             );
         } catch (BalanceInquiryException $e) {
             dd($e->getCode(), $e->getMessage());

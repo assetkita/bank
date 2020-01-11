@@ -3,9 +3,8 @@
 namespace Assetku\BankService\Providers;
 
 use Assetku\BankService\Bank;
-use Assetku\BankService\Services\BankProvider;
+use Assetku\BankService\Services\BankService;
 use Illuminate\Support\ServiceProvider;
-use Assetku\BankService\Services\Permatabank\Permatabank;
 
 class BankServiceProvider extends ServiceProvider
 {
@@ -20,11 +19,11 @@ class BankServiceProvider extends ServiceProvider
 
         switch (config('bankservice.default')) {
             default:
-                $bankProvider = Permatabank::class;
+                $service = \Assetku\BankService\Services\Permatabank\Service::class;
                 break;
         }
 
-        $this->app->bind(BankProvider::class, $bankProvider);
+        $this->app->bind(BankService::class, $service);
 
         $this->app->bind('assetkita.bank', function () {
             return new Bank;

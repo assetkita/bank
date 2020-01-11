@@ -2,23 +2,10 @@
 
 namespace Assetku\BankService\Inquiry\Permatabank\Disbursement;
 
-class StatusTransactionInquiry
+use Assetku\BankService\Services\Permatabank\Response;
+
+class StatusTransactionInquiry extends Response
 {
-    /**
-     * @var string
-     */
-    protected $customerReferenceId;
-
-    /**
-     * @var string
-     */
-    protected $statusCode;
-
-    /**
-     * @var string
-     */
-    protected $statusDescription;
-
     /**
      * @var string
      */
@@ -27,47 +14,15 @@ class StatusTransactionInquiry
     /**
      * StatusTransactionInquiry constructor.
      *
-     * @param $inquiryStatusTransaction
+     * @param $response
      */
-    public function __construct($inquiryStatusTransaction)
-    {   
-        $this->customerReferenceId =  $inquiryStatusTransaction->StatusTransactionRs->CustRefID;
-        
-        $this->statusCode = $inquiryStatusTransaction->StatusTransactionRs->StatusCode;
-        
-        $this->statusDescription = $inquiryStatusTransaction->StatusTransactionRs->StatusDesc ?? null;
-
-        $this->transactionReferenceNumber = $inquiryStatusTransaction->StatusTransactionRs->TrxReffNo;
-    }
-
-    /**
-     * Get status transaction inquiry's customer reference id
-     * 
-     * @return string
-     */
-    public function getCustomerReferenceId()
+    public function __construct($response)
     {
-        return $this->customerReferenceId;
-    }
+        parent::__construct($response->StatusTransactionRs);
 
-    /**
-     * Get status transaction inquiry's status code
-     * 
-     * @return string
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
+        $this->transactionReferenceNumber = $response->StatusTransactionRs->TrxReffNo;
 
-    /**
-     * Get status transaction inquiry's status description
-     * 
-     * @return string
-     */
-    public function getStatusDescription()
-    {
-        return $this->statusDescription;
+        $this->success = $response->StatusTransactionRs->StatusCode === '00' && isset($this->transactionReferenceNumber);
     }
 
     /**

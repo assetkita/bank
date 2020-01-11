@@ -12,7 +12,7 @@ class LlgTransferTest extends TestCase
     /**
      * @throws GuzzleException
      */
-    public function testSuccessLlgTransferTest()
+    public function testSuccessLlgTransfer()
     {
         $mock = new LlgTransferMock('701075323', 1000000000);
 
@@ -31,7 +31,7 @@ class LlgTransferTest extends TestCase
     /**
      * @throws GuzzleException
      */
-    public function testAccountNotFoundLlgTransferTest()
+    public function testAccountNotFoundLlgTransfer()
     {
         $mock = new LlgTransferMock('701075324', 1000000000);
 

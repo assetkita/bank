@@ -7,10 +7,25 @@ use Assetku\BankService\Contracts\OverbookingInquirySubject;
 class OverbookingInquiryMock implements OverbookingInquirySubject
 {
     /**
+     * @var string
+     */
+    protected $accountNumber;
+
+    /**
+     * OverbookingInquiryMock constructor.
+     *
+     * @param  string  $accountNumber
+     */
+    public function __construct(string $accountNumber)
+    {
+        $this->accountNumber = $accountNumber;
+    }
+
+    /**
      * @inheritDoc
      */
     public function overbookingInquiryAccountNumber()
     {
-        return '9999002800';
+        return $this->accountNumber;
     }
 }

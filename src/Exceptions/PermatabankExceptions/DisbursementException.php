@@ -6,11 +6,11 @@ use Exception;
 use Assetku\BankService\Contracts\BankExceptionContract;
 use Illuminate\Http\Response;
 
-class PermatabankException extends Exception implements BankExceptionContract
+class DisbursementException extends Exception implements BankExceptionContract
 {
     const STATUS_REJECTED = '01';
 
-    const STATUS_IN_PROGRESS = '02';
+    const STATUS_INVALID_ACCOUNT = '02';
 
     const STATUS_DUPLICATE_CUST_REF_ID = '03';
 
@@ -25,6 +25,8 @@ class PermatabankException extends Exception implements BankExceptionContract
     const STATUS_INVALID_AMOUNT = '13';
     
     const STATUS_ACCOUNT_NOT_FOUND = '14';
+
+    const STATUS_INQUIRY_STATUS_NOT_FOUND = '14';
 
     const STATUS_DISALLOWED_TRANSACTION_TWO = '15';
 
@@ -65,20 +67,20 @@ class PermatabankException extends Exception implements BankExceptionContract
     const STATUS_SIGNATURE_NOT_VALID = '403';
 
     /**
-     * get translated error from BankProvider Provider
+     * Get translated error from permata bank
      * 
      * @param mixed $code
      * @return string
      */
-    public static function TranslateError($code)
+    public static function translateError($code)
     {
         switch ($code) {
             case static::STATUS_REJECTED:
                 $message = 'Ditolak.';
                 break;
             
-            case static::STATUS_IN_PROGRESS:
-                $message = 'Dalam Progress Transaction. menunggu status rekonsiliasi.';
+            case static::STATUS_INVALID_ACCOUNT:
+                $message = 'Akun tidak valid.';
                 break;
             
             case static::STATUS_DUPLICATE_CUST_REF_ID:
@@ -106,6 +108,7 @@ class PermatabankException extends Exception implements BankExceptionContract
                 break;
             
             case static::STATUS_ACCOUNT_NOT_FOUND:
+            case static::STATUS_INQUIRY_STATUS_NOT_FOUND:
                 $message = 'akun tidak ditemukan.';
                 break;
             
@@ -118,7 +121,7 @@ class PermatabankException extends Exception implements BankExceptionContract
                 break;
             
             case static::STATUS_INVALID_TO_ACCOUNT:
-                $message = 'Akun tidak valid.';
+                $message = 'Akun tujuan tidak valid.';
                 break;
             
             case static::STATUS_INVALID_FORMAT:

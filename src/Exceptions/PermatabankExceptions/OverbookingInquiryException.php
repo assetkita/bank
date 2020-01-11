@@ -4,7 +4,7 @@ namespace Assetku\BankService\Exceptions\PermatabankExceptions;
 
 use Illuminate\Http\Response;
 
-class OverbookingInquiryException extends PermatabankException
+class OverbookingInquiryException extends DisbursementException
 {
     /**
      * Display error for invalid
@@ -14,7 +14,7 @@ class OverbookingInquiryException extends PermatabankException
      */
     public static function invalid($code)
     {
-        $message = static::TranslateError($code);
+        $message = static::translateError($code);
 
         return new static($message, $code);
     }
@@ -47,7 +47,7 @@ class OverbookingInquiryException extends PermatabankException
      */
     public static function forbidden($code)
     {
-        $message = static::TranslateError($code);
+        $message = static::translateError($code);
 
         return new static($message, Response::HTTP_FORBIDDEN);
     }
@@ -60,7 +60,7 @@ class OverbookingInquiryException extends PermatabankException
      */
     public static function unauthorized($code)
     {
-        $message = static::TranslateError($code);
+        $message = static::translateError($code);
 
         return new static($message, Response::HTTP_UNAUTHORIZED);
     }

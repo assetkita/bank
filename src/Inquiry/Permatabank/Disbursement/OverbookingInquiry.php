@@ -2,23 +2,10 @@
 
 namespace Assetku\BankService\Inquiry\Permatabank\Disbursement;
 
-class OverbookingInquiry
+use Assetku\BankService\Services\Permatabank\Response;
+
+class OverbookingInquiry extends Response
 {
-    /**
-     * @var string
-     */
-    protected $customerReferenceId;
-
-    /**
-     * @var string
-     */
-    protected $statusCode;
-
-    /**
-     * @var string|null
-     */
-    protected $statusDescription;
-
     /**
      * @var string
      */
@@ -32,51 +19,16 @@ class OverbookingInquiry
     /**
      * OverbookingInquiry constructor.
      *
-     * @param $inquiryOverbooking
+     * @param $response
      */
-    public function __construct($inquiryOverbooking)
+    public function __construct($response)
     {
-        $messageHeader = $inquiryOverbooking->AcctInqRs->MsgRsHdr;
-        
-        $this->customerReferenceId =  $messageHeader->CustRefID;
-        
-        $this->statusCode = $messageHeader->StatusCode;
-        
-        $this->statusDescription = $messageHeader->StatusDesc ?? null;
+        parent::__construct($response->AcctInqRs->MsgRsHdr);
 
-        $this->accountNumber = $inquiryOverbooking->AcctInqRs->InqInfo->AccountNumber;
+        $this->accountNumber = $response->AcctInqRs->InqInfo->AccountNumber;
+        $this->accountName = $response->AcctInqRs->InqInfo->AccountName;
 
-        $this->accountName = $inquiryOverbooking->AcctInqRs->InqInfo->AccountName;
-    }
-
-    /**
-     * Get overbooking inquiry's customer reference id
-     *
-     * @return string
-     */
-    public function getCustomerReferenceId()
-    {
-        return $this->customerReferenceId;
-    }
-
-    /**
-     * Get overbooking inquiry's status code
-     *
-     * @return string
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
-    /**
-     * Get overbooking inquiry's status description
-     *
-     * @return string|null
-     */
-    public function getStatusDescription()
-    {
-        return $this->statusDescription;
+        $this->success = $response->AcctInqRs->MsgRsHdr->StatusCode === '00' && isset($this->accountName);
     }
 
     /**

@@ -2,28 +2,10 @@
 
 namespace Assetku\BankService\Inquiry\Permatabank\Disbursement;
 
-class OnlineTransferInquiry
+use Assetku\BankService\Services\Permatabank\Response;
+
+class OnlineTransferInquiry extends Response
 {
-    /**
-     * @var string
-     */
-    protected $customerReferenceId;
-
-    /**
-     * @var string
-     */
-    protected $statusCode;
-
-    /**
-     * @var string|null
-     */
-    protected $statusDescription;
-
-    /**
-     * @var string
-     */
-    protected $transactionReferenceNumber;
-
     /**
      * @var string
      */
@@ -47,67 +29,20 @@ class OnlineTransferInquiry
     /**
      * OnlineTransferInquiry constructor.
      *
-     * @param $onlineTransferInquiry
+     * @param $response
      */
-    public function __construct($onlineTransferInquiry)
+    public function __construct($response)
     {
-        $messageHeader = $onlineTransferInquiry->OlXferInqRs->MsgRsHdr;
-        
-        $this->customerReferenceId =  $messageHeader->CustRefID;
-        
-        $this->statusCode = $messageHeader->StatusCode;
-        
-        $this->statusDescription = $messageHeader->StatusDesc ?? null;
+        parent::__construct($response->OlXferInqRs->MsgRsHdr);
 
-        $this->toAccount = $onlineTransferInquiry->OlXferInqRs->XferInfo->ToAccount;
+        $this->toAccount = $response->OlXferInqRs->XferInfo->ToAccount;
+        $this->toAccountFullName = $response->OlXferInqRs->XferInfo->ToAccountFullName;
+        $this->bankId = $response->OlXferInqRs->XferInfo->BankId;
+        $this->bankName = $response->OlXferInqRs->XferInfo->BankName;
 
-        $this->toAccountFullName = $onlineTransferInquiry->OlXferInqRs->XferInfo->ToAccountFullName;
-        
-        $this->bankId = $onlineTransferInquiry->OlXferInqRs->XferInfo->BankId;
-
-        $this->bankName = $onlineTransferInquiry->OlXferInqRs->XferInfo->BankName;
-
-        $this->transactionReferenceNumber = $onlineTransferInquiry->OlXferInqRs->TrxReffNo;
-    }
-
-    /**
-     * Get online transfer inquiry's customer reference id
-     * 
-     * @return string
-     */
-    public function getCustomerReferenceId()
-    {
-        return $this->customerReferenceId;
-    }
-
-    /**
-     * Get online transfer inquiry's status code
-     *
-     * @return string
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
-    /**
-     * Get online transfer inquiry's status description
-     *
-     * @return string|null
-     */
-    public function getStatusDescription()
-    {
-        return $this->statusDescription;
-    }
-
-    /**
-     * Get online transfer inquiry's transaction reference number
-     *
-     * @return string
-     */
-    public function getTransactionReferenceNumber()
-    {
-        return $this->transactionReferenceNumber;
+        $this->success = $response->OlXferInqRs->MsgRsHdr->StatusCode === '00'
+            && isset($this->toAccountFullName)
+            && isset($this->bankName);
     }
 
     /**

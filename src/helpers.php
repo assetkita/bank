@@ -7,7 +7,7 @@ if (! function_exists('random_alphanumeric')) {
      * @param  int  $length
      * @return string
      */
-    function random_alphanumeric($length = 16) {
+    function random_alphanumeric($length = 20) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';

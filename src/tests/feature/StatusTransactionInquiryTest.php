@@ -11,7 +11,7 @@ class StatusTransactionInquiryTest extends TestCase
     /**
      * @throws GuzzleException
      */
-    public function testSuccessInquiryTransaction()
+    public function testSuccessStatusTransactionInquiry()
     {
         $mock = new StatusTransactionInquiryMock('ASSET59751');
 
@@ -19,8 +19,7 @@ class StatusTransactionInquiryTest extends TestCase
             $statusTransactionInquiry = \Bank::statusTransactionInquiry($mock);
 
             $this->assertTrue(
-                $statusTransactionInquiry->getCustomerReferenceId() === 'ASSET59751' &&
-                $statusTransactionInquiry->getStatusCode() === '00'
+                $statusTransactionInquiry->isSuccess()
             );
         } catch (StatusTransactionInquiryException $e) {
             dd($e->getCode(), $e->getMessage());
@@ -32,7 +31,7 @@ class StatusTransactionInquiryTest extends TestCase
     /**
      * @throws GuzzleException
      */
-    public function testInquiryStatusNotFound()
+    public function testNotFoundStatusTransactionInquiry()
     {
         $customerReferenceId = mt_rand(1111111111, 9999999999);
 
@@ -42,8 +41,7 @@ class StatusTransactionInquiryTest extends TestCase
             $statusTransactionInquiry = \Bank::statusTransactionInquiry($mock);
 
             $this->assertTrue(
-                $statusTransactionInquiry->getStatusCode() === '14' &&
-                $statusTransactionInquiry->getStatusDescription() == 'INQUIRY STATUS NOT FOUND'
+                $statusTransactionInquiry->getMeta()->getStatusCode() === '14'
             );
         } catch (StatusTransactionInquiryException $e) {
             dd($e->getCode(), $e->getMessage());

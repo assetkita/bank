@@ -12,7 +12,7 @@ class OnlineTransferTest extends TestCase
     /**
      * @throws GuzzleException
      */
-    public function testSuccessOnlineTransferTest()
+    public function testSuccessOnlineTransfer()
     {
         $mock = new OnlineTransferMock('701075323', 10000);
 
