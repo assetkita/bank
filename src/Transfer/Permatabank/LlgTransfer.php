@@ -2,23 +2,10 @@
 
 namespace Assetku\BankService\Transfer\Permatabank;
 
-class LlgTransfer
+use Assetku\BankService\Services\Permatabank\Response;
+
+class LlgTransfer extends Response
 {
-    /**
-     * @var string
-     */
-    protected $customerReferenceId;
-
-    /**
-     * @var string
-     */
-    protected $statusCode;
-
-    /**
-     * @var string|null
-     */
-    protected $statusDescription;
-
     /**
      * @var string
      */
@@ -27,49 +14,13 @@ class LlgTransfer
     /**
      * LlgTransfer constructor.
      *
-     * @param $llgTransfer
+     * @param $response
      */
-    public function __construct($llgTransfer)
+    public function __construct($response)
     {
-        $messageHeader = $llgTransfer->LlgXferAddRs->MsgRsHdr;
-        
-        $this->customerReferenceId =  $messageHeader->CustRefID;
-        
-        $this->statusCode = $messageHeader->StatusCode;
-        
-        $this->statusDescription = $messageHeader->StatusDesc ?? null;
+        parent::__construct($response->LlgXferAddRs->MsgRsHdr);
 
-        $this->transactionReferenceNumber = $llgTransfer->LlgXferAddRs->TrxReffNo;
-    }
-
-    /**
-     * Get llg transfer's customer reference id
-     * 
-     * @return string
-     */
-    public function getCustomerReferenceId()
-    {
-        return $this->customerReferenceId;
-    }
-
-    /**
-     * Get llg transfer's status code
-     *
-     * @return string
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
-    /**
-     * Get llg transfer's status description
-     *
-     * @return string|null
-     */
-    public function getStatusDescription()
-    {
-        return $this->statusDescription;
+        $this->transactionReferenceNumber = $response->LlgXferAddRs->TrxReffNo;
     }
 
     /**

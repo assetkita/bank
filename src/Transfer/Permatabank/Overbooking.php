@@ -2,75 +2,25 @@
 
 namespace Assetku\BankService\Transfer\Permatabank;
 
-class Overbooking
+use Assetku\BankService\Services\Permatabank\Response;
+
+class Overbooking extends Response
 {
     /**
      * @var string
      */
-    protected $custRefId;
-
-    /**
-     * @var string
-     */
-    protected $statusCode;
-
-    /**
-     * @var string|null
-     */
-    protected $statusDesc;
-
-    /**
-     * @var string
-     */
-    protected $trxReffNo;
+    protected $transactionReferenceNumber;
 
     /**
      * Overbooking constructor.
      *
-     * @param $overbooking
+     * @param $response
      */
-    public function __construct($overbooking)
+    public function __construct($response)
     {
-        $messageHeader = $overbooking->XferAddRs->MsgRsHdr;
-        
-        $this->custRefId =  $messageHeader->CustRefID;
-        
-        $this->statusCode = $messageHeader->StatusCode;
-        
-        $this->statusDesc = $messageHeader->StatusDesc ?? null;
+        parent::__construct($response->XferAddRs->MsgRsHdr);
 
-        $this->trxReffNo = $overbooking->XferAddRs->TrxReffNo;
-
-    }
-
-    /**
-     * Get overbooking's customer reference id
-     * 
-     * @return string
-     */
-    public function getCustomerReferenceId()
-    {
-        return $this->custRefId;
-    }
-
-    /**
-     * Get overbooking's status code
-     * 
-     * @return string
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
-    /**
-     * Get overbooking's status description
-     * 
-     * @return string
-     */
-    public function getStatusDescription()
-    {
-        return $this->statusDesc;
+        $this->transactionReferenceNumber = $response->XferAddRs->TrxReffNo;
     }
 
     /**
@@ -80,6 +30,6 @@ class Overbooking
      */
     public function getTransactionReferenceNumber()
     {
-        return $this->trxReffNo;
+        return $this->transactionReferenceNumber;
     }
 }
