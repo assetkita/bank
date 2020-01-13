@@ -9,14 +9,12 @@ class OverbookingInquiryException extends DisbursementException
     /**
      * Display error for invalid
      *
-     * @param  string  $code
+     * @param  string  $accountNumber
      * @return OverbookingInquiryException
      */
-    public static function invalid($code)
+    public static function invalid(string $accountNumber)
     {
-        $message = static::translateError($code);
-
-        return new static($message, $code);
+        return new static("Hasil overbooking inquiry nomor akun {$accountNumber} tidak valid.", Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

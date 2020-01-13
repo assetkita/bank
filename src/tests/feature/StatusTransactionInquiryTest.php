@@ -3,7 +3,6 @@
 namespace Assetku\BankService\tests;
 
 use Assetku\BankService\Exceptions\PermatabankExceptions\StatusTransactionInquiryException;
-use Assetku\BankService\Mocks\StatusTransactionInquiryMock;
 use GuzzleHttp\Exception\GuzzleException;
 
 class StatusTransactionInquiryTest extends TestCase
@@ -13,10 +12,8 @@ class StatusTransactionInquiryTest extends TestCase
      */
     public function testSuccessStatusTransactionInquiry()
     {
-        $mock = new StatusTransactionInquiryMock('ASSET59751');
-
         try {
-            $statusTransactionInquiry = \Bank::statusTransactionInquiry($mock);
+            $statusTransactionInquiry = \Bank::statusTransactionInquiry('ASSET59751');
 
             $this->assertTrue(
                 $statusTransactionInquiry->isSuccess()
@@ -33,12 +30,8 @@ class StatusTransactionInquiryTest extends TestCase
      */
     public function testNotFoundStatusTransactionInquiry()
     {
-        $customerReferenceId = mt_rand(1111111111, 9999999999);
-
-        $mock = new StatusTransactionInquiryMock($customerReferenceId);
-
         try {
-            $statusTransactionInquiry = \Bank::statusTransactionInquiry($mock);
+            $statusTransactionInquiry = \Bank::statusTransactionInquiry(mt_rand(1111111111, 9999999999));
 
             $this->assertTrue(
                 $statusTransactionInquiry->getMeta()->getStatusCode() === '14'

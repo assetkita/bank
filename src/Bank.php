@@ -2,14 +2,10 @@
 
 namespace Assetku\BankService;
 
-use Assetku\BankService\Contracts\BalanceInquirySubject;
 use Assetku\BankService\Contracts\LlgTransferSubject;
-use Assetku\BankService\Contracts\OnlineTransferInquirySubject;
 use Assetku\BankService\Contracts\OnlineTransferSubject;
-use Assetku\BankService\Contracts\OverbookingInquirySubject;
 use Assetku\BankService\Contracts\OverbookingSubject;
 use Assetku\BankService\Contracts\RtgsTransferSubject;
-use Assetku\BankService\Contracts\StatusTransactionInquirySubject;
 use Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
@@ -39,15 +35,15 @@ class Bank
     /**
      * Perform balance inquiry
      *
-     * @param  \Assetku\BankService\Contracts\BalanceInquirySubject  $subject
+     * @param  string  $accountName
      * @return \Assetku\BankService\Inquiry\Permatabank\Disbursement\BalanceInquiry
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException
      */
-    public function balanceInquiry(BalanceInquirySubject $subject)
+    public function balanceInquiry(string $accountName)
     {
         try {
-            return $this->bankService->balanceInquiry($subject);
+            return $this->bankService->balanceInquiry($accountName);
         } catch (BalanceInquiryException $e) {
             throw $e;
         } catch (GuzzleException $e) {
@@ -58,15 +54,15 @@ class Bank
     /**
      * Perform overbooking inquiry
      *
-     * @param  \Assetku\BankService\Contracts\OverbookingInquirySubject  $subject
+     * @param  string  $accountNumber
      * @return \Assetku\BankService\Inquiry\Permatabank\Disbursement\OverbookingInquiry
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingInquiryException
      */
-    public function overbookingInquiry(OverbookingInquirySubject $subject)
+    public function overbookingInquiry(string $accountNumber)
     {
         try {
-            return $this->bankService->overbookingInquiry($subject);
+            return $this->bankService->overbookingInquiry($accountNumber);
         } catch (OverbookingInquiryException $e) {
             throw $e;
         } catch (GuzzleException $e) {
@@ -77,15 +73,17 @@ class Bank
     /**
      * Perform online transfer inquiry
      *
-     * @param  \Assetku\BankService\Contracts\OnlineTransferInquirySubject  $subject
+     * @param  string  $toAccount
+     * @param  string  $bankId
+     * @param  string  $bankName
      * @return \Assetku\BankService\Inquiry\Permatabank\Disbursement\OnlineTransferInquiry
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferInquiryException
      */
-    public function onlineTransferInquiry(OnlineTransferInquirySubject $subject)
+    public function onlineTransferInquiry(string $toAccount, string $bankId, string $bankName)
     {
         try {
-            return $this->bankService->onlineTransferInquiry($subject);
+            return $this->bankService->onlineTransferInquiry($toAccount, $bankId, $bankName);
         } catch (OnlineTransferInquiryException $e) {
             throw $e;
         } catch (GuzzleException $e) {
@@ -96,15 +94,15 @@ class Bank
     /**
      * Perform status transaction inquiry
      *
-     * @param  \Assetku\BankService\Contracts\StatusTransactionInquirySubject  $subject
+     * @param  string  $customerReferenceId
      * @return \Assetku\BankService\Inquiry\Permatabank\Disbursement\StatusTransactionInquiry
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\StatusTransactionInquiryException
      */
-    public function statusTransactionInquiry(StatusTransactionInquirySubject $subject)
+    public function statusTransactionInquiry(string $customerReferenceId)
     {
         try {
-            return $this->bankService->statusTransactionInquiry($subject);
+            return $this->bankService->statusTransactionInquiry($customerReferenceId);
         } catch (StatusTransactionInquiryException $e) {
             throw $e;
         } catch (GuzzleException $e) {
@@ -118,6 +116,7 @@ class Bank
      * @param  \Assetku\BankService\Contracts\OverbookingSubject  $subject
      * @return \Assetku\BankService\Transfer\Permatabank\Overbooking
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingInquiryException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingException
      */
     public function overbooking(OverbookingSubject $subject)
@@ -137,6 +136,7 @@ class Bank
      * @param  \Assetku\BankService\Contracts\OnlineTransferSubject  $subject
      * @return \Assetku\BankService\Transfer\Permatabank\OnlineTransfer
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferInquiryException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException
      */
     public function onlineTransfer(OnlineTransferSubject $subject)

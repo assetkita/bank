@@ -9,14 +9,12 @@ class BalanceInquiryException extends DisbursementException
     /**
      * Display error for invalid
      *
-     * @param  string  $code
+     * @param  string  $accountNumber
      * @return BalanceInquiryException
      */
-    public static function invalid($code)
+    public static function invalid(string $accountNumber)
     {
-        $message = static::translateError($code);
-
-        return new static($message, $code);
+        return new static("Hasil balance inquiry nomor akun {$accountNumber} tidak valid.", Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

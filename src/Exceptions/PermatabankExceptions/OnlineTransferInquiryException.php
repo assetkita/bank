@@ -7,6 +7,19 @@ use Illuminate\Http\Response;
 class OnlineTransferInquiryException extends DisbursementException
 {
     /**
+     * Display error for invalid
+     *
+     * @param  string  $toAccount
+     * @param  string  $bankId
+     * @param  string  $bankName
+     * @return OnlineTransferInquiryException
+     */
+    public static function invalid(string $toAccount, string $bankId, string $bankName)
+    {
+        return new static("Hasil online transfer inquiry akun tujuan {$toAccount} dengan id bank {$bankId} dan nama bank {$bankName} tidak valid.", Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
      * Display error for service unavailable
      *
      * @return OnlineTransferInquiryException

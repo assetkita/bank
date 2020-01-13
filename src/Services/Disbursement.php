@@ -33,42 +33,44 @@ interface Disbursement
     /**
      * Perform status transaction inquiry
      *
-     * @param  StatusTransactionInquirySubject  $subject
+     * @param  string  $customerReferenceId
      * @return StatusTransactionInquiry
      * @throws GuzzleException
      * @throws StatusTransactionInquiryException
      */
-    public function statusTransactionInquiry(StatusTransactionInquirySubject $subject);
+    public function statusTransactionInquiry(string $customerReferenceId);
 
     /**
      * Perform balance inquiry
      *
-     * @param  BalanceInquirySubject  $subject
+     * @param  string  $accountNumber
      * @return BalanceInquiry
      * @throws GuzzleException
      * @throws BalanceInquiryException
      */
-    public function balanceInquiry(BalanceInquirySubject $subject);
+    public function balanceInquiry(string $accountNumber);
 
     /**
      * Perform overbooking inquiry
      *
-     * @param  OverbookingInquirySubject  $subject
+     * @param  string  $accountNumber
      * @return OverbookingInquiry
      * @throws GuzzleException
      * @throws OverbookingInquiryException
      */
-    public function overbookingInquiry(OverbookingInquirySubject $subject);
+    public function overbookingInquiry(string $accountNumber);
 
     /**
      * Perform online transfer inquiry
      *
-     * @param  OnlineTransferInquirySubject  $subject
+     * @param  string  $toAccount
+     * @param  string  $bankId
+     * @param  string  $bankName
      * @return OnlineTransferInquiry
      * @throws GuzzleException
      * @throws OnlineTransferInquiryException
      */
-    public function onlineTransferInquiry(OnlineTransferInquirySubject $subject);
+    public function onlineTransferInquiry(string $toAccount, string $bankId, string $bankName);
 
     /**
      * Perform overbooking
@@ -76,6 +78,7 @@ interface Disbursement
      * @param  OverbookingSubject  $subject
      * @return Overbooking
      * @throws GuzzleException
+     * @throws OverbookingInquiryException
      * @throws OverbookingException
      */
     public function overbooking(OverbookingSubject $subject);
@@ -86,6 +89,7 @@ interface Disbursement
      * @param  OnlineTransferSubject  $subject
      * @return OnlineTransfer
      * @throws GuzzleException
+     * @throws OnlineTransferInquiryException
      * @throws OnlineTransferException
      */
     public function onlineTransfer(OnlineTransferSubject $subject);

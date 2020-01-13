@@ -30,7 +30,7 @@ interface LlgTransferSubject
      *
      * @return string
      */
-    public function llgTransferToBankIdentifier();
+    public function llgTransferToBankId();
 
     /**
      * Get llg transfer's to bank name

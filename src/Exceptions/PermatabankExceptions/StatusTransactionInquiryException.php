@@ -9,14 +9,12 @@ class StatusTransactionInquiryException extends DisbursementException
     /**
      * Display error for invalid
      *
-     * @param  string  $code
+     * @param  string  $customerReferenceId
      * @return StatusTransactionInquiryException
      */
-    public static function invalid($code)
+    public static function invalid(string $customerReferenceId)
     {
-        $message = static::translateError($code);
-
-        return new static($message, $code);
+        return new static("Hasil status transaction inquiry id referensi pelanggan {$customerReferenceId} tidak valid.", Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

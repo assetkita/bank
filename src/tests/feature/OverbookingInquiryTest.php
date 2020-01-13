@@ -3,7 +3,6 @@
 namespace Assetku\BankService\tests;
 
 use Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingInquiryException;
-use Assetku\BankService\Mocks\OverbookingInquiryMock;
 use GuzzleHttp\Exception\GuzzleException;
 
 class OverbookingInquiryTest extends TestCase
@@ -13,10 +12,8 @@ class OverbookingInquiryTest extends TestCase
      */
     public function testSuccessOverbookingInquiry()
     {
-        $mock = new OverbookingInquiryMock('9999002800');
-
         try {
-            $overbookingInquiry = \Bank::overbookingInquiry($mock);
+            $overbookingInquiry = \Bank::overbookingInquiry('9999002800');
 
             $this->assertTrue($overbookingInquiry->isSuccess());
         } catch (OverbookingInquiryException $e) {
@@ -31,10 +28,8 @@ class OverbookingInquiryTest extends TestCase
      */
     public function testAccountNotFoundOverbookingInquiry()
     {
-        $mock = new OverbookingInquiryMock('12345');
-
         try {
-            $overbookingInquiry = \Bank::overbookingInquiry($mock);
+            $overbookingInquiry = \Bank::overbookingInquiry('12345');
 
             $this->assertTrue(
                 $overbookingInquiry->getMeta()->getStatusCode() === '14'

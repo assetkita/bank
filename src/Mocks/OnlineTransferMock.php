@@ -47,7 +47,7 @@ class OnlineTransferMock implements OnlineTransferSubject
     /**
      * @inheritDoc
      */
-    public function onlineTransferToBankIdentifier()
+    public function onlineTransferToBankId()
     {
         return '90010';
     }

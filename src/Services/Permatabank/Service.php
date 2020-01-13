@@ -2,14 +2,10 @@
 
 namespace Assetku\BankService\Services\Permatabank;
 
-use Assetku\BankService\Contracts\BalanceInquirySubject;
 use Assetku\BankService\Contracts\LlgTransferSubject;
-use Assetku\BankService\Contracts\OnlineTransferInquirySubject;
 use Assetku\BankService\Contracts\OnlineTransferSubject;
-use Assetku\BankService\Contracts\OverbookingInquirySubject;
 use Assetku\BankService\Contracts\OverbookingSubject;
 use Assetku\BankService\Contracts\RtgsTransferSubject;
-use Assetku\BankService\Contracts\StatusTransactionInquirySubject;
 use Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OAuthException;
@@ -150,7 +146,7 @@ class Service implements BankService
     /**
      * @inheritDoc
      */
-    public function balanceInquiry(BalanceInquirySubject $subject)
+    public function balanceInquiry(string $accountNumber)
     {
         $data = [
             'BalInqRq' => [
@@ -159,7 +155,7 @@ class Service implements BankService
                     'CustRefID'        => random_alphanumeric(),
                 ],
                 'InqInfo'  => [
-                    'AccountNumber' => $subject->balanceInquiryAccountNumber(),
+                    'AccountNumber' => $accountNumber,
                 ],
             ],
         ];
@@ -204,7 +200,7 @@ class Service implements BankService
     /**
      * @inheritDoc
      */
-    public function overbookingInquiry(OverbookingInquirySubject $subject)
+    public function overbookingInquiry(string $accountNumber)
     {
         $data = [
             'AcctInqRq' => [
@@ -213,7 +209,7 @@ class Service implements BankService
                     'CustRefID'        => random_alphanumeric(),
                 ],
                 'InqInfo'  => [
-                    'AccountNumber' => $subject->overbookingInquiryAccountNumber(),
+                    'AccountNumber' => $accountNumber,
                 ],
             ],
         ];
@@ -258,7 +254,7 @@ class Service implements BankService
     /**
      * @inheritDoc
      */
-    public function onlineTransferInquiry(OnlineTransferInquirySubject $subject)
+    public function onlineTransferInquiry(string $toAccount, string $bankId, string $bankName)
     {
         $data = [
             'OlXferInqRq' => [
@@ -269,9 +265,9 @@ class Service implements BankService
                 'XferInfo' => $this->trim
                     ->setToBeTrimmed('BankName')
                     ->setData([
-                        'ToAccount' => $subject->onlineTransferInquiryToAccount(),
-                        'BankId'    => $subject->onlineTransferInquiryBankId(),
-                        'BankName'  => $subject->onlineTransferInquiryBankName(),
+                        'ToAccount' => $toAccount,
+                        'BankId'    => $bankId,
+                        'BankName'  => $bankName,
                     ])
                     ->handle(),
             ],
@@ -317,12 +313,12 @@ class Service implements BankService
     /**
      * @inheritDoc
      */
-    public function statusTransactionInquiry(StatusTransactionInquirySubject $subject)
+    public function statusTransactionInquiry(string $customerReferenceId)
     {
         $data = [
             'StatusTransactionRq' => [
                 'CorpID'    => $this->organizationName,
-                'CustRefID' => $subject->statusTransactionInquiryCustomerReferenceId(),
+                'CustRefID' => $customerReferenceId,
             ],
         ];
 
@@ -368,6 +364,18 @@ class Service implements BankService
      */
     public function overbooking(OverbookingSubject $subject)
     {
+        try {
+            $overbookingInquiry = $this->overbookingInquiry($subject->overbookingToAccount());
+        } catch (OverbookingInquiryException $e) {
+            throw $e;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+
+        if (! $overbookingInquiry->isSuccess()) {
+            throw OverbookingInquiryException::invalid($subject->overbookingToAccount());
+        }
+
         $data = [
             'XferAddRq' => [
                 'MsgRqHdr' => [
@@ -437,6 +445,20 @@ class Service implements BankService
      */
     public function onlineTransfer(OnlineTransferSubject $subject)
     {
+        try {
+            $onlineTransferInquiry = $this->onlineTransferInquiry($subject->onlineTransferToAccount(),
+                $subject->onlineTransferToBankId(), $subject->onlineTransferToBankName());
+        } catch (OnlineTransferInquiryException $e) {
+            throw $e;
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+
+        if (! $onlineTransferInquiry->isSuccess()) {
+            throw OnlineTransferInquiryException::invalid($subject->onlineTransferToAccount(),
+                $subject->onlineTransferToBankId(), $subject->onlineTransferToBankName());
+        }
+
         $data = [
             'OlXferAddRq' => [
                 'MsgRqHdr' => [
@@ -453,8 +475,8 @@ class Service implements BankService
                     ->setData([
                         'FromAccount'   => $subject->onlineTransferFromAccount(),
                         'FromAcctName'  => $subject->onlineTransferFromAccountName(),
-                        'ToBankId'      => $subject->onlineTransferToBankIdentifier(),
                         'ToAccount'     => $subject->onlineTransferToAccount(),
+                        'ToBankId'      => $subject->onlineTransferToBankId(),
                         'ToBankName'    => $subject->onlineTransferToBankName(),
                         'Amount'        => $subject->onlineTransferAmount(),
                         'BenefAcctName' => $subject->onlineTransferBeneficiaryAccountName(),
@@ -530,7 +552,7 @@ class Service implements BankService
                         'FromAccount'         => $subject->llgTransferFromAccount(),
                         'FromAcctName'        => $subject->llgTransferFromAccountName(),
                         'ToAccount'           => $subject->llgTransferToAccount(),
-                        'ToBankId'            => $subject->llgTransferToBankIdentifier(),
+                        'ToBankId'            => $subject->llgTransferToBankId(),
                         'ToBankName'          => $subject->llgTransferToBankName(),
                         'Amount'              => $subject->llgTransferAmount(),
                         'CitizenStatus'       => '0',

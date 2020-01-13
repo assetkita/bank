@@ -23,7 +23,7 @@ interface OnlineTransferSubject
      *
      * @return string
      */
-    public function onlineTransferToBankIdentifier();
+    public function onlineTransferToBankId();
 
     /**
      * Get online transfer's to bank account

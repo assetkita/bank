@@ -3,7 +3,6 @@
 namespace Assetku\BankService\tests;
 
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferInquiryException;
-use Assetku\BankService\Mocks\OnlineTransferInquiryMock;
 use GuzzleHttp\Exception\GuzzleException;
 
 class OnlineTransferInquiryTest extends TestCase
@@ -13,10 +12,8 @@ class OnlineTransferInquiryTest extends TestCase
      */
     public function testSuccessInquiryOnlineTransfer()
     {
-        $mock = new OnlineTransferInquiryMock('90010');
-
         try {
-            $onlineTransferInquiry = \Bank::onlineTransferInquiry($mock);
+            $onlineTransferInquiry = \Bank::onlineTransferInquiry('701075331', '90010', 'BANK BNI');
 
             $this->assertTrue(
                 $onlineTransferInquiry->isSuccess()
@@ -34,10 +31,8 @@ class OnlineTransferInquiryTest extends TestCase
      */
     public function testInvalidBankCodeOnlineTransfer()
     {
-        $mock = new OnlineTransferInquiryMock( '12345');
-
         try {
-            $onlineTransferInquiry = \Bank::onlineTransferInquiry($mock);
+            $onlineTransferInquiry = \Bank::onlineTransferInquiry('701075331', '12345', 'BANK BNI');
 
             $this->assertTrue(
                 $onlineTransferInquiry->getMeta()->getStatusCode() === '31'

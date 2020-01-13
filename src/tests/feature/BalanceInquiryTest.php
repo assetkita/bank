@@ -3,9 +3,8 @@
 namespace Assetku\BankService\tests\Feature;
 
 use Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException;
-use Assetku\BankService\Mocks\BalanceInquiryMock;
-use GuzzleHttp\Exception\GuzzleException;
 use Assetku\BankService\tests\TestCase;
+use GuzzleHttp\Exception\GuzzleException;
 
 class BalanceInquiryTest extends TestCase
 {
@@ -14,10 +13,8 @@ class BalanceInquiryTest extends TestCase
      */
     public function testSuccessBalanceInquiry()
     {
-        $mock = new BalanceInquiryMock('701075323');
-
         try {
-            $balanceInquiry = \Bank::balanceInquiry($mock);
+            $balanceInquiry = \Bank::balanceInquiry('701075323');
 
             $this->assertTrue(
                 $balanceInquiry->isSuccess()
@@ -34,10 +31,8 @@ class BalanceInquiryTest extends TestCase
      */
     public function testInvalidAccountBalanceInquiry()
     {
-        $mock = new BalanceInquiryMock('12345');
-
         try {
-            $balanceInquiry = \Bank::balanceInquiry($mock);
+            $balanceInquiry = \Bank::balanceInquiry('12345');
 
             $this->assertTrue(
                 $balanceInquiry->getMeta()->getStatusCode() === '02'
