@@ -5,9 +5,9 @@ namespace Assetku\BankService\Investa\Permatabank\Document;
 class UploadDocument
 {
     /**
-     * @var $bankReffId
+     * @var $bankRefId
      */
-    protected $bankReffId;
+    protected $bankRefId;
 
     /**
      * @var $docType
@@ -32,11 +32,11 @@ class UploadDocument
     /**
      * set bank reff id
      * 
-     * @var string $bankReffId
+     * @var string $bankRefId
      */
-    public function setBankReffId(string $bankReffId)
+    public function setBankRefId(string $bankRefId)
     {
-        $this->bankReffId = $bankReffId;
+        $this->bankRefId = $bankRefId;
 
         return $this;
     }

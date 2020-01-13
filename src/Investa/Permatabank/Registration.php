@@ -62,7 +62,7 @@ class Registration
      * 
      * @return string $custRefID
      */
-    public function getCustRefId()
+    public function getCustomerReferenceId()
     {
         return $this->custRefID;
     }
@@ -74,7 +74,7 @@ class Registration
      */
     public function getStatusCode()
     {
-        return $this->getStatusCode;
+        return $this->statusCode;
     }
 
     /**
@@ -82,7 +82,7 @@ class Registration
      * 
      * @return string $statusDesc
      */
-    public function getStatusDesc()
+    public function getStatusDescription()
     {
         return $this->statusDesc;
     }

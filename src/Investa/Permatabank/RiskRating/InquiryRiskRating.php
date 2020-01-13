@@ -73,7 +73,7 @@ class InquiryRiskRating
      * 
      * @return string
      */
-    public function getStatusDesc()
+    public function getStatusDescription()
     {
         return $this->statusDesc;
     }
@@ -83,7 +83,7 @@ class InquiryRiskRating
      * 
      * @return string
      */
-    public function getCustRefId()
+    public function getCustomerReferenceId()
     {
         return $this->custRefID;
     }

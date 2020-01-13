@@ -3,9 +3,8 @@
 namespace Assetku\BankService\Providers;
 
 use Assetku\BankService\Bank;
+use Assetku\BankService\Services\BankService;
 use Illuminate\Support\ServiceProvider;
-use Assetku\BankService\Contracts\BankContract;
-use Assetku\BankService\Services\Permatabank\Permatabank;
 
 class BankServiceProvider extends ServiceProvider
 {
@@ -16,18 +15,15 @@ class BankServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/bankservice.php', 'bankservice');
+        $this->mergeConfigFrom(__DIR__.'/../config/bankservice.php', 'bankservice');
 
         switch (config('bankservice.default')) {
-            case 'permatabank':
-                $bankProvider = Permatabank::class;
-                break;
             default:
-                $bankProvider = Permatabank::class;
+                $service = \Assetku\BankService\Services\Permatabank\Service::class;
                 break;
         }
 
-        $this->app->bind(BankContract::class, $bankProvider);
+        $this->app->bind(BankService::class, $service);
 
         $this->app->bind('assetkita.bank', function () {
             return new Bank;
@@ -42,7 +38,7 @@ class BankServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/bankservice.php' => config_path('bankservice.php')
+            __DIR__.'/../config/bankservice.php' => config_path('bankservice.php')
         ], 'config');
     }
 }

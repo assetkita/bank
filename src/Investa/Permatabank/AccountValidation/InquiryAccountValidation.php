@@ -59,7 +59,7 @@ class InquiryAccountValidation
      * 
      * @return string
      */
-    public function getStatusDesc()
+    public function getStatusDescription()
     {
         return $this->statusDesc;
     }
