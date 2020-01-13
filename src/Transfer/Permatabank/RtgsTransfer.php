@@ -2,73 +2,34 @@
 
 namespace Assetku\BankService\Transfer\Permatabank;
 
-class RtgsTransfer
+use Assetku\BankService\Services\Permatabank\Response;
+
+class RtgsTransfer extends Response
 {
     /**
      * @var string
      */
-    protected $custRefId;
+    protected $transactionReferenceNumber;
 
     /**
-     * @var string
+     * RtgsTransfer constructor.
+     *
+     * @param $response
      */
-    protected $statusCode;
-
-    /**
-     * @var string
-     */
-    protected $statusDesc;
-
-    /**
-     * @var string
-     */
-    protected $trxRefNo;
-
-    /**
-     * init Rtgs
-     * 
-     * @param object $rtgsTransferResponse
-     */
-    public function __construct($rtgsTransferResponse)
+    public function __construct($response)
     {
-        $this->custRefId = $rtgsTransferResponse->RtgsXferAddRs->MsgRsHdr->CustRefID;
+        parent::__construct($response->RtgsXferAddRs->MsgRsHdr);
 
-        $this->statusCode = $rtgsTransferResponse->RtgsXferAddRs->MsgRsHdr->StatusCode;
-        
-        $this->statusDesc = $rtgsTransferResponse->RtgsXferAddRs->MsgRsHdr->StatusDesc;
-
-        $this->trxRefNo = $rtgsTransferResponse->RtgsXferAddRs->TrxReffNo;
+        $this->transactionReferenceNumber = $response->RtgsXferAddRs->TrxReffNo;
     }
 
     /**
+     * Get rtgs transfer's transaction reference number
+     *
      * @return string
      */
-    public function getStatusCode()
+    public function getTransactionReferenceNumber()
     {
-        return $this->statusCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatusDesc()
-    {
-        return $this->statusDesc;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCustRefId()
-    {
-        return $this->custRefId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTrxRefNo()
-    {
-        return $this->trxRefNo;
+        return $this->transactionReferenceNumber;
     }
 }
