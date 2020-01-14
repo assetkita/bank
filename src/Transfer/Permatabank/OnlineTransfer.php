@@ -21,6 +21,8 @@ class OnlineTransfer extends Response
         parent::__construct($response->OlXferAddRs->MsgRsHdr);
 
         $this->transactionReferenceNumber = $response->OlXferAddRs->TrxReffNo;
+
+        $this->success = $response->OlXferAddRs->MsgRsHdr->StatusCode === '00' && isset($this->transactionReferenceNumber);
     }
 
     /**

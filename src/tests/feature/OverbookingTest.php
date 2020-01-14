@@ -20,10 +20,7 @@ class OverbookingTest extends TestCase
         try {
             $overbooking = \Bank::overbooking($mock);
 
-            $this->assertTrue(
-                $overbooking->getStatusCode() === '00' &&
-                $overbooking->getStatusDescription() === 'Success'
-            );
+            $this->assertTrue($overbooking->isSuccess());
         } catch (OverbookingException $e) {
             dd($e->getCode(), $e->getMessage());
         } catch (GuzzleException $e) {
@@ -36,15 +33,19 @@ class OverbookingTest extends TestCase
      */
     public function testInvalidAccountOverbooking()
     {
-        $mock = new OverbookingMock('111111111');
+        $mock = new OverbookingMock(mt_rand('111111111', '999999999'));
 
         try {
             $overbooking = \Bank::overbooking($mock);
 
-            $this->assertTrue(
-                $overbooking->getStatusCode() === '02',
-                $overbooking->getStatusDescription() === 'Invalid Account'
-            );
+            if ($overbooking->getMeta()) {
+                $this->assertTrue(
+                    $overbooking->getMeta()->getStatusCode() === '02',
+                    $overbooking->getMeta()->getStatusDescription() === 'Invalid Account'
+                );
+            }
+
+            $this->assertTrue(empty($overbooking->getMeta()));
         } catch (OverbookingException $e) {
             dd($e->getCode(), $e->getMessage());
         }  catch (GuzzleException $e) {

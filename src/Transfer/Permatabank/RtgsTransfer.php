@@ -21,6 +21,8 @@ class RtgsTransfer extends Response
         parent::__construct($response->RtgsXferAddRs->MsgRsHdr);
 
         $this->transactionReferenceNumber = $response->RtgsXferAddRs->TrxReffNo;
+
+        $this->success = $response->RtgsXferAddRs->MsgRsHdr->StatusCode === '00' && isset($this->transactionReferenceNumber);
     }
 
     /**

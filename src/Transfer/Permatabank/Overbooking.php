@@ -18,9 +18,13 @@ class Overbooking extends Response
      */
     public function __construct($response)
     {
-        parent::__construct($response->XferAddRs->MsgRsHdr);
+        if ($response) {
+            parent::__construct($response->XferAddRs->MsgRsHdr);
 
-        $this->transactionReferenceNumber = $response->XferAddRs->TrxReffNo;
+            $this->transactionReferenceNumber = $response->XferAddRs->TrxReffNo;
+
+            $this->success = $response->XferAddRs->MsgRsHdr->StatusCode === '00';
+        }
     }
 
     /**

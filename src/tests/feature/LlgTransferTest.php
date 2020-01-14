@@ -19,8 +19,7 @@ class LlgTransferTest extends TestCase
         try {
             $llgTransfer = \Bank::llgTransfer($mock);
 
-            $this->assertTrue($llgTransfer->getStatusCode() === '00' && $llgTransfer->getStatusDescription() === 'Success'
-            );
+            $this->assertTrue($llgTransfer->isSuccess());
         } catch (LlgTransferException $e) {
             dd($e->getCode(), $e->getMessage());
         } catch (GuzzleException $e) {
@@ -38,7 +37,7 @@ class LlgTransferTest extends TestCase
         try {
             $llgTransfer = \Bank::llgTransfer($mock);
 
-            $this->assertTrue($llgTransfer->getStatusCode() === '14' && $llgTransfer->getStatusDescription() === 'Account Not Found'
+            $this->assertTrue($llgTransfer->getMeta()->getStatusCode() === '14' && $llgTransfer->getMeta()->getStatusDescription() === 'Account Not Found'
             );
         } catch (LlgTransferException $e) {
             dd($e->getCode(), $e->getMessage());
@@ -57,7 +56,7 @@ class LlgTransferTest extends TestCase
         try {
             $llgTransfer = \Bank::llgTransfer($mock);
 
-            $this->assertTrue($llgTransfer->getStatusCode() === '17' && $llgTransfer->getStatusDescription() === 'Amount Transaction is under RTGS Limit Amount'
+            $this->assertTrue($llgTransfer->getMeta()->getStatusCode() === '17' && $llgTransfer->getMeta()->getStatusDescription() === 'Amount Transaction is under RTGS Limit Amount'
             );
         } catch (LlgTransferException $e) {
             dd($e->getCode(), $e->getMessage());

@@ -79,25 +79,17 @@ class LlgTransferMock implements LlgTransferSubject
     /**
      * @inheritDoc
      */
+    public function llgTransferTransactionDescription()
+    {
+        return 'Llg Transfer Test';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function llgTransferBeneficiaryAccountName()
     {
         return 'John';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function llgTransferBeneficiaryEmail()
-    {
-        return 'john@gmail.com';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function llgTransferBeneficiaryPhoneNumber()
-    {
-        return '0821222333467';
     }
 
     /**
@@ -122,29 +114,5 @@ class LlgTransferMock implements LlgTransferSubject
     public function llgTransferBeneficiaryBankCity()
     {
         return 'JAKARTA';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function llgTransferBeneficiaryAddress1()
-    {
-        return 'jl Berkah no.14';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function llgTransferBeneficiaryAddress2()
-    {
-        return 'Perum Satu';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function llgTransferBeneficiaryAddress3()
-    {
-        return 'Pulo Gadung';
     }
 }

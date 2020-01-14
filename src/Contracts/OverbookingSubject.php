@@ -33,23 +33,16 @@ interface OverbookingSubject
     public function overbookingAmount();
 
     /**
+     * Get overbooking's transaction description
+     *
+     * @return string
+     */
+    public function overbookingTransactionDescription();
+
+    /**
      * Get overbooking's beneficiary account name
      *
      * @return string
      */
     public function overbookingBeneficiaryAccountName();
-
-    /**
-     * Get overbooking's beneficiary email
-     *
-     * @return string
-     */
-    public function overbookingBeneficiaryEmail();
-
-    /**
-     * Get overbooking's beneficiary phone number
-     *
-     * @return string
-     */
-    public function overbookingBeneficiaryPhoneNumber();
 }

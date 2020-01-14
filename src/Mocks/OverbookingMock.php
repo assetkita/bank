@@ -56,24 +56,16 @@ class OverbookingMock implements OverbookingSubject
     /**
      * @inheritDoc
      */
+    public function overbookingTransactionDescription()
+    {
+        return 'Overbooking Test';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function overbookingBeneficiaryAccountName()
     {
         return 'Agung Trilaksono';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function overbookingBeneficiaryEmail()
-    {
-        return 'agungtri123@gmail.com';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function overbookingBeneficiaryPhoneNumber()
-    {
-        return '081234567890';
     }
 }

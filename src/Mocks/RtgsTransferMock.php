@@ -9,7 +9,7 @@ class RtgsTransferMock implements RtgsTransferSubject
     /**
      * @inheritDoc
      */
-    public function fromAccount()
+    public function rtgsTransferFromAccount()
     {
         return '701075323';
     }
@@ -17,87 +17,7 @@ class RtgsTransferMock implements RtgsTransferSubject
     /**
      * @inheritDoc
      */
-    public function toAccount()
-    {
-        return '701075331';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function toBankId()
-    {
-        return '90010';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function toBankName()
-    {
-        return 'BNI';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function amount()
-    {
-        return 10000000000;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function benefEmail()
-    {
-        return 'john@gmail.com';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function benefAccountName()
-    {
-        return 'john';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function benefPhoneNo()
-    {
-        return '0821222333467';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function benefBankAddress()
-    {
-        return 'JALAN JEND SUDIRMAN';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function benefBankBranchName()
-    {
-        return 'SUDIRMAN';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function benefBankCity()
-    {
-        return 'JAKARTA';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function fromAccountName()
+    public function rtgsTransferFromAccountName()
     {
         return 'Doe';
     }
@@ -105,32 +25,72 @@ class RtgsTransferMock implements RtgsTransferSubject
     /**
      * @inheritDoc
      */
-    public function fromCurrencyCode()
+    public function rtgsTransferToAccount()
     {
-        return 'IDR';
+        return '701075331';
     }
 
     /**
      * @inheritDoc
      */
-    public function benefAddress1()
+    public function rtgsTransferToBankId()
     {
-        return 'jl Berkah no.14';
+        return '90010';
     }
 
     /**
      * @inheritDoc
      */
-    public function benefAddress2()
+    public function rtgsTransferToBankName()
     {
-        return 'jl Berkah no.14';
+        return 'BNI';
     }
 
     /**
      * @inheritDoc
      */
-    public function benefAddress3()
+    public function rtgsTransferAmount()
     {
-        return 'jl Berkah no.14';
+        return 10000000000;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function rtgsTransferTransactionDescription()
+    {
+        return 'RTGS Transfer Test';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function rtgsTransferBeneficiaryAccountName()
+    {
+        return 'john';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function rtgsTransferBeneficiaryBankAddress()
+    {
+        return 'JALAN JEND SUDIRMAN';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function rtgsTransferBeneficiaryBankBranchName()
+    {
+        return 'SUDIRMAN';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function rtgsTransferBeneficiaryBankCity()
+    {
+        return 'JAKARTA';
     }
 }
