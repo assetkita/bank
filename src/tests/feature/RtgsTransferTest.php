@@ -19,10 +19,7 @@ class RtgsTransferTest extends TestCase
         try {
             $rtgsTransfer = \Bank::rtgsTransfer($mock);
             
-            $this->assertTrue(
-                $rtgsTransfer->getStatusCode() === '00' &&
-                $rtgsTransfer->getStatusDesc() === 'Success'
-            );
+            $this->assertTrue($rtgsTransfer->isSuccess());
         } catch (RtgsTransferException $e) {
             dd($e->getCode(), $e->getMessage());
         } catch (GuzzleException $e) {

@@ -21,6 +21,8 @@ class LlgTransfer extends Response
         parent::__construct($response->LlgXferAddRs->MsgRsHdr);
 
         $this->transactionReferenceNumber = $response->LlgXferAddRs->TrxReffNo;
+
+        $this->success = $response->LlgXferAddRs->MsgRsHdr->StatusCode === '00' && isset($this->transactionReferenceNumber);
     }
 
     /**

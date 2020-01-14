@@ -5,83 +5,79 @@ namespace Assetku\BankService\Contracts;
 interface RtgsTransferSubject
 {
     /**
+     * Get rtgs transfer's from account
+     *
      * @return string
      */
-    public function fromAccount();
+    public function rtgsTransferFromAccount();
 
     /**
+     * Get rtgs transfer's from account name
+     *
      * @return string
      */
-    public function toAccount();
+    public function rtgsTransferFromAccountName();
 
     /**
+     * Get rtgs transfer's to account
+     *
      * @return string
      */
-    public function toBankId();
+    public function rtgsTransferToAccount();
 
     /**
+     * Get rtgs transfer's to bank id
+     *
      * @return string
      */
-    public function toBankName();
+    public function rtgsTransferToBankId();
 
     /**
-     * @return int
-     */
-    public function amount();
-
-    /**
+     * Get rtgs transfer's to bank name
+     *
      * @return string
      */
-    public function benefEmail();
+    public function rtgsTransferToBankName();
 
     /**
-     * @return string
+     * Get rtgs transfer's amount
+     *
+     * @return int|float|double
      */
-    public function benefAccountName();
+    public function rtgsTransferAmount();
 
     /**
+     * Get llg transfer's transaction description
+     *
      * @return string
      */
-    public function benefPhoneNo();
+    public function rtgsTransferTransactionDescription();
 
     /**
+     * Get rtgs transfer's beneficiary account name
+     *
      * @return string
      */
-    public function benefBankAddress();
+    public function rtgsTransferBeneficiaryAccountName();
 
     /**
+     * Get rtgs transfer's beneficiary bank address
+     *
      * @return string
      */
-    public function benefBankBranchName();
+    public function rtgsTransferBeneficiaryBankAddress();
 
     /**
+     * Get rtgs transfer's bank branch name
+     *
      * @return string
      */
-    public function benefBankCity();
+    public function rtgsTransferBeneficiaryBankBranchName();
 
     /**
+     * Get rtgs transfer's bank city
+     *
      * @return string
      */
-    public function fromAccountName();
-
-    /**
-     * @return string
-     */
-    public function fromCurrencyCode();
-
-    /**
-     * @return string
-     */
-    public function benefAddress1();
-
-    /**
-     * @return string
-     */
-    public function benefAddress2();
-
-    /**
-     * @return string
-     */
-    public function benefAddress3();
-
+    public function rtgsTransferBeneficiaryBankCity();
 }

@@ -12,7 +12,7 @@ class Response
     /**
      * @var bool
      */
-    protected $success;
+    protected $success = false;
 
     /**
      * Response constructor.

@@ -47,23 +47,16 @@ interface OnlineTransferSubject
     public function onlineTransferAmount();
 
     /**
+     * Get online transfer's transaction description
+     *
+     * @return string
+     */
+    public function onlineTransferTransactionDescription();
+
+    /**
      * Get online transfer's beneficiary account name
      *
      * @return string
      */
     public function onlineTransferBeneficiaryAccountName();
-
-    /**
-     * Get online transfer's beneficiary email
-     *
-     * @return string
-     */
-    public function onlineTransferBeneficiaryEmail();
-
-    /**
-     * Get online transfer's beneficiary phone number
-     *
-     * @return string
-     */
-    public function onlineTransferBeneficiaryPhoneNumber();
 }

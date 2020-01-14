@@ -79,24 +79,16 @@ class OnlineTransferMock implements OnlineTransferSubject
     /**
      * @inheritDoc
      */
+    public function onlineTransferTransactionDescription()
+    {
+        return 'Online Transfer Test';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function onlineTransferBeneficiaryAccountName()
     {
         return 'John';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function onlineTransferBeneficiaryEmail()
-    {
-        return 'john@gmail.com';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function onlineTransferBeneficiaryPhoneNumber()
-    {
-        return '0821222333467';
     }
 }
