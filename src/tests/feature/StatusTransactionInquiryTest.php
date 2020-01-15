@@ -13,7 +13,7 @@ class StatusTransactionInquiryTest extends TestCase
     public function testSuccessStatusTransactionInquiry()
     {
         try {
-            $statusTransactionInquiry = \Bank::statusTransactionInquiry('ASSET59751');
+            $statusTransactionInquiry = \Bank::statusTransactionInquiry('6Rbx07tLkxSWWy84xH7s');
 
             $this->assertTrue(
                 $statusTransactionInquiry->isSuccess()

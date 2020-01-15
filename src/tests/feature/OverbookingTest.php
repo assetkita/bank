@@ -19,6 +19,7 @@ class OverbookingTest extends TestCase
 
         try {
             $overbooking = \Bank::overbooking($mock);
+            dd($overbooking);
 
             $this->assertTrue($overbooking->isSuccess());
         } catch (OverbookingException $e) {
