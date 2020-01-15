@@ -6,6 +6,7 @@ use Assetku\BankService\Contracts\LlgTransferSubject;
 use Assetku\BankService\Contracts\OnlineTransferSubject;
 use Assetku\BankService\Contracts\OverbookingSubject;
 use Assetku\BankService\Contracts\RtgsTransferSubject;
+use Assetku\BankService\Exceptions\BankValidatorException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OAuthException;
@@ -25,6 +26,7 @@ use Assetku\BankService\Investa\Permatabank\Document\Document;
 use Assetku\BankService\Investa\Permatabank\Registration;
 use Assetku\BankService\Investa\Permatabank\RiskRating\InquiryRiskRating;
 use Assetku\BankService\Investa\Permatabank\UpdateKycStatus\UpdateKycStatus;
+use Assetku\BankService\Rules\Permatabank\Disbursement\OnlineTransferRule;
 use Assetku\BankService\Services\BankService;
 use Assetku\BankService\Services\HttpClient;
 use Assetku\BankService\Transfer\Permatabank\LlgTransfer;
@@ -32,6 +34,7 @@ use Assetku\BankService\Transfer\Permatabank\OnlineTransfer;
 use Assetku\BankService\Transfer\Permatabank\Overbooking;
 use Assetku\BankService\Transfer\Permatabank\RtgsTransfer;
 use Assetku\BankService\utils\TrimWhitespace;
+use Assetku\BankService\utils\Validator;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
@@ -103,6 +106,11 @@ class Service implements BankService
     protected $trim;
 
     /**
+     * @var Validator
+     */
+    protected $validator;
+
+    /**
      * @var string
      */
     protected $accessToken;
@@ -133,6 +141,8 @@ class Service implements BankService
         $this->instcode = config('bankservice.services.permata.instcode');
 
         $this->trim = new TrimWhitespace;
+
+        $this->validator = new Validator;
 
         try {
             $this->accessToken = $this->getToken();
@@ -446,6 +456,14 @@ class Service implements BankService
     public function onlineTransfer(OnlineTransferSubject $subject)
     {
         try {
+            $this->validator->validate([
+                'amount' => $subject->onlineTransferAmount(),
+            ], new OnlineTransferRule);
+        } catch (BankValidatorException $e) {
+            throw $e;
+        }
+
+        try {
             $onlineTransferInquiry = $this->onlineTransferInquiry($subject->onlineTransferToAccount(),
                 $subject->onlineTransferToBankId(), $subject->onlineTransferToBankName());
         } catch (OnlineTransferInquiryException $e) {
@@ -486,7 +504,7 @@ class Service implements BankService
                         'BenefAcctName' => $subject->onlineTransferBeneficiaryAccountName(),
                     ])
                     ->handle(),
-            ]
+            ],
         ];
 
         try {
@@ -530,6 +548,14 @@ class Service implements BankService
      */
     public function llgTransfer(LlgTransferSubject $subject)
     {
+        try {
+            $this->validator->validate([
+                'amount' => $subject->llgTransferAmount(),
+            ], new OnlineTransferRule);
+        } catch (BankValidatorException $e) {
+            throw $e;
+        }
+
         $data = [
             'LlgXferAddRq' => [
                 'MsgRqHdr' => [
@@ -564,7 +590,7 @@ class Service implements BankService
                         'BenefBankCity'       => $subject->llgTransferBeneficiaryBankCity(),
                     ])
                     ->handle(),
-            ]
+            ],
         ];
 
         try {
@@ -608,6 +634,14 @@ class Service implements BankService
      */
     public function rtgsTransfer(RtgsTransferSubject $subject)
     {
+        try {
+            $this->validator->validate([
+                'amount' => $subject->rtgsTransferAmount(),
+            ], new OnlineTransferRule);
+        } catch (BankValidatorException $e) {
+            throw $e;
+        }
+
         $data = [
             'RtgsXferAddRq' => [
                 'MsgRqHdr' => [
@@ -643,7 +677,7 @@ class Service implements BankService
                         'BenefBankCity'       => $subject->rtgsTransferBeneficiaryBankCity(),
                     ])
                     ->handle(),
-            ]
+            ],
         ];
 
         try {

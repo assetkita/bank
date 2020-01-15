@@ -135,6 +135,7 @@ class Bank
      *
      * @param  \Assetku\BankService\Contracts\OnlineTransferSubject  $subject
      * @return \Assetku\BankService\Transfer\Permatabank\OnlineTransfer
+     * @throws \Assetku\BankService\Exceptions\BankValidatorException
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferInquiryException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException
@@ -155,6 +156,7 @@ class Bank
      *
      * @param  \Assetku\BankService\Contracts\LlgTransferSubject  $subject
      * @return \Assetku\BankService\Transfer\Permatabank\LlgTransfer
+     * @throws \Assetku\BankService\Exceptions\BankValidatorException
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException
      */
@@ -174,6 +176,7 @@ class Bank
      *
      * @param  \Assetku\BankService\Contracts\RtgsTransferSubject  $subject
      * @return \Assetku\BankService\Transfer\Permatabank\RtgsTransfer
+     * @throws \Assetku\BankService\Exceptions\BankValidatorException
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\RtgsTransferException
      */
