@@ -65,7 +65,7 @@ class OnlineTransferMock implements OnlineTransferSubject
      */
     public function onlineTransferToBankName()
     {
-        return 'BNI';
+        return 'BANK BNI';
     }
 
     /**

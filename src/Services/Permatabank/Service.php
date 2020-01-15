@@ -468,6 +468,7 @@ class Service implements BankService
                 'XferInfo' => $this->trim
                     ->setToBeTrimmed([
                         'FromAcctName',
+                        'ToBankName',
                         'TrxDesc',
                         'BenefAcctName',
                         'BenefEmail',
@@ -538,6 +539,7 @@ class Service implements BankService
                 'XferInfo' => $this->trim
                     ->setToBeTrimmed([
                         'FromAcctName',
+                        'ToBankName',
                         'TrxDesc',
                         'BenefAcctName',
                         'BenefBankAddress',
@@ -616,6 +618,7 @@ class Service implements BankService
                     'FromAccount',
                     'FromAcctName',
                     'ToAccount',
+                    'ToBankName',
                     'TrxDesc',
                     'BenefAcctName',
                     'BenefBankAddress',
