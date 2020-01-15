@@ -26,7 +26,9 @@ use Assetku\BankService\Investa\Permatabank\Document\Document;
 use Assetku\BankService\Investa\Permatabank\Registration;
 use Assetku\BankService\Investa\Permatabank\RiskRating\InquiryRiskRating;
 use Assetku\BankService\Investa\Permatabank\UpdateKycStatus\UpdateKycStatus;
+use Assetku\BankService\Rules\Permatabank\Disbursement\LlgTransferRule;
 use Assetku\BankService\Rules\Permatabank\Disbursement\OnlineTransferRule;
+use Assetku\BankService\Rules\Permatabank\Disbursement\RtgsTransferRule;
 use Assetku\BankService\Services\BankService;
 use Assetku\BankService\Services\HttpClient;
 use Assetku\BankService\Transfer\Permatabank\LlgTransfer;
@@ -551,7 +553,7 @@ class Service implements BankService
         try {
             $this->validator->validate([
                 'amount' => $subject->llgTransferAmount(),
-            ], new OnlineTransferRule);
+            ], new LlgTransferRule);
         } catch (BankValidatorException $e) {
             throw $e;
         }
@@ -637,7 +639,7 @@ class Service implements BankService
         try {
             $this->validator->validate([
                 'amount' => $subject->rtgsTransferAmount(),
-            ], new OnlineTransferRule);
+            ], new RtgsTransferRule);
         } catch (BankValidatorException $e) {
             throw $e;
         }
