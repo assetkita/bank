@@ -2,14 +2,11 @@
 
 namespace Assetku\BankService\Services;
 
-use Assetku\BankService\Contracts\BalanceInquirySubject;
 use Assetku\BankService\Contracts\LlgTransferSubject;
-use Assetku\BankService\Contracts\OnlineTransferInquirySubject;
 use Assetku\BankService\Contracts\OnlineTransferSubject;
-use Assetku\BankService\Contracts\OverbookingInquirySubject;
 use Assetku\BankService\Contracts\OverbookingSubject;
 use Assetku\BankService\Contracts\RtgsTransferSubject;
-use Assetku\BankService\Contracts\StatusTransactionInquirySubject;
+use Assetku\BankService\Exceptions\BankValidatorException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\BalanceInquiryException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\LlgTransferException;
 use Assetku\BankService\Exceptions\PermatabankExceptions\OnlineTransferException;
@@ -88,6 +85,7 @@ interface Disbursement
      *
      * @param  OnlineTransferSubject  $subject
      * @return OnlineTransfer
+     * @throws BankValidatorException
      * @throws GuzzleException
      * @throws OnlineTransferInquiryException
      * @throws OnlineTransferException
@@ -99,6 +97,7 @@ interface Disbursement
      *
      * @param  LlgTransferSubject  $subject
      * @return LlgTransfer
+     * @throws BankValidatorException
      * @throws GuzzleException
      * @throws LlgTransferException
      */
@@ -109,6 +108,7 @@ interface Disbursement
      *
      * @param  RtgsTransferSubject  $subject
      * @return RtgsTransfer
+     * @throws BankValidatorException
      * @throws GuzzleException
      * @throws RtgsTransferException
      */
