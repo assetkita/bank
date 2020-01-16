@@ -19,11 +19,11 @@ interface OnlineTransferSubject
     public function onlineTransferFromAccountName();
 
     /**
-     * Get online transfer's to bank id
+     * Get online transfer's from bank name
      *
      * @return string
      */
-    public function onlineTransferToBankId();
+    public function onlineTransferFromBankName();
 
     /**
      * Get online transfer's to bank account
@@ -31,6 +31,13 @@ interface OnlineTransferSubject
      * @return string
      */
     public function onlineTransferToAccount();
+
+    /**
+     * Get online transfer's to bank id
+     *
+     * @return string
+     */
+    public function onlineTransferToBankId();
 
     /**
      * Get online transfer's to bank name

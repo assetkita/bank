@@ -47,6 +47,14 @@ class LlgTransferMock implements LlgTransferSubject
     /**
      * @inheritDoc
      */
+    public function llgTransferFromBankName()
+    {
+        return 'Bank BNI';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function llgTransferToAccount()
     {
         return '701075323';

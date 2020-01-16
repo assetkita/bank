@@ -25,6 +25,14 @@ class RtgsTransferMock implements RtgsTransferSubject
     /**
      * @inheritDoc
      */
+    public function rtgsTransferFromBankName()
+    {
+        return 'Bank BNI';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function rtgsTransferToAccount()
     {
         return '701075331';

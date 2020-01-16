@@ -40,9 +40,25 @@ class OverbookingMock implements OverbookingSubject
     /**
      * @inheritDoc
      */
+    public function overbookingFromBankName()
+    {
+        return 'Bank BNI';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function overbookingToAccount()
     {
         return '701075323';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function overbookingToBankName()
+    {
+        return 'Bank BNI';
     }
 
     /**
