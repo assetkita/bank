@@ -2,9 +2,7 @@
 
 namespace Assetku\BankService\Rules\Permatabank\Disbursement;
 
-use Assetku\BankService\Rules\Rule;
-
-class LlgTransferRule extends Rule
+class OverbookingRule
 {
     /**
      * @inheritDoc
@@ -12,7 +10,7 @@ class LlgTransferRule extends Rule
     public function rules()
     {
         return [
-            'amount' => 'required|numeric|min:1000|max:1000000000',
+            'amount' => 'required|numeric|min:1000',
         ];
     }
 

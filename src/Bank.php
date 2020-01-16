@@ -115,6 +115,7 @@ class Bank
      *
      * @param  \Assetku\BankService\Contracts\OverbookingSubject  $subject
      * @return \Assetku\BankService\Transfer\Permatabank\Overbooking
+     * @throws \Assetku\BankService\Exceptions\BankValidatorException
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingInquiryException
      * @throws \Assetku\BankService\Exceptions\PermatabankExceptions\OverbookingException

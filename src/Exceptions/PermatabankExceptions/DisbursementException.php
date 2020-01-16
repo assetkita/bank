@@ -2,9 +2,8 @@
 
 namespace Assetku\BankService\Exceptions\PermatabankExceptions;
 
-use Exception;
 use Assetku\BankService\Contracts\BankExceptionContract;
-use Illuminate\Http\Response;
+use Exception;
 
 class DisbursementException extends Exception implements BankExceptionContract
 {
@@ -39,8 +38,10 @@ class DisbursementException extends Exception implements BankExceptionContract
     const STATUS_INVALID_BANK_CODE = '31';
     
     const STATUS_INSUFFICIENT_FUND = '51';
+
+    const STATUS_MINIMAL_TRANSACTION_LIMIT_EXCEEDED = '51';
     
-    const STATUS_EXCEEDS_WITHDRAWL_AMOUNT_LIMIT = '61';
+    const STATUS_EXCEEDS_WITHDRAWAL_AMOUNT_LIMIT = '61';
     
     const STATUS_RESTRICTED_CARD = '62';
     
@@ -84,36 +85,33 @@ class DisbursementException extends Exception implements BankExceptionContract
                 break;
             
             case static::STATUS_DUPLICATE_CUST_REF_ID:
-                $message = 'CustRefId tidak boleh sama.';
+                $message = 'ID referensi pelanggan rangkap.';
                 break;
             
             case static::STATUS_DAILY_LIMIT_EXCEEDS:
-                $message = 'Batas Harian Melebihi.';
+                $message = 'Melebihi batas harian.';
                 break;
 
             case static::STATUS_DISALLOWED_TRANSACTION:
+            case static::STATUS_DISALLOWED_TRANSACTION_TWO:
                 $message = 'Transaksi tidak diperbolehkan.';
                 break;
             
             case static::STATUS_INVALID_TRX_TYPE:
-                $message = 'Jenis Transfer tidak valid.';
+                $message = 'Jenis transfer tidak valid.';
                 break;
             
             case static::STATUS_GENERIC_EXCEPTION:
-                $message = 'Generic Exception.';
+                $message = 'Pengecualian umum.';
                 break;
             
             case static::STATUS_INVALID_AMOUNT:
-                $message = 'Jumlah Transfer tidak valid.';
+                $message = 'Jumlah transfer tidak valid.';
                 break;
             
             case static::STATUS_ACCOUNT_NOT_FOUND:
             case static::STATUS_INQUIRY_STATUS_NOT_FOUND:
-                $message = 'akun tidak ditemukan.';
-                break;
-            
-            case static::STATUS_DISALLOWED_TRANSACTION_TWO:
-                $message = 'Transaksi tidak diperbolehkan.';
+                $message = 'Akun tidak ditemukan. | Status pemeriksaan tidak ditemukan.';
                 break;
             
             case static::STATUS_AMOUNT_TRANSACTION_IS_UNDER_RTGS_LIMIT_AMOUNT:
@@ -133,15 +131,16 @@ class DisbursementException extends Exception implements BankExceptionContract
                 break;
             
             case static::STATUS_INSUFFICIENT_FUND:
-                $message = 'Dana tidak cukup.';
+            case static::STATUS_MINIMAL_TRANSACTION_LIMIT_EXCEEDED:
+                $message = 'Dana tidak cukup. | Melebihi batas transaksi minimal.';
                 break;
 
-            case static::STATUS_EXCEEDS_WITHDRAWL_AMOUNT_LIMIT:
-                $message = 'Jumlah penarikan dana terbatas.';
+            case static::STATUS_EXCEEDS_WITHDRAWAL_AMOUNT_LIMIT:
+                $message = 'Melebihi batas jumlah penarikan.';
                 break;
             
             case static::STATUS_RESTRICTED_CARD: 
-                $message = 'kartu dilarang.';
+                $message = 'Kartu dibatasi.';
                 break;
 
             case static::STATUS_SECURITY_VIOLATION:
@@ -149,43 +148,43 @@ class DisbursementException extends Exception implements BankExceptionContract
                 break;
 
             case static::STATUS_GENERIC_ERROR:
-                $message = 'Generic error.';
+                $message = 'Kesalahan umum.';
                 break;
 
             case static::STATUS_TIMEOUT_BILL_PAYMENT:
-                $message = 'Billing timeout.';
+                $message = 'Kehabisan waktu pembayaran tagihan.';
                 break;
 
             case static::STATUS_BILL_ALREADY_PAID:
-                $message = 'Billing telah dibayar.';
+                $message = 'Tagihan telah dibayar.';
                 break;
 
             case static::STATUS_INVALID_BENEFICIARY_OR_CURRENCY:
-                $message = 'Penerimaan atau mata uang tidak valid.';
+                $message = 'Penerima atau mata uang tidak valid.';
                 break;
 
             case static::STATUS_TRANSPORT_ERROR_TO_BACKEND:
-                $message = 'transportasi ke backend error.';
+                $message = 'Kesalahan transportasi ke backend.';
                 break;
 
             case static::STATUS_TRANSPORT_ERROR_TO_3RD_PARTY:
-                $message = 'transportasi ke 3rd party error.';
+                $message = 'Kesalahan transportasi ke pihak ketiga.';
                 break;
 
             case static::STATUS_TIMEOUT:
-                $message = 'Error timeout.';
+                $message = 'Kehabisan waktu.';
                 break;
 
             case static::STATUS_PRIVATE_KEY_IS_NOT_FOUND:
-                $message = 'Private key salah atau tidak tersedia.';
+                $message = 'Kunci pribadi tidak ditemukan.';
                 break;
 
             case static::STATUS_UNAUTHORIZED:
-                $message = 'Tidak memiliki hak akses.';
+                $message = 'Tidak berwenang.';
                 break;
 
             case static::STATUS_SIGNATURE_NOT_VALID:
-                $message = 'Signature code tidak cocok.';
+                $message = 'Tanda tangan tidak valid.';
                 break;
             
             default:

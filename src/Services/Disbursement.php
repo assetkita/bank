@@ -74,6 +74,7 @@ interface Disbursement
      *
      * @param  OverbookingSubject  $subject
      * @return Overbooking
+     * @throws BankValidatorException
      * @throws GuzzleException
      * @throws OverbookingInquiryException
      * @throws OverbookingException

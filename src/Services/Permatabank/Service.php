@@ -377,6 +377,14 @@ class Service implements BankService
     public function overbooking(OverbookingSubject $subject)
     {
         try {
+            $this->validator->validate([
+                'amount' => $subject->overbookingAmount(),
+            ], new OnlineTransferRule);
+        } catch (BankValidatorException $e) {
+            throw $e;
+        }
+
+        try {
             $overbookingInquiry = $this->overbookingInquiry($subject->overbookingToAccount());
         } catch (OverbookingInquiryException $e) {
             throw $e;
