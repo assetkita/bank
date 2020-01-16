@@ -19,6 +19,13 @@ interface LlgTransferSubject
     public function llgTransferFromAccountName();
 
     /**
+     * Get llg transfer's from bank name
+     *
+     * @return string
+     */
+    public function llgTransferFromBankName();
+
+    /**
      * Get llg transfer's to account
      *
      * @return string

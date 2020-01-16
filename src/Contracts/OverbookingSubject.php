@@ -19,11 +19,25 @@ interface OverbookingSubject
     public function overbookingFromAccountName();
 
     /**
+     * Get overbooking's from bank name
+     *
+     * @return string
+     */
+    public function overbookingFromBankName();
+
+    /**
      * Get overbooking's to account
      *
      * @return string
      */
     public function overbookingToAccount();
+
+    /**
+     * Get overbooking's to bank name
+     *
+     * @return string
+     */
+    public function overbookingToBankName();
 
     /**
      * Get overbooking's amount
