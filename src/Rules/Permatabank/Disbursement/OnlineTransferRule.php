@@ -12,7 +12,7 @@ class OnlineTransferRule extends Rule
     public function rules()
     {
         return [
-            'amount' => 'required|numeric|min:1|max:25000000',
+            'amount' => 'required|numeric|min:1000|max:25000000',
         ];
     }
 
