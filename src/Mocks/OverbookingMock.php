@@ -34,7 +34,7 @@ class OverbookingMock implements OverbookingSubject
      */
     public function overbookingFromAccountName()
     {
-        return 'Agung';
+        return 'Escrow Account';
     }
 
     /**
@@ -42,7 +42,7 @@ class OverbookingMock implements OverbookingSubject
      */
     public function overbookingFromBankName()
     {
-        return 'Bank BNI';
+        return 'BANK PERMATA';
     }
 
     /**
@@ -50,7 +50,15 @@ class OverbookingMock implements OverbookingSubject
      */
     public function overbookingToAccount()
     {
-        return '701075323';
+        return '4123561541';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function overbookingToAccountName()
+    {
+        return 'Operational Account';
     }
 
     /**
@@ -58,7 +66,7 @@ class OverbookingMock implements OverbookingSubject
      */
     public function overbookingToBankName()
     {
-        return 'Bank BNI';
+        return 'BANK PERMATA';
     }
 
     /**
@@ -74,7 +82,7 @@ class OverbookingMock implements OverbookingSubject
      */
     public function overbookingTransactionDescription()
     {
-        return 'Overbooking Test';
+        return 'Admin Fee';
     }
 
     /**
@@ -82,6 +90,6 @@ class OverbookingMock implements OverbookingSubject
      */
     public function overbookingBeneficiaryAccountName()
     {
-        return 'Agung Trilaksono';
+        return 'PT. Assetku Mitra Bangsa';
     }
 }

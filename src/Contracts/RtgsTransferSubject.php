@@ -47,6 +47,13 @@ interface RtgsTransferSubject
     public function rtgsTransferToBankName();
 
     /**
+     * Get rtgs transfer's beneficiary account name
+     *
+     * @return string
+     */
+    public function rtgsTransferBeneficiaryAccountName();
+
+    /**
      * Get rtgs transfer's amount
      *
      * @return int|float|double
@@ -59,32 +66,4 @@ interface RtgsTransferSubject
      * @return string
      */
     public function rtgsTransferTransactionDescription();
-
-    /**
-     * Get rtgs transfer's beneficiary account name
-     *
-     * @return string
-     */
-    public function rtgsTransferBeneficiaryAccountName();
-
-    /**
-     * Get rtgs transfer's beneficiary bank address
-     *
-     * @return string
-     */
-    public function rtgsTransferBeneficiaryBankAddress();
-
-    /**
-     * Get rtgs transfer's bank branch name
-     *
-     * @return string
-     */
-    public function rtgsTransferBeneficiaryBankBranchName();
-
-    /**
-     * Get rtgs transfer's bank city
-     *
-     * @return string
-     */
-    public function rtgsTransferBeneficiaryBankCity();
 }

@@ -7,11 +7,33 @@ use Assetku\BankService\Contracts\RtgsTransferSubject;
 class RtgsTransferMock implements RtgsTransferSubject
 {
     /**
+     * @var string
+     */
+    protected $fromAccount;
+
+    /**
+     * @var int
+     */
+    protected $amount;
+
+    /**
+     * RtgsTransferMock constructor.
+     *
+     * @param  string  $fromAccount
+     * @param  int  $amount
+     */
+    public function __construct(string $fromAccount, int $amount)
+    {
+        $this->fromAccount = $fromAccount;
+        $this->amount = $amount;
+    }
+
+    /**
      * @inheritDoc
      */
     public function rtgsTransferFromAccount()
     {
-        return '701075323';
+        return $this->fromAccount;
     }
 
     /**
@@ -19,7 +41,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function rtgsTransferFromAccountName()
     {
-        return 'Doe';
+        return 'Operational Account';
     }
 
     /**
@@ -27,7 +49,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function rtgsTransferFromBankName()
     {
-        return 'Bank BNI';
+        return 'BANK PERMATA';
     }
 
     /**
@@ -35,7 +57,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function rtgsTransferToAccount()
     {
-        return '701075331';
+        return '701075323';
     }
 
     /**
@@ -51,7 +73,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function rtgsTransferToBankName()
     {
-        return 'BNI';
+        return 'BANK BNI';
     }
 
     /**
@@ -59,7 +81,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function rtgsTransferAmount()
     {
-        return 10000000000;
+        return $this->amount;
     }
 
     /**
@@ -67,7 +89,7 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function rtgsTransferTransactionDescription()
     {
-        return 'RTGS Transfer Test';
+        return 'Pencairan pinjaman';
     }
 
     /**
@@ -75,30 +97,6 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function rtgsTransferBeneficiaryAccountName()
     {
-        return 'john';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function rtgsTransferBeneficiaryBankAddress()
-    {
-        return 'JALAN JEND SUDIRMAN';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function rtgsTransferBeneficiaryBankBranchName()
-    {
-        return 'SUDIRMAN';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function rtgsTransferBeneficiaryBankCity()
-    {
-        return 'JAKARTA';
+        return 'PT. Assetku Mitra Bangsa';
     }
 }

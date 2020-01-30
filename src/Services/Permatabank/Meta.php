@@ -2,7 +2,7 @@
 
 namespace Assetku\BankService\Services\Permatabank;
 
-use Assetku\BankService\Exceptions\PermatabankExceptions\DisbursementException;
+use Assetku\BankService\Exceptions\PermatabankException;
 
 class Meta
 {
@@ -44,7 +44,7 @@ class Meta
         $this->statusDescription = $messageResponseHeader->StatusDesc;
 
         if ($messageResponseHeader->StatusCode !== '00') {
-            $this->errorMessage = DisbursementException::translateError($messageResponseHeader->StatusCode);
+            $this->errorMessage = PermatabankException::translate($messageResponseHeader->StatusCode);
         }
     }
 

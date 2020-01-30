@@ -1,59 +1,69 @@
 {
-    "name": "assetkita/bank",
-    "description": "Asset Kita bank services package.",
-    "keywords": [
-      "assetkita",
-      "laravel",
-      "bank",
-      "fintech"
-    ],
-    "homepage": "https://assetkita.com",
-    "license": "MIT",
-    "authors": [
-      {
-        "name": "Agung Trilaksono",
-        "email": "agungtrilaksono899@hotmail.com",
-        "role": "Software Engineer"
+  "name": "assetkita/bank",
+  "description": "Asset Kita bank services package.",
+  "keywords": [
+    "laravel",
+    "bank",
+    "permata bank"
+  ],
+  "homepage": "https://assetkita.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Agung Trilaksono",
+      "email": "agungtrilaksono899@hotmail.com",
+      "role": "Software Engineer"
+    },
+    {
+      "name": "Yoel Peter Chandra",
+      "email": "yoelpc4@gmail.com",
+      "role": "Full Stack Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "guzzlehttp/guzzle": "6.*",
+    "illuminate/contracts": "5.5.*",
+    "illuminate/support": "5.5.*",
+    "illuminate/validation": "5.5.*",
+    "psr/http-message": "1.*",
+    "symfony/http-foundation": "3.*",
+    "symfony/http-kernel": "3.*"
+  },
+  "require-dev": {
+    "fzaninotto/faker": "1.*",
+    "orchestra/testbench": "3.*",
+    "phpunit/phpunit": "6.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Assetku\\BankService\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Assetku\\BankService\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Assetku\\BankService\\Providers\\BankServiceProvider"
+      ],
+      "aliases": {
+        "Bank": "Assetku\\BankService\\Facades\\Bank"
       }
-    ],
-    "require": {
-        "php": ">=7.0",
-        "guzzlehttp/guzzle": "6.3.3",
-        "illuminate/contracts": "5.5.*",
-        "illuminate/http": "5.5.*",
-        "illuminate/support": "5.5.*",
-        "illuminate/validation": "5.5.*",
-        "psr/http-message": "1.0.*"
-    },
-    "require-dev": {
-      "fzaninotto/faker": "~1.4",
-      "orchestra/testbench": "3.5",
-      "phpunit/phpunit": "~6.0"
-    },
-    "autoload": {
-      "psr-4": {
-        "Assetku\\BankService\\": "src/"
-      },
-      "files": [
-        "src/helpers.php"
-      ]
-    },
-    "extra": {
-      "laravel": {
-        "providers": [
-          "Assetku\\BankService\\Providers\\BankServiceProvider"
-        ],
-        "aliases": {
-          "Bank": "Assetku\\BankService\\Facades\\Bank"
-        }
-      }
-    },
-    "config": {
-      "sort-packages": true
-    },
-    "scripts": {
-      "test": "vendor/bin/phpunit"
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true
-  }
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
