@@ -17,7 +17,7 @@ class LlgTransferMock implements LlgTransferSubject
     protected $amount;
 
     /**
-     * OnlineTransferMock constructor.
+     * LlgTransferMock constructor.
      *
      * @param  string  $fromAccount
      * @param  int  $amount
@@ -41,7 +41,7 @@ class LlgTransferMock implements LlgTransferSubject
      */
     public function llgTransferFromAccountName()
     {
-        return 'Doe';
+        return 'Operational Account';
     }
 
     /**
@@ -49,7 +49,7 @@ class LlgTransferMock implements LlgTransferSubject
      */
     public function llgTransferFromBankName()
     {
-        return 'Bank BNI';
+        return 'BANK PERMATA';
     }
 
     /**
@@ -73,7 +73,7 @@ class LlgTransferMock implements LlgTransferSubject
      */
     public function llgTransferToBankName()
     {
-        return 'BNI';
+        return 'BANK BNI';
     }
 
     /**
@@ -89,7 +89,7 @@ class LlgTransferMock implements LlgTransferSubject
      */
     public function llgTransferTransactionDescription()
     {
-        return 'Llg Transfer Test';
+        return 'Pencairan pinjaman';
     }
 
     /**
@@ -97,30 +97,6 @@ class LlgTransferMock implements LlgTransferSubject
      */
     public function llgTransferBeneficiaryAccountName()
     {
-        return 'John';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function llgTransferBeneficiaryBankAddress()
-    {
-        return 'JALAN JEND SUDIRMAN';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function llgTransferBeneficiaryBankBranchName()
-    {
-        return 'SUDIRMAN';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function llgTransferBeneficiaryBankCity()
-    {
-        return 'JAKARTA';
+        return 'PT. Assetku Mitra Bangsa';
     }
 }

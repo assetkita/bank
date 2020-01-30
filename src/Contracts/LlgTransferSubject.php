@@ -47,6 +47,13 @@ interface LlgTransferSubject
     public function llgTransferToBankName();
 
     /**
+     * Get llg transfer's beneficiary account name
+     *
+     * @return string
+     */
+    public function llgTransferBeneficiaryAccountName();
+
+    /**
      * Get llg transfer's amount
      *
      * @return int|float|double
@@ -59,32 +66,4 @@ interface LlgTransferSubject
      * @return string
      */
     public function llgTransferTransactionDescription();
-
-    /**
-     * Get llg transfer's beneficiary account name
-     *
-     * @return string
-     */
-    public function llgTransferBeneficiaryAccountName();
-
-    /**
-     * Get llg transfer's beneficiary bank address
-     *
-     * @return string
-     */
-    public function llgTransferBeneficiaryBankAddress();
-
-    /**
-     * Get llg transfer's beneficiary bank branch name
-     *
-     * @return string
-     */
-    public function llgTransferBeneficiaryBankBranchName();
-
-    /**
-     * Get llg transfer's beneficiary branch city
-     *
-     * @return string
-     */
-    public function llgTransferBeneficiaryBankCity();
 }

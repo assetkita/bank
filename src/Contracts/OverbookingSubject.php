@@ -33,6 +33,13 @@ interface OverbookingSubject
     public function overbookingToAccount();
 
     /**
+     * Get overbooking's to account name
+     *
+     * @return string
+     */
+    public function overbookingToAccountName();
+
+    /**
      * Get overbooking's to bank name
      *
      * @return string

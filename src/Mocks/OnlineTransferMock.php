@@ -12,7 +12,7 @@ class OnlineTransferMock implements OnlineTransferSubject
     protected $fromAccount;
 
     /**
-     * @var int
+     * @var int|float|double
      */
     protected $amount;
 
@@ -20,9 +20,9 @@ class OnlineTransferMock implements OnlineTransferSubject
      * OnlineTransferMock constructor.
      *
      * @param  string  $fromAccount
-     * @param  int  $amount
+     * @param  int|float|double  $amount
      */
-    public function __construct(string $fromAccount, int $amount)
+    public function __construct(string $fromAccount, $amount)
     {
         $this->fromAccount = $fromAccount;
         $this->amount = $amount;
@@ -41,7 +41,7 @@ class OnlineTransferMock implements OnlineTransferSubject
      */
     public function onlineTransferFromAccountName()
     {
-        return 'Doe';
+        return 'Operational Account';
     }
 
     /**
@@ -49,7 +49,7 @@ class OnlineTransferMock implements OnlineTransferSubject
      */
     public function onlineTransferFromBankName()
     {
-        return 'Bank BNI';
+        return 'BANK PERMATA';
     }
 
     /**
@@ -57,7 +57,7 @@ class OnlineTransferMock implements OnlineTransferSubject
      */
     public function onlineTransferToAccount()
     {
-        return '701075331';
+        return '701075323';
     }
 
     /**
@@ -89,7 +89,7 @@ class OnlineTransferMock implements OnlineTransferSubject
      */
     public function onlineTransferTransactionDescription()
     {
-        return 'Online Transfer Test';
+        return 'Pencairan pinjaman';
     }
 
     /**
@@ -97,6 +97,6 @@ class OnlineTransferMock implements OnlineTransferSubject
      */
     public function onlineTransferBeneficiaryAccountName()
     {
-        return 'John';
+        return 'PT. Assetku Mitra Bangsa';
     }
 }
