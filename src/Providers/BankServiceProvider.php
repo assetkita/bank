@@ -6,6 +6,7 @@ use Assetku\BankService\Apis\Guzzle\ApiManager;
 use Assetku\BankService\BankService;
 use Assetku\BankService\Contracts\Apis\Api;
 use Assetku\BankService\Contracts\Apis\Factory;
+use Assetku\BankService\Services\Contracts\Service;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
@@ -34,8 +35,8 @@ class BankServiceProvider extends ServiceProvider
 
         $this->app->register($this->serviceProviders[\Config::get('bank.default')]);
 
-        $this->app->bind('bank', function () {
-            return new BankService;
+        $this->app->bind('bank_service', function () {
+            return new BankService($this->app->make(Service::class));
         });
     }
 
