@@ -63,6 +63,14 @@ class OnlineTransferMock implements OnlineTransferSubject
     /**
      * @inheritDoc
      */
+    public function onlineTransferToAccountName()
+    {
+        return 'John Doe';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function onlineTransferToBankId()
     {
         return '90010';
@@ -97,6 +105,6 @@ class OnlineTransferMock implements OnlineTransferSubject
      */
     public function onlineTransferBeneficiaryAccountName()
     {
-        return 'PT. Assetku Mitra Bangsa';
+        return 'John Doe';
     }
 }

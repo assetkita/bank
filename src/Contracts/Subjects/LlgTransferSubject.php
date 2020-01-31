@@ -26,11 +26,18 @@ interface LlgTransferSubject
     public function llgTransferFromBankName();
 
     /**
-     * Get llg transfer's to toAccount
+     * Get llg transfer's to account
      *
      * @return string
      */
     public function llgTransferToAccount();
+
+    /**
+     * Get llg transfer's to account name
+     *
+     * @return string
+     */
+    public function llgTransferToAccountName();
 
     /**
      * Get llg transfer's to bank id

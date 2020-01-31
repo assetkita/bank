@@ -63,6 +63,14 @@ class LlgTransferMock implements LlgTransferSubject
     /**
      * @inheritDoc
      */
+    public function llgTransferToAccountName()
+    {
+        return 'John Doe';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function llgTransferToBankId()
     {
         return '90010';
@@ -97,6 +105,6 @@ class LlgTransferMock implements LlgTransferSubject
      */
     public function llgTransferBeneficiaryAccountName()
     {
-        return 'PT. Assetku Mitra Bangsa';
+        return 'John Doe';
     }
 }

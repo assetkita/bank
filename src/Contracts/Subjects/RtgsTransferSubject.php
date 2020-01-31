@@ -26,11 +26,18 @@ interface RtgsTransferSubject
     public function rtgsTransferFromBankName();
 
     /**
-     * Get rtgs transfer's to toAccount
+     * Get rtgs transfer's to to account name
      *
      * @return string
      */
     public function rtgsTransferToAccount();
+
+    /**
+     * Get rtgs transfer's to to account name
+     *
+     * @return string
+     */
+    public function rtgsTransferToAccountName();
 
     /**
      * Get rtgs transfer's to bank id

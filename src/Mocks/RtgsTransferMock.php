@@ -63,6 +63,14 @@ class RtgsTransferMock implements RtgsTransferSubject
     /**
      * @inheritDoc
      */
+    public function rtgsTransferToAccountName()
+    {
+        return 'John Doe';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function rtgsTransferToBankId()
     {
         return '90010';
@@ -97,6 +105,6 @@ class RtgsTransferMock implements RtgsTransferSubject
      */
     public function rtgsTransferBeneficiaryAccountName()
     {
-        return 'PT. Assetku Mitra Bangsa';
+        return 'John Doe';
     }
 }
