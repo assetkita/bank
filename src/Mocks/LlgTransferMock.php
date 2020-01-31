@@ -2,7 +2,7 @@
 
 namespace Assetku\BankService\Mocks;
 
-use Assetku\BankService\Contracts\LlgTransferSubject;
+use Assetku\BankService\Contracts\Subjects\LlgTransferSubject;
 
 class LlgTransferMock implements LlgTransferSubject
 {

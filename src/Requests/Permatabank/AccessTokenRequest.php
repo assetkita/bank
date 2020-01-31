@@ -2,10 +2,10 @@
 
 namespace Assetku\BankService\Requests\Permatabank;
 
-use Assetku\BankService\Requests\Contracts\AccessTokenRequest as GetTokenRequestContract;
-use Assetku\BankService\Requests\Contracts\MustValidated;
-use Assetku\BankService\Requests\Permatabank\Encoders\FormParamsEncoder;
-use Assetku\BankService\Requests\Permatabank\Headers\AuthHeader;
+use Assetku\BankService\Contracts\Requests\AccessTokenRequest as GetTokenRequestContract;
+use Assetku\BankService\Contracts\Requests\MustValidated;
+use Assetku\BankService\Encoders\Permatabank\FormParamsEncoder;
+use Assetku\BankService\Headers\Permatabank\AuthHeader;
 
 class AccessTokenRequest extends Request implements GetTokenRequestContract, MustValidated
 {

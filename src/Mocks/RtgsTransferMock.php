@@ -2,7 +2,7 @@
 
 namespace Assetku\BankService\Mocks;
 
-use Assetku\BankService\Contracts\RtgsTransferSubject;
+use Assetku\BankService\Contracts\Subjects\RtgsTransferSubject;
 
 class RtgsTransferMock implements RtgsTransferSubject
 {

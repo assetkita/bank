@@ -2,11 +2,11 @@
 
 namespace Assetku\BankService\Requests\Permatabank;
 
-use Assetku\BankService\Contracts\RtgsTransferSubject;
-use Assetku\BankService\Requests\Contracts\MustValidated;
-use Assetku\BankService\Requests\Contracts\RtgsTransferRequest as RtgsTransferRequestContract;
-use Assetku\BankService\Requests\Permatabank\Encoders\JsonEncoder;
-use Assetku\BankService\Requests\Permatabank\Headers\CommonHeader;
+use Assetku\BankService\Contracts\Requests\MustValidated;
+use Assetku\BankService\Contracts\Requests\RtgsTransferRequest as RtgsTransferRequestContract;
+use Assetku\BankService\Contracts\Subjects\RtgsTransferSubject;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class RtgsTransferRequest extends Request implements RtgsTransferRequestContract, MustValidated
 {

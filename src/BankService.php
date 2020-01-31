@@ -2,26 +2,26 @@
 
 namespace Assetku\BankService;
 
-use Assetku\BankService\Contracts\LlgTransferSubject;
-use Assetku\BankService\Contracts\OnlineTransferSubject;
-use Assetku\BankService\Contracts\OverbookingSubject;
-use Assetku\BankService\Contracts\RtgsTransferSubject;
-use Assetku\BankService\Requests\Contracts\AccessTokenRequest;
-use Assetku\BankService\Requests\Contracts\Factories\BalanceInquiryRequestFactory;
-use Assetku\BankService\Requests\Contracts\Factories\LlgTransferRequestFactory;
-use Assetku\BankService\Requests\Contracts\Factories\OnlineTransferInquiryRequestFactory;
-use Assetku\BankService\Requests\Contracts\Factories\OnlineTransferRequestFactory;
-use Assetku\BankService\Requests\Contracts\Factories\OverbookingInquiryRequestFactory;
-use Assetku\BankService\Requests\Contracts\Factories\OverbookingRequestFactory;
-use Assetku\BankService\Requests\Contracts\Factories\RtgsTransferRequestFactory;
-use Assetku\BankService\Requests\Contracts\Factories\StatusTransactionInquiryRequestFactory;
-use Assetku\BankService\Requests\Contracts\MustValidated;
+use Assetku\BankService\Contracts\Requests\AccessTokenRequest;
+use Assetku\BankService\Contracts\Requests\BalanceInquiryRequestFactory;
+use Assetku\BankService\Contracts\Requests\LlgTransferRequestFactory;
+use Assetku\BankService\Contracts\Requests\MustValidated;
+use Assetku\BankService\Contracts\Requests\OnlineTransferInquiryRequestFactory;
+use Assetku\BankService\Contracts\Requests\OnlineTransferRequestFactory;
+use Assetku\BankService\Contracts\Requests\OverbookingInquiryRequestFactory;
+use Assetku\BankService\Contracts\Requests\OverbookingRequestFactory;
+use Assetku\BankService\Contracts\Requests\RtgsTransferRequestFactory;
+use Assetku\BankService\Contracts\Requests\StatusTransactionInquiryRequestFactory;
+use Assetku\BankService\Contracts\Subjects\LlgTransferSubject;
+use Assetku\BankService\Contracts\Subjects\OnlineTransferSubject;
+use Assetku\BankService\Contracts\Subjects\OverbookingSubject;
+use Assetku\BankService\Contracts\Subjects\RtgsTransferSubject;
+use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
+use Assetku\BankService\Exceptions\OverbookingInquiryException;
 use Assetku\BankService\Services\Contracts\Service;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Validation\Factory;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BankService
 {
@@ -42,15 +42,14 @@ class BankService
      * Perform get access token
      *
      * @return string
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function accessToken()
     {
         try {
             // remember the access token in cache for 150 minutes (2.5 hours)
-            return Cache::remember('permatabank.access_token', 150, function () {
+            return \Cache::remember('permatabank.access_token', 150, function () {
                 $request = \App::make(AccessTokenRequest::class);
 
                 $this->validate($request);
@@ -59,9 +58,7 @@ class BankService
             });
         } catch (ValidationException $e) {
             throw $e;
-        } catch (HttpException $e) {
-            throw $e;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
@@ -70,9 +67,8 @@ class BankService
      * Perform balance inquiry
      *
      * @param  string  $accountNumber
-     * @return \Assetku\BankService\Inquiry\Permatabank\Disbursement\BalanceInquiry
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \Assetku\BankService\Contracts\Inquiries\BalanceInquiry
+     * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function balanceInquiry(string $accountNumber)
@@ -87,9 +83,7 @@ class BankService
 
         try {
             return $this->service->balanceInquiry($request);
-        } catch (HttpException $e) {
-            throw $e;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
@@ -98,9 +92,8 @@ class BankService
      * Perform overbooking inquiry
      *
      * @param  string  $accountNumber
-     * @return \Assetku\BankService\Inquiry\Permatabank\Disbursement\OverbookingInquiry
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \Assetku\BankService\Contracts\Inquiries\OverbookingInquiry
+     * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function overbookingInquiry(string $accountNumber)
@@ -115,9 +108,7 @@ class BankService
 
         try {
             return $this->service->overbookingInquiry($request);
-        } catch (HttpException $e) {
-            throw $e;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
@@ -128,9 +119,8 @@ class BankService
      * @param  string  $toAccount
      * @param  string  $bankId
      * @param  string  $bankName
-     * @return \Assetku\BankService\Inquiry\Permatabank\Disbursement\OnlineTransferInquiry
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \Assetku\BankService\Contracts\Inquiries\OnlineTransferInquiry
+     * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function onlineTransferInquiry(string $toAccount, string $bankId, string $bankName)
@@ -145,9 +135,7 @@ class BankService
 
         try {
             return $this->service->onlineTransferInquiry($request);
-        } catch (HttpException $e) {
-            throw $e;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
@@ -156,9 +144,8 @@ class BankService
      * Perform status transaction inquiry
      *
      * @param  string  $customerReferenceId
-     * @return \Assetku\BankService\Inquiry\Permatabank\Disbursement\StatusTransactionInquiry
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \Assetku\BankService\Contracts\Inquiries\StatusTransactionInquiry
+     * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function statusTransactionInquiry(string $customerReferenceId)
@@ -173,9 +160,7 @@ class BankService
 
         try {
             return $this->service->statusTransactionInquiry($request);
-        } catch (HttpException $e) {
-            throw $e;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
@@ -183,11 +168,10 @@ class BankService
     /**
      * Perform overbooking
      *
-     * @param  \Assetku\BankService\Contracts\OverbookingSubject  $subject
-     * @return \Assetku\BankService\Transfer\Permatabank\Overbooking
+     * @param  \Assetku\BankService\Contracts\Subjects\OverbookingSubject  $subject
+     * @return \Assetku\BankService\Contracts\Transfers\Overbooking
      * @throws \Assetku\BankService\Exceptions\OverbookingInquiryException
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function overbooking(OverbookingSubject $subject)
@@ -202,9 +186,9 @@ class BankService
 
         try {
             return $this->service->overbooking($request);
-        } catch (HttpException $e) {
+        } catch (RequestException $e) {
             throw $e;
-        } catch (GuzzleException $e) {
+        } catch (OverbookingInquiryException $e) {
             throw $e;
         }
     }
@@ -212,11 +196,10 @@ class BankService
     /**
      * Perform online transfer
      *
-     * @param  \Assetku\BankService\Contracts\OnlineTransferSubject  $subject
-     * @return \Assetku\BankService\Transfer\Permatabank\OnlineTransfer
+     * @param  \Assetku\BankService\Contracts\Subjects\OnlineTransferSubject  $subject
+     * @return \Assetku\BankService\Contracts\Transfers\OnlineTransfer
      * @throws \Assetku\BankService\Exceptions\OnlineTransferInquiryException
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function onlineTransfer(OnlineTransferSubject $subject)
@@ -231,20 +214,19 @@ class BankService
 
         try {
             return $this->service->onlineTransfer($request);
-        } catch (HttpException $e) {
+        } catch (RequestException $e) {
             throw $e;
-        } catch (GuzzleException $e) {
+        } catch (OnlineTransferInquiryException $e) {
             throw $e;
         }
     }
 
     /**
-     * Perform LLG transfer
+     * Perform llg transfer
      *
-     * @param  \Assetku\BankService\Contracts\LlgTransferSubject  $subject
-     * @return \Assetku\BankService\Transfer\Permatabank\LlgTransfer
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @param  \Assetku\BankService\Contracts\Subjects\LlgTransferSubject  $subject
+     * @return \Assetku\BankService\Contracts\Transfers\LlgTransfer
+     * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function llgTransfer(LlgTransferSubject $subject)
@@ -259,20 +241,17 @@ class BankService
 
         try {
             return $this->service->llgTransfer($request);
-        } catch (HttpException $e) {
-            throw $e;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
 
     /**
-     * Perform RTGS transfer
+     * Perform rtgs transfer
      *
-     * @param  \Assetku\BankService\Contracts\RtgsTransferSubject  $subject
-     * @return \Assetku\BankService\Transfer\Permatabank\RtgsTransfer
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @param  \Assetku\BankService\Contracts\Subjects\RtgsTransferSubject  $subject
+     * @return \Assetku\BankService\Contracts\Transfers\RtgsTransfer
+     * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function rtgsTransfer(RtgsTransferSubject $subject)
@@ -287,9 +266,7 @@ class BankService
 
         try {
             return $this->service->rtgsTransfer($request);
-        } catch (HttpException $e) {
-            throw $e;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
@@ -300,13 +277,13 @@ class BankService
      * @param  array  $data
      * @param  string  $custRefID
      * @return mixed
-     * @throws GuzzleException
+     * @throws RequestException
      */
     public function submitFintechAccount(array $data, string $custRefID)
     {
         try {
             return $this->service->submitFintechAccount($data, $custRefID);
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
@@ -324,7 +301,7 @@ class BankService
             $data = $this->service->submitRegistrationDocument($data, $custRefID);
 
             return $data;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
@@ -341,7 +318,7 @@ class BankService
             $data = $this->service->inquiryRiskRating($data, $custRefID);
 
             return $data;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
@@ -358,7 +335,7 @@ class BankService
             $data = $this->service->inquiryAccountValidation($data, $custRefID);
 
             return $data;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }
@@ -375,7 +352,7 @@ class BankService
             $data = $this->service->updateKycStatus($data, $custRefID);
 
             return $data;
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }

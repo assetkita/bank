@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-<!-- [![Contributor Covenant][ico-code-of-conduct]](CODE_OF_CONDUCT.md) -->
+[![Contributor Covenant][ico-code-of-conduct]](CODE_OF_CONDUCT.md)
 
 _Laravel Bank API package for Asset Kita._
 
