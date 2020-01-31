@@ -33,6 +33,11 @@ class LlgTransferRequest extends Request implements LlgTransferRequestContract, 
     /**
      * @var string
      */
+    protected $toAccountName;
+
+    /**
+     * @var string
+     */
     protected $toBankId;
 
     /**
@@ -107,6 +112,8 @@ class LlgTransferRequest extends Request implements LlgTransferRequestContract, 
 
         $this->toAccount = $subject->llgTransferToAccount();
 
+        $this->toAccountName = $subject->llgTransferToAccountName();
+
         $this->toBankId = $subject->llgTransferToBankId();
 
         $this->toBankName = $subject->llgTransferToBankName();
@@ -148,6 +155,14 @@ class LlgTransferRequest extends Request implements LlgTransferRequestContract, 
     public function toAccount()
     {
         return $this->toAccount;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toAccountName()
+    {
+        return $this->toAccountName;
     }
 
     /**

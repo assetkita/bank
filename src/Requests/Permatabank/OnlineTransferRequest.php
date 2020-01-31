@@ -33,6 +33,11 @@ class OnlineTransferRequest extends Request implements OnlineTransferRequestCont
     /**
      * @var string
      */
+    protected $toAccountName;
+
+    /**
+     * @var string
+     */
     protected $toBankId;
 
     /**
@@ -77,6 +82,8 @@ class OnlineTransferRequest extends Request implements OnlineTransferRequestCont
 
         $this->toAccount = $subject->onlineTransferToAccount();
 
+        $this->toAccountName = $subject->onlineTransferToAccountName();
+
         $this->toBankId = $subject->onlineTransferToBankId();
 
         $this->toBankName = $subject->onlineTransferToBankName();
@@ -118,6 +125,14 @@ class OnlineTransferRequest extends Request implements OnlineTransferRequestCont
     public function toAccount()
     {
         return $this->toAccount;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toAccountName()
+    {
+        return $this->toAccountName;
     }
 
     /**

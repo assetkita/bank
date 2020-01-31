@@ -33,6 +33,11 @@ class RtgsTransferRequest extends Request implements RtgsTransferRequestContract
     /**
      * @var string
      */
+    protected $toAccountName;
+
+    /**
+     * @var string
+     */
     protected $toBankId;
 
     /**
@@ -107,6 +112,8 @@ class RtgsTransferRequest extends Request implements RtgsTransferRequestContract
 
         $this->toAccount = $subject->rtgsTransferToAccount();
 
+        $this->toAccountName = $subject->rtgsTransferToAccountName();
+
         $this->toBankId = $subject->rtgsTransferToBankId();
 
         $this->toBankName = $subject->rtgsTransferToBankName();
@@ -148,6 +155,14 @@ class RtgsTransferRequest extends Request implements RtgsTransferRequestContract
     public function toAccount()
     {
         return $this->toAccount;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toAccountName()
+    {
+        return $this->toAccountName;
     }
 
     /**
