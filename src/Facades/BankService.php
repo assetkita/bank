@@ -13,6 +13,6 @@ class BankService extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'bank';
+        return 'bank_service';
     }   
 }
