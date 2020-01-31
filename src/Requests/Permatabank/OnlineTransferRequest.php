@@ -2,11 +2,11 @@
 
 namespace Assetku\BankService\Requests\Permatabank;
 
-use Assetku\BankService\Contracts\OnlineTransferSubject;
-use Assetku\BankService\Requests\Contracts\MustValidated;
-use Assetku\BankService\Requests\Contracts\OnlineTransferRequest as OnlineTransferRequestContract;
-use Assetku\BankService\Requests\Permatabank\Encoders\JsonEncoder;
-use Assetku\BankService\Requests\Permatabank\Headers\CommonHeader;
+use Assetku\BankService\Contracts\Requests\MustValidated;
+use Assetku\BankService\Contracts\Requests\OnlineTransferRequest as OnlineTransferRequestContract;
+use Assetku\BankService\Contracts\Subjects\OnlineTransferSubject;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class OnlineTransferRequest extends Request implements OnlineTransferRequestContract, MustValidated
 {

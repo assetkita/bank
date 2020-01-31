@@ -2,7 +2,7 @@
 
 namespace Assetku\BankService\Mocks;
 
-use Assetku\BankService\Contracts\OverbookingSubject;
+use Assetku\BankService\Contracts\Subjects\OverbookingSubject;
 
 class OverbookingMock implements OverbookingSubject
 {

@@ -2,7 +2,7 @@
 
 namespace Assetku\BankService\Mocks;
 
-use Assetku\BankService\Contracts\OnlineTransferSubject;
+use Assetku\BankService\Contracts\Subjects\OnlineTransferSubject;
 
 class OnlineTransferMock implements OnlineTransferSubject
 {

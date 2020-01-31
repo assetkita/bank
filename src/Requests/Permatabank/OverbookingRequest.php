@@ -2,11 +2,11 @@
 
 namespace Assetku\BankService\Requests\Permatabank;
 
-use Assetku\BankService\Contracts\OverbookingSubject;
-use Assetku\BankService\Requests\Contracts\MustValidated;
-use Assetku\BankService\Requests\Contracts\OverbookingRequest as OverbookingRequestContract;
-use Assetku\BankService\Requests\Permatabank\Encoders\JsonEncoder;
-use Assetku\BankService\Requests\Permatabank\Headers\CommonHeader;
+use Assetku\BankService\Contracts\Requests\MustValidated;
+use Assetku\BankService\Contracts\Requests\OverbookingRequest as OverbookingRequestContract;
+use Assetku\BankService\Contracts\Subjects\OverbookingSubject;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class OverbookingRequest extends Request implements OverbookingRequestContract, MustValidated
 {

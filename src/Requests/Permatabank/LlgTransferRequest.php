@@ -2,11 +2,11 @@
 
 namespace Assetku\BankService\Requests\Permatabank;
 
-use Assetku\BankService\Contracts\LlgTransferSubject;
-use Assetku\BankService\Requests\Contracts\LlgTransferRequest as LlgTransferRequestContract;
-use Assetku\BankService\Requests\Contracts\MustValidated;
-use Assetku\BankService\Requests\Permatabank\Encoders\JsonEncoder;
-use Assetku\BankService\Requests\Permatabank\Headers\CommonHeader;
+use Assetku\BankService\Contracts\Requests\LlgTransferRequest as LlgTransferRequestContract;
+use Assetku\BankService\Contracts\Requests\MustValidated;
+use Assetku\BankService\Contracts\Subjects\LlgTransferSubject;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class LlgTransferRequest extends Request implements LlgTransferRequestContract, MustValidated
 {

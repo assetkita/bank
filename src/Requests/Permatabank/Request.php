@@ -2,9 +2,7 @@
 
 namespace Assetku\BankService\Requests\Permatabank;
 
-use Assetku\BankService\Requests\Contracts\Request as RequestContract;
-
-abstract class Request implements RequestContract
+abstract class Request
 {
     /**
      * @var string
@@ -18,13 +16,12 @@ abstract class Request implements RequestContract
 
     /**
      * Request constructor.
-     *
      */
     public function __construct()
     {
-        $this->timestamp = now()->format('Y-m-d\TH:i:s\.vP');
-
         $this->customerReferenceId = random_alphanumeric();
+
+        $this->timestamp = now()->format('Y-m-d\TH:i:s\.vP');
     }
 
     /**

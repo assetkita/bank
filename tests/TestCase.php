@@ -81,10 +81,10 @@ abstract class TestCase extends OrchestraTestCase
             'organization_name' => env('PERMATABANK_GROUP_ID'),
             'instcode'          => env('PERMATABANK_INSTCODE'),
             'development'       => [
-                'base_url' => env('PERMATABANK_BASE_URL_DEVELOPMENT')
+                'base_url' => env('PERMATABANK_BASE_URL_DEVELOPMENT'),
             ],
             'production'        => [
-                'base_url' => env('PERMATABANK_BASE_URL_PRODUCTION')
+                'base_url' => env('PERMATABANK_BASE_URL_PRODUCTION'),
             ],
         ]);
     }
