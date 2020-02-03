@@ -5,14 +5,14 @@ namespace Assetku\BankService\Contracts\Subjects;
 interface RtgsTransferSubject
 {
     /**
-     * Get rtgs transfer's from toAccount
+     * Get rtgs transfer's from account
      *
      * @return string
      */
     public function rtgsTransferFromAccount();
 
     /**
-     * Get rtgs transfer's from toAccount name
+     * Get rtgs transfer's from account name
      *
      * @return string
      */
@@ -54,7 +54,7 @@ interface RtgsTransferSubject
     public function rtgsTransferToBankName();
 
     /**
-     * Get rtgs transfer's beneficiary toAccount name
+     * Get rtgs transfer's beneficiary account name
      *
      * @return string
      */

@@ -54,7 +54,7 @@ class PersonalInfo implements Serializeable
         return [
             'StaIndividu' => $this->staIndividu->toArray(),
             'AddressInfo' => $this->mapSerialize($this->addressInfos),
-            'PhoneInfo' => $this->mapSerialize($this->phoneInfos),
+            'PersonalInfo' => $this->mapSerialize($this->phoneInfos),
             'Products' => $this->mapSerialize($this->products),
             'Employments' => $this->employments->toArray(),
             'Identities' => $this->identity->toArray(),

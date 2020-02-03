@@ -2,18 +2,19 @@
 
 namespace Assetku\BankService\Providers;
 
-use Assetku\BankService\Apis\Guzzle\ApiManager;
+use Assetku\BankService\Apis\Guzzle\Api;
+use Assetku\BankService\Apis\Guzzle\ApiFactory;
 use Assetku\BankService\BankService;
-use Assetku\BankService\Contracts\Apis\Api;
-use Assetku\BankService\Contracts\Apis\Factory;
-use Assetku\BankService\Services\Contracts\Service;
+use Assetku\BankService\Contracts\Apis\ApiContract;
+use Assetku\BankService\Contracts\Apis\ApiFactoryContract;
+use Assetku\BankService\Contracts\ServiceContract;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
 class BankServiceProvider extends ServiceProvider
 {
     /**
-     * The available bank service provider
+     * Available bank service providers
      *
      * @var array
      */
@@ -30,13 +31,12 @@ class BankServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/bank.php', 'bank');
 
-        $this->app->singleton(Factory::class, ApiManager::class);
-        $this->app->singleton(Api::class, \Assetku\BankService\Apis\Guzzle\Api::class);
+        $this->registerApi();
 
-        $this->app->register($this->serviceProviders[\Config::get('bank.default')]);
+        $this->registerThirdPartyServiceProvider();
 
         $this->app->bind('bank_service', function () {
-            return new BankService($this->app->make(Service::class));
+            return new BankService($this->app->make(ServiceContract::class));
         });
     }
 
@@ -64,5 +64,31 @@ class BankServiceProvider extends ServiceProvider
                 return str_replace(' ', '', $value);
             });
         });
+    }
+
+    /**
+     * Register api bindings
+     *
+     * @return void
+     */
+    protected function registerApi()
+    {
+        $this->app->singleton(ApiFactoryContract::class, ApiFactory::class);
+
+        $this->app->singleton(ApiContract::class, Api::class);
+    }
+
+    /**
+     * Register selected third party service provider
+     *
+     * @return void
+     */
+    protected function registerThirdPartyServiceProvider()
+    {
+        $default = \Config::get('bank.default');
+
+        $selectedServiceProvider = $this->serviceProviders[$default];
+
+        $this->app->register($selectedServiceProvider);
     }
 }

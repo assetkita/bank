@@ -2,57 +2,64 @@
 
 namespace Assetku\BankService\Providers;
 
-use Assetku\BankService\Contracts\Inquiries\BalanceInquiry;
-use Assetku\BankService\Contracts\Inquiries\BalanceInquiryFactory;
-use Assetku\BankService\Contracts\Inquiries\OnlineTransferInquiry;
-use Assetku\BankService\Contracts\Inquiries\OnlineTransferInquiryFactory;
-use Assetku\BankService\Contracts\Inquiries\OverbookingInquiry;
-use Assetku\BankService\Contracts\Inquiries\OverbookingInquiryFactory;
-use Assetku\BankService\Contracts\Inquiries\StatusTransactionInquiry;
-use Assetku\BankService\Contracts\Inquiries\StatusTransactionInquiryFactory;
-use Assetku\BankService\Contracts\Requests\AccessTokenRequest;
-use Assetku\BankService\Contracts\Requests\BalanceInquiryRequest;
-use Assetku\BankService\Contracts\Requests\BalanceInquiryRequestFactory;
-use Assetku\BankService\Contracts\Requests\LlgTransferRequest;
-use Assetku\BankService\Contracts\Requests\LlgTransferRequestFactory;
-use Assetku\BankService\Contracts\Requests\OnlineTransferInquiryRequest;
-use Assetku\BankService\Contracts\Requests\OnlineTransferInquiryRequestFactory;
-use Assetku\BankService\Contracts\Requests\OnlineTransferRequest;
-use Assetku\BankService\Contracts\Requests\OnlineTransferRequestFactory;
-use Assetku\BankService\Contracts\Requests\OverbookingInquiryRequest;
-use Assetku\BankService\Contracts\Requests\OverbookingInquiryRequestFactory;
-use Assetku\BankService\Contracts\Requests\OverbookingRequest;
-use Assetku\BankService\Contracts\Requests\OverbookingRequestFactory;
-use Assetku\BankService\Contracts\Requests\RtgsTransferRequest;
-use Assetku\BankService\Contracts\Requests\RtgsTransferRequestFactory;
-use Assetku\BankService\Contracts\Requests\StatusTransactionInquiryRequest;
-use Assetku\BankService\Contracts\Requests\StatusTransactionInquiryRequestFactory;
-use Assetku\BankService\Contracts\Transfers\LlgTransfer;
-use Assetku\BankService\Contracts\Transfers\LlgTransferFactory;
-use Assetku\BankService\Contracts\Transfers\OnlineTransfer;
-use Assetku\BankService\Contracts\Transfers\OnlineTransferFactory;
-use Assetku\BankService\Contracts\Transfers\Overbooking;
-use Assetku\BankService\Contracts\Transfers\OverbookingFactory;
-use Assetku\BankService\Contracts\Transfers\RtgsTransfer;
-use Assetku\BankService\Contracts\Transfers\RtgsTransferFactory;
-use Assetku\BankService\Inquiries\Permatabank\BalanceInquiryManager;
-use Assetku\BankService\Inquiries\Permatabank\OnlineTransferInquiryManager;
-use Assetku\BankService\Inquiries\Permatabank\OverbookingInquiryManager;
-use Assetku\BankService\Inquiries\Permatabank\StatusTransactionInquiryManager;
-use Assetku\BankService\Requests\Permatabank\BalanceInquiryRequestManager;
-use Assetku\BankService\Requests\Permatabank\LlgTransferRequestManager;
-use Assetku\BankService\Requests\Permatabank\OnlineTransferInquiryRequestManager;
-use Assetku\BankService\Requests\Permatabank\OnlineTransferRequestManager;
-use Assetku\BankService\Requests\Permatabank\OverbookingInquiryRequestManager;
-use Assetku\BankService\Requests\Permatabank\OverbookingRequestManager;
-use Assetku\BankService\Requests\Permatabank\RtgsTransferRequestManager;
-use Assetku\BankService\Requests\Permatabank\StatusTransactionInquiryRequestManager;
-use Assetku\BankService\Services\Contracts\Service;
+use Assetku\BankService\AccessToken\Permatabank\AccessTokenRequest;
+use Assetku\BankService\BalanceInquiry\Permatabank\BalanceInquiryFactory;
+use Assetku\BankService\BalanceInquiry\Permatabank\BalanceInquiryRequest;
+use Assetku\BankService\BalanceInquiry\Permatabank\BalanceInquiryResponse;
+use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
+use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryFactoryContract;
+use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryRequestContract;
+use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryResponseContract;
+use Assetku\BankService\Contracts\LlgTransfer\LlgTransferFactoryContract;
+use Assetku\BankService\Contracts\LlgTransfer\LlgTransferRequestContract;
+use Assetku\BankService\Contracts\LlgTransfer\LlgTransferResponseContract;
+use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferFactoryContract;
+use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferRequestContract;
+use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferResponseContract;
+use Assetku\BankService\Contracts\OnlineTransferInquiry\OnlineTransferInquiryFactoryContract;
+use Assetku\BankService\Contracts\OnlineTransferInquiry\OnlineTransferInquiryRequestContract;
+use Assetku\BankService\Contracts\OnlineTransferInquiry\OnlineTransferInquiryResponseContract;
+use Assetku\BankService\Contracts\Overbooking\OverbookingFactoryContract;
+use Assetku\BankService\Contracts\Overbooking\OverbookingRequestContract;
+use Assetku\BankService\Contracts\Overbooking\OverbookingResponseContract;
+use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryFactoryContract;
+use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryRequestContract;
+use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryResponseContract;
+use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferFactoryContract;
+use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferRequestContract;
+use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferResponseContract;
+use Assetku\BankService\Contracts\ServiceContract;
+use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryFactoryContract;
+use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryRequestContract;
+use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryResponseContract;
+use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
+use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
+use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataFactory;
+use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataRequest;
+use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataResponse;
+use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferFactory;
+use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferRequest;
+use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferResponse;
+use Assetku\BankService\OnlineTransfer\Permatabank\OnlineTransferFactory;
+use Assetku\BankService\OnlineTransfer\Permatabank\OnlineTransferRequest;
+use Assetku\BankService\OnlineTransfer\Permatabank\OnlineTransferResponse;
+use Assetku\BankService\OnlineTransferInquiry\Permatabank\OnlineTransferInquiryFactory;
+use Assetku\BankService\OnlineTransferInquiry\Permatabank\OnlineTransferInquiryRequest;
+use Assetku\BankService\OnlineTransferInquiry\Permatabank\OnlineTransferInquiryResponse;
+use Assetku\BankService\Overbooking\Permatabank\OverbookingFactory;
+use Assetku\BankService\Overbooking\Permatabank\OverbookingRequest;
+use Assetku\BankService\Overbooking\Permatabank\OverbookingResponse;
+use Assetku\BankService\OverbookingInquiry\Permatabank\OverbookingInquiryFactory;
+use Assetku\BankService\OverbookingInquiry\Permatabank\OverbookingInquiryRequest;
+use Assetku\BankService\OverbookingInquiry\Permatabank\OverbookingInquiryResponse;
+use Assetku\BankService\RtgsTransfer\Permatabank\RtgsTransferFactory;
+use Assetku\BankService\RtgsTransfer\Permatabank\RtgsTransferRequest;
+use Assetku\BankService\RtgsTransfer\Permatabank\RtgsTransferResponse;
 use Assetku\BankService\Services\PermatabankService;
-use Assetku\BankService\Transfers\Permatabank\LlgTransferManager;
-use Assetku\BankService\Transfers\Permatabank\OnlineTransferManager;
-use Assetku\BankService\Transfers\Permatabank\OverbookingManager;
-use Assetku\BankService\Transfers\Permatabank\RtgsTransferManager;
+use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryFactory;
+use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryRequest;
+use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryResponse;
 use Illuminate\Support\ServiceProvider;
 
 class PermatabankServiceProvider extends ServiceProvider
@@ -64,171 +71,55 @@ class PermatabankServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(Service::class, PermatabankService::class);
+        // service
+        $this->app->singleton(ServiceContract::class, PermatabankService::class);
 
-        $this->app->bind(
-            AccessTokenRequest::class,
-            \Assetku\BankService\Requests\Permatabank\AccessTokenRequest::class
-        );
+        // access token
+        $this->app->bind(AccessTokenRequestContract::class, AccessTokenRequest::class);
 
-        $this->app->bind(
-            BalanceInquiryRequestFactory::class,
-            BalanceInquiryRequestManager::class
-        );
+        // balance inquiry
+        $this->app->bind(BalanceInquiryFactoryContract::class, BalanceInquiryFactory::class);
+        $this->app->bind(BalanceInquiryRequestContract::class, BalanceInquiryRequest::class);
+        $this->app->bind(BalanceInquiryResponseContract::class, BalanceInquiryResponse::class);
 
-        $this->app->bind(
-            BalanceInquiryRequest::class,
-            \Assetku\BankService\Requests\Permatabank\BalanceInquiryRequest::class
-        );
+        // overbooking inquiry
+        $this->app->bind(OverbookingInquiryFactoryContract::class, OverbookingInquiryFactory::class);
+        $this->app->bind(OverbookingInquiryRequestContract::class, OverbookingInquiryRequest::class);
+        $this->app->bind(OverbookingInquiryResponseContract::class, OverbookingInquiryResponse::class);
 
-        $this->app->bind(
-            OverbookingInquiryRequestFactory::class,
-            OverbookingInquiryRequestManager::class
-        );
+        // online transfer inquiry
+        $this->app->bind(OnlineTransferInquiryFactoryContract::class, OnlineTransferInquiryFactory::class);
+        $this->app->bind(OnlineTransferInquiryRequestContract::class, OnlineTransferInquiryRequest::class);
+        $this->app->bind(OnlineTransferInquiryResponseContract::class, OnlineTransferInquiryResponse::class);
 
-        $this->app->bind(
-            OverbookingInquiryRequest::class,
-            \Assetku\BankService\Requests\Permatabank\OverbookingInquiryRequest::class
-        );
+        // status transaction inquiry
+        $this->app->bind(StatusTransactionInquiryFactoryContract::class, StatusTransactionInquiryFactory::class);
+        $this->app->bind(StatusTransactionInquiryRequestContract::class, StatusTransactionInquiryRequest::class);
+        $this->app->bind(StatusTransactionInquiryResponseContract::class, StatusTransactionInquiryResponse::class);
 
-        $this->app->bind(
-            OnlineTransferInquiryRequestFactory::class,
-            OnlineTransferInquiryRequestManager::class
-        );
+        // overbooking
+        $this->app->bind(OverbookingFactoryContract::class, OverbookingFactory::class);
+        $this->app->bind(OverbookingRequestContract::class, OverbookingRequest::class);
+        $this->app->bind(OverbookingResponseContract::class, OverbookingResponse::class);
 
-        $this->app->bind(
-            OnlineTransferInquiryRequest::class,
-            \Assetku\BankService\Requests\Permatabank\OnlineTransferInquiryRequest::class
-        );
+        // online transfer
+        $this->app->bind(OnlineTransferFactoryContract::class, OnlineTransferFactory::class);
+        $this->app->bind(OnlineTransferRequestContract::class, OnlineTransferRequest::class);
+        $this->app->bind(OnlineTransferResponseContract::class, OnlineTransferResponse::class);
 
-        $this->app->bind(
-            StatusTransactionInquiryRequestFactory::class,
-            StatusTransactionInquiryRequestManager::class
-        );
+        // llg transfer
+        $this->app->bind(LlgTransferFactoryContract::class, LlgTransferFactory::class);
+        $this->app->bind(LlgTransferRequestContract::class, LlgTransferRequest::class);
+        $this->app->bind(LlgTransferResponseContract::class, LlgTransferResponse::class);
 
-        $this->app->bind(
-            StatusTransactionInquiryRequest::class,
-            \Assetku\BankService\Requests\Permatabank\StatusTransactionInquiryRequest::class
-        );
+        // rtgs transfer
+        $this->app->bind(RtgsTransferFactoryContract::class, RtgsTransferFactory::class);
+        $this->app->bind(RtgsTransferRequestContract::class, RtgsTransferRequest::class);
+        $this->app->bind(RtgsTransferResponseContract::class, RtgsTransferResponse::class);
 
-        $this->app->bind(
-            OverbookingRequestFactory::class,
-            OverbookingRequestManager::class
-        );
-
-        $this->app->bind(
-            OverbookingRequest::class,
-            \Assetku\BankService\Requests\Permatabank\OverbookingRequest::class
-        );
-
-        $this->app->bind(
-            OnlineTransferRequestFactory::class,
-            OnlineTransferRequestManager::class
-        );
-
-        $this->app->bind(
-            OnlineTransferRequest::class,
-            \Assetku\BankService\Requests\Permatabank\OnlineTransferRequest::class
-        );
-
-        $this->app->bind(
-            LlgTransferRequestFactory::class,
-            LlgTransferRequestManager::class
-        );
-
-        $this->app->bind(
-            LlgTransferRequest::class,
-            \Assetku\BankService\Requests\Permatabank\LlgTransferRequest::class
-        );
-
-        $this->app->bind(
-            RtgsTransferRequestFactory::class,
-            RtgsTransferRequestManager::class
-        );
-
-        $this->app->bind(
-            RtgsTransferRequest::class,
-            \Assetku\BankService\Requests\Permatabank\RtgsTransferRequest::class
-        );
-
-        $this->app->bind(
-            BalanceInquiryFactory::class,
-            BalanceInquiryManager::class
-        );
-
-        $this->app->bind(
-            BalanceInquiry::class,
-            \Assetku\BankService\Inquiries\Permatabank\BalanceInquiry::class
-        );
-
-        $this->app->bind(
-            OverbookingInquiryFactory::class,
-            OverbookingInquiryManager::class
-        );
-
-        $this->app->bind(
-            OverbookingInquiry::class,
-            \Assetku\BankService\Inquiries\Permatabank\OverbookingInquiry::class
-        );
-
-        $this->app->bind(
-            OnlineTransferInquiryFactory::class,
-            OnlineTransferInquiryManager::class
-        );
-
-        $this->app->bind(
-            OnlineTransferInquiry::class,
-            \Assetku\BankService\Inquiries\Permatabank\OnlineTransferInquiry::class
-        );
-
-        $this->app->bind(
-            StatusTransactionInquiryFactory::class,
-            StatusTransactionInquiryManager::class
-        );
-
-        $this->app->bind(
-            StatusTransactionInquiry::class,
-            \Assetku\BankService\Inquiries\Permatabank\StatusTransactionInquiry::class
-        );
-
-        $this->app->bind(
-            OverbookingFactory::class,
-            OverbookingManager::class
-        );
-
-        $this->app->bind(
-            Overbooking::class,
-            \Assetku\BankService\Transfers\Permatabank\Overbooking::class
-        );
-
-        $this->app->bind(
-            OnlineTransferFactory::class,
-            OnlineTransferManager::class
-        );
-
-        $this->app->bind(
-            OnlineTransfer::class,
-            \Assetku\BankService\Transfers\Permatabank\OnlineTransfer::class
-        );
-
-        $this->app->bind(
-            LlgTransferFactory::class,
-            LlgTransferManager::class
-        );
-
-        $this->app->bind(
-            LlgTransfer::class,
-            \Assetku\BankService\Transfers\Permatabank\LlgTransfer::class
-        );
-
-        $this->app->bind(
-            RtgsTransferFactory::class,
-            RtgsTransferManager::class
-        );
-
-        $this->app->bind(
-            RtgsTransfer::class,
-            \Assetku\BankService\Transfers\Permatabank\RtgsTransfer::class
-        );
+        // submit application data
+        $this->app->bind(SubmitApplicationDataFactoryContract::class, SubmitApplicationDataFactory::class);
+        $this->app->bind(SubmitApplicationDataRequestContract::class, SubmitApplicationDataRequest::class);
+        $this->app->bind(SubmitApplicationDataResponseContract::class, SubmitApplicationDataResponse::class);
     }
 }

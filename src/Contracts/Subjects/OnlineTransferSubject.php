@@ -5,14 +5,14 @@ namespace Assetku\BankService\Contracts\Subjects;
 interface OnlineTransferSubject
 {
     /**
-     * Get online transfer's from toAccount
+     * Get online transfer's from account
      *
      * @return string
      */
     public function onlineTransferFromAccount();
 
     /**
-     * Get online transfer's from toAccount name
+     * Get online transfer's from account name
      *
      * @return string
      */
@@ -68,7 +68,7 @@ interface OnlineTransferSubject
     public function onlineTransferTransactionDescription();
 
     /**
-     * Get online transfer's beneficiary toAccount name
+     * Get online transfer's beneficiary account name
      *
      * @return string
      */

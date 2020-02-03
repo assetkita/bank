@@ -5,14 +5,14 @@ namespace Assetku\BankService\Contracts\Subjects;
 interface OverbookingSubject
 {
     /**
-     * Get overbooking's from toAccount
+     * Get overbooking's from account
      *
      * @return string
      */
     public function overbookingFromAccount();
 
     /**
-     * Get overbooking's from toAccount name
+     * Get overbooking's from account name
      *
      * @return string
      */
@@ -61,7 +61,7 @@ interface OverbookingSubject
     public function overbookingTransactionDescription();
 
     /**
-     * Get overbooking's beneficiary toAccount name
+     * Get overbooking's beneficiary account name
      *
      * @return string
      */

@@ -2,23 +2,25 @@
 
 namespace Assetku\BankService;
 
-use Assetku\BankService\Contracts\Requests\AccessTokenRequest;
-use Assetku\BankService\Contracts\Requests\BalanceInquiryRequestFactory;
-use Assetku\BankService\Contracts\Requests\LlgTransferRequestFactory;
-use Assetku\BankService\Contracts\Requests\MustValidated;
-use Assetku\BankService\Contracts\Requests\OnlineTransferInquiryRequestFactory;
-use Assetku\BankService\Contracts\Requests\OnlineTransferRequestFactory;
-use Assetku\BankService\Contracts\Requests\OverbookingInquiryRequestFactory;
-use Assetku\BankService\Contracts\Requests\OverbookingRequestFactory;
-use Assetku\BankService\Contracts\Requests\RtgsTransferRequestFactory;
-use Assetku\BankService\Contracts\Requests\StatusTransactionInquiryRequestFactory;
+use Assetku\BankService\BalanceInquiry\Permatabank\BalanceInquiryFactory;
+use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
+use Assetku\BankService\Contracts\MustValidated;
+use Assetku\BankService\Contracts\ServiceContract;
 use Assetku\BankService\Contracts\Subjects\LlgTransferSubject;
 use Assetku\BankService\Contracts\Subjects\OnlineTransferSubject;
 use Assetku\BankService\Contracts\Subjects\OverbookingSubject;
 use Assetku\BankService\Contracts\Subjects\RtgsTransferSubject;
+use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
+use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
-use Assetku\BankService\Services\Contracts\Service;
+use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferFactory;
+use Assetku\BankService\OnlineTransfer\Permatabank\OnlineTransferFactory;
+use Assetku\BankService\OnlineTransferInquiry\Permatabank\OnlineTransferInquiryFactory;
+use Assetku\BankService\Overbooking\Permatabank\OverbookingFactory;
+use Assetku\BankService\OverbookingInquiry\Permatabank\OverbookingInquiryFactory;
+use Assetku\BankService\RtgsTransfer\Permatabank\RtgsTransferFactory;
+use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryFactory;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\ValidationException;
@@ -26,16 +28,16 @@ use Illuminate\Validation\ValidationException;
 class BankService
 {
     /**
-     * @var Service
+     * @var ServiceContract
      */
     protected $service;
 
     /**
      * BankService constructor.
      *
-     * @param  Service  $service
+     * @param  ServiceContract  $service
      */
-    public function __construct(Service $service)
+    public function __construct(ServiceContract $service)
     {
         $this->service = $service;
     }
@@ -52,7 +54,7 @@ class BankService
         try {
             // remember the access token in cache for 150 minutes (2.5 hours)
             return \Cache::remember('permatabank.access_token', 150, function () {
-                $request = \App::make(AccessTokenRequest::class);
+                $request = \App::make(AccessTokenRequestContract::class);
 
                 $this->validate($request);
 
@@ -69,13 +71,13 @@ class BankService
      * Perform balance inquiry
      *
      * @param  string  $accountNumber
-     * @return \Assetku\BankService\Contracts\Inquiries\BalanceInquiry
+     * @return \Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryResponseContract
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function balanceInquiry(string $accountNumber)
     {
-        $request = \App::make(BalanceInquiryRequestFactory::class)->make($accountNumber);
+        $request = \App::make(BalanceInquiryFactory::class)->makeRequest($accountNumber);
 
         try {
             $this->validate($request);
@@ -94,13 +96,13 @@ class BankService
      * Perform overbooking inquiry
      *
      * @param  string  $accountNumber
-     * @return \Assetku\BankService\Contracts\Inquiries\OverbookingInquiry
+     * @return \Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryResponseContract
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function overbookingInquiry(string $accountNumber)
     {
-        $request = \App::make(OverbookingInquiryRequestFactory::class)->make($accountNumber);
+        $request = \App::make(OverbookingInquiryFactory::class)->makeRequest($accountNumber);
 
         try {
             $this->validate($request);
@@ -121,13 +123,13 @@ class BankService
      * @param  string  $toAccount
      * @param  string  $bankId
      * @param  string  $bankName
-     * @return \Assetku\BankService\Contracts\Inquiries\OnlineTransferInquiry
+     * @return \Assetku\BankService\Contracts\OnlineTransferInquiry\OnlineTransferInquiryResponseContract
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function onlineTransferInquiry(string $toAccount, string $bankId, string $bankName)
     {
-        $request = \App::make(OnlineTransferInquiryRequestFactory::class)->make($toAccount, $bankId, $bankName);
+        $request = \App::make(OnlineTransferInquiryFactory::class)->makeRequest($toAccount, $bankId, $bankName);
 
         try {
             $this->validate($request);
@@ -145,14 +147,14 @@ class BankService
     /**
      * Perform status transaction inquiry
      *
-     * @param  string  $customerReferenceId
-     * @return \Assetku\BankService\Contracts\Inquiries\StatusTransactionInquiry
+     * @param  string  $customerReferralId
+     * @return \Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryResponseContract
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function statusTransactionInquiry(string $customerReferenceId)
+    public function statusTransactionInquiry(string $customerReferralId)
     {
-        $request = \App::make(StatusTransactionInquiryRequestFactory::class)->make($customerReferenceId);
+        $request = \App::make(StatusTransactionInquiryFactory::class)->makeRequest($customerReferralId);
 
         try {
             $this->validate($request);
@@ -171,14 +173,14 @@ class BankService
      * Perform overbooking
      *
      * @param  \Assetku\BankService\Contracts\Subjects\OverbookingSubject  $subject
-     * @return \Assetku\BankService\Contracts\Transfers\Overbooking
+     * @return \Assetku\BankService\Contracts\Overbooking\OverbookingResponseContract
      * @throws \Assetku\BankService\Exceptions\OverbookingInquiryException
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function overbooking(OverbookingSubject $subject)
     {
-        $request = \App::make(OverbookingRequestFactory::class)->make($subject);
+        $request = \App::make(OverbookingFactory::class)->makeRequest($subject);
 
         try {
             $this->validate($request);
@@ -199,14 +201,14 @@ class BankService
      * Perform online transfer
      *
      * @param  \Assetku\BankService\Contracts\Subjects\OnlineTransferSubject  $subject
-     * @return \Assetku\BankService\Contracts\Transfers\OnlineTransfer
+     * @return \Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferResponseContract
      * @throws \Assetku\BankService\Exceptions\OnlineTransferInquiryException
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function onlineTransfer(OnlineTransferSubject $subject)
     {
-        $request = \App::make(OnlineTransferRequestFactory::class)->make($subject);
+        $request = \App::make(OnlineTransferFactory::class)->makeRequest($subject);
 
         try {
             $this->validate($request);
@@ -227,13 +229,13 @@ class BankService
      * Perform llg transfer
      *
      * @param  \Assetku\BankService\Contracts\Subjects\LlgTransferSubject  $subject
-     * @return \Assetku\BankService\Contracts\Transfers\LlgTransfer
+     * @return \Assetku\BankService\Contracts\LlgTransfer\LlgTransferResponseContract
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function llgTransfer(LlgTransferSubject $subject)
     {
-        $request = \App::make(LlgTransferRequestFactory::class)->make($subject);
+        $request = \App::make(LlgTransferFactory::class)->makeRequest($subject);
 
         try {
             $this->validate($request);
@@ -252,13 +254,13 @@ class BankService
      * Perform rtgs transfer
      *
      * @param  \Assetku\BankService\Contracts\Subjects\RtgsTransferSubject  $subject
-     * @return \Assetku\BankService\Contracts\Transfers\RtgsTransfer
+     * @return \Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferResponseContract
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function rtgsTransfer(RtgsTransferSubject $subject)
     {
-        $request = \App::make(RtgsTransferRequestFactory::class)->make($subject);
+        $request = \App::make(RtgsTransferFactory::class)->makeRequest($subject);
 
         try {
             $this->validate($request);
@@ -274,17 +276,19 @@ class BankService
     }
 
     /**
-     * Investa Account request
+     * Perform submit application data
      *
      * @param  array  $data
-     * @param  string  $custRefID
-     * @return mixed
-     * @throws RequestException
+     * @return SubmitApplicationDataResponseContract
+     * @throws \GuzzleHttp\Exception\RequestException
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function submitFintechAccount(array $data, string $custRefID)
+    public function submitApplicationData(array $data)
     {
+        $request = \App::make(SubmitApplicationDataFactoryContract::class)->makeRequest($data);
+
         try {
-            return $this->service->submitFintechAccount($data, $custRefID);
+            return $this->service->submitApplicationData($request);
         } catch (RequestException $e) {
             throw $e;
         }
@@ -297,10 +301,10 @@ class BankService
      * @param  string  $custRefID
      * @return mixed
      */
-    public function submitDocument(array $data, string $custRefID)
+    public function submitDocument(array $data)
     {
         try {
-            $data = $this->service->submitRegistrationDocument($data, $custRefID);
+            $data = $this->service->submitRegistrationDocument($data);
 
             return $data;
         } catch (RequestException $e) {
@@ -314,10 +318,10 @@ class BankService
      * @param  array  $data
      * @param  string  $custRefID
      */
-    public function inquiryRiskRating(array $data, string $custRefID)
+    public function inquiryRiskRating(array $data)
     {
         try {
-            $data = $this->service->inquiryRiskRating($data, $custRefID);
+            $data = $this->service->inquiryRiskRating($data);
 
             return $data;
         } catch (RequestException $e) {
@@ -331,10 +335,10 @@ class BankService
      * @param  array  $data
      * @param  string  $custRefID
      */
-    public function inquiryAccountValidation(array $data, string $custRefID)
+    public function inquiryAccountValidation(array $data)
     {
         try {
-            $data = $this->service->inquiryAccountValidation($data, $custRefID);
+            $data = $this->service->inquiryAccountValidation($data);
 
             return $data;
         } catch (RequestException $e) {
@@ -348,10 +352,10 @@ class BankService
      * @param  array  $data
      * @param  string  $custRefID
      */
-    public function updateKycStatus(array $data, string $custRefID)
+    public function updateKycStatus(array $data)
     {
         try {
-            $data = $this->service->updateKycStatus($data, $custRefID);
+            $data = $this->service->updateKycStatus($data);
 
             return $data;
         } catch (RequestException $e) {

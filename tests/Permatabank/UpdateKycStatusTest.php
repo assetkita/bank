@@ -23,7 +23,7 @@ class UpdateKycStatusTest extends TestCase
 //
 //            $this->assertTrue(
 //                $updateKycRequest->statusCode() === '00',
-//                $updateKycRequest->getCustomerReferenceId() === $custRefId
+//                $updateKycRequest->getCustomerReferralId() === $custRefId
 //            );
 //        } catch (GuzzleException $e) {
 //            throw $e;

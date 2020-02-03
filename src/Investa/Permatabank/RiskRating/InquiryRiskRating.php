@@ -79,11 +79,11 @@ class InquiryRiskRating
     }
 
     /**
-     * GET customer reference id
+     * GET customer referral id
      * 
      * @return string
      */
-    public function getCustomerReferenceId()
+    public function getCustomerReferralId()
     {
         return $this->custRefID;
     }

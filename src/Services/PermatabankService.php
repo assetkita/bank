@@ -2,38 +2,37 @@
 
 namespace Assetku\BankService\Services;
 
-use Assetku\BankService\Contracts\Apis\Api;
-use Assetku\BankService\Contracts\Apis\Factory;
-use Assetku\BankService\Contracts\Inquiries\BalanceInquiry;
-use Assetku\BankService\Contracts\Inquiries\BalanceInquiryFactory;
-use Assetku\BankService\Contracts\Inquiries\OnlineTransferInquiryFactory;
-use Assetku\BankService\Contracts\Inquiries\OverbookingInquiryFactory;
-use Assetku\BankService\Contracts\Inquiries\StatusTransactionInquiryFactory;
-use Assetku\BankService\Contracts\Transfers\LlgTransferFactory;
-use Assetku\BankService\Contracts\Transfers\OnlineTransferFactory;
-use Assetku\BankService\Contracts\Transfers\OverbookingFactory;
-use Assetku\BankService\Contracts\Transfers\RtgsTransferFactory;
+use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
+use Assetku\BankService\Contracts\Apis\ApiContract;
+use Assetku\BankService\Contracts\Apis\ApiFactoryContract;
+use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryFactoryContract;
+use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryRequestContract;
+use Assetku\BankService\Contracts\LlgTransfer\LlgTransferFactoryContract;
+use Assetku\BankService\Contracts\LlgTransfer\LlgTransferRequestContract;
+use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferFactoryContract;
+use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferRequestContract;
+use Assetku\BankService\Contracts\OnlineTransferInquiry\OnlineTransferInquiryFactoryContract;
+use Assetku\BankService\Contracts\OnlineTransferInquiry\OnlineTransferInquiryRequestContract;
+use Assetku\BankService\Contracts\Overbooking\OverbookingFactoryContract;
+use Assetku\BankService\Contracts\Overbooking\OverbookingRequestContract;
+use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryFactoryContract;
+use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryRequestContract;
+use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferFactoryContract;
+use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferRequestContract;
+use Assetku\BankService\Contracts\ServiceContract;
+use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryFactoryContract;
+use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
+use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
+use Assetku\BankService\Contracts\SubmitRegistrationDocument\SubmitRegistrationDocumentRequestContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
-use Assetku\BankService\Contracts\Requests\AccessTokenRequest;
-use Assetku\BankService\Contracts\Requests\BalanceInquiryRequest;
-use Assetku\BankService\Contracts\Requests\OnlineTransferInquiryRequestFactory;
-use Assetku\BankService\Contracts\Requests\OverbookingInquiryRequestFactory;
-use Assetku\BankService\Contracts\Requests\LlgTransferRequest;
-use Assetku\BankService\Contracts\Requests\OnlineTransferInquiryRequest;
-use Assetku\BankService\Contracts\Requests\OnlineTransferRequest;
-use Assetku\BankService\Contracts\Requests\OverbookingInquiryRequest;
-use Assetku\BankService\Contracts\Requests\OverbookingRequest;
-use Assetku\BankService\Contracts\Requests\RtgsTransferRequest;
-use Assetku\BankService\Contracts\Requests\StatusTransactionInquiryRequest;
-use Assetku\BankService\Services\Contracts\Service as ServiceContract;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PermatabankService implements ServiceContract
 {
     /**
-     * @var Api
+     * @var ApiContract
      */
     protected $api;
 
@@ -44,14 +43,14 @@ class PermatabankService implements ServiceContract
     {
         $environment = \App::environment('production') ? 'production' : 'development';
 
-        $this->api = \App::make(Factory::class)
+        $this->api = \App::make(ApiFactoryContract::class)
             ->make(\Config::get("bank.providers.permatabank.{$environment}.base_url"));
     }
 
     /**
      * @inheritDoc
      */
-    public function accessToken(AccessTokenRequest $request)
+    public function accessToken(AccessTokenRequestContract $request)
     {
         try {
             $response = $this->api->handle($request);
@@ -69,14 +68,14 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function balanceInquiry(BalanceInquiryRequest $request)
+    public function balanceInquiry(BalanceInquiryRequestContract $request)
     {
         try {
             $response = $this->api->handle($request);
 
             $contents = $response->getBody()->getContents();
 
-            return \App::make(BalanceInquiryFactory::class)->make($request, $contents);
+            return \App::make(BalanceInquiryFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
         }
@@ -85,14 +84,14 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function overbookingInquiry(OverbookingInquiryRequest $request)
+    public function overbookingInquiry(OverbookingInquiryRequestContract $request)
     {
         try {
             $response = $this->api->handle($request);
 
             $contents = $response->getBody()->getContents();
 
-            return \App::make(OverbookingInquiryFactory::class)->make($request, $contents);
+            return \App::make(OverbookingInquiryFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
         }
@@ -101,14 +100,14 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function onlineTransferInquiry(OnlineTransferInquiryRequest $request)
+    public function onlineTransferInquiry(OnlineTransferInquiryRequestContract $request)
     {
         try {
             $response = $this->api->handle($request);
 
             $contents = $response->getBody()->getContents();
 
-            return \App::make(OnlineTransferInquiryFactory::class)->make($request, $contents);
+            return \App::make(OnlineTransferInquiryFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
         }
@@ -117,14 +116,14 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function statusTransactionInquiry(StatusTransactionInquiryRequest $request)
+    public function statusTransactionInquiry(StatusTransactionInquiryRequestContract $request)
     {
         try {
             $response = $this->api->handle($request);
 
             $contents = $response->getBody()->getContents();
 
-            return \App::make(StatusTransactionInquiryFactory::class)->make($request, $contents);
+            return \App::make(StatusTransactionInquiryFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
         }
@@ -133,11 +132,11 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function overbooking(OverbookingRequest $request)
+    public function overbooking(OverbookingRequestContract $request)
     {
         try {
-            $overbookingInquiryRequest = \App::make(OverbookingInquiryRequestFactory::class)
-                ->make($request->toAccount());
+            $overbookingInquiryRequest = \App::make(OverbookingInquiryFactoryContract::class)
+                ->makeRequest($request->toAccount());
 
             $overbookingInquiry = $this->overbookingInquiry($overbookingInquiryRequest);
 
@@ -153,7 +152,7 @@ class PermatabankService implements ServiceContract
 
             $contents = $response->getBody()->getContents();
 
-            return \App::make(OverbookingFactory::class)->make($request, $contents);
+            return \App::make(OverbookingFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
         }
@@ -162,11 +161,11 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function onlineTransfer(OnlineTransferRequest $request)
+    public function onlineTransfer(OnlineTransferRequestContract $request)
     {
         try {
-            $onlineTransferInquiryRequest = \App::make(OnlineTransferInquiryRequestFactory::class)
-                ->make($request->toAccount(), $request->toBankId(), $request->toBankName());
+            $onlineTransferInquiryRequest = \App::make(OnlineTransferInquiryFactoryContract::class)
+                ->makeRequest($request->toAccount(), $request->toBankId(), $request->toBankName());
 
             $onlineTransferInquiry = $this->onlineTransferInquiry($onlineTransferInquiryRequest);
 
@@ -182,7 +181,7 @@ class PermatabankService implements ServiceContract
 
             $contents = $response->getBody()->getContents();
 
-            return \App::make(OnlineTransferFactory::class)->make($request, $contents);
+            return \App::make(OnlineTransferFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
         }
@@ -191,14 +190,14 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function llgTransfer(LlgTransferRequest $request)
+    public function llgTransfer(LlgTransferRequestContract $request)
     {
         try {
             $response = $this->api->handle($request);
 
             $contents = $response->getBody()->getContents();
 
-            return \App::make(LlgTransferFactory::class)->make($request, $contents);
+            return \App::make(LlgTransferFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
         }
@@ -207,14 +206,14 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function rtgsTransfer(RtgsTransferRequest $request)
+    public function rtgsTransfer(RtgsTransferRequestContract $request)
     {
         try {
             $response = $this->api->handle($request);
 
             $contents = $response->getBody()->getContents();
 
-            return \App::make(RtgsTransferFactory::class)->make($request, $contents);
+            return \App::make(RtgsTransferFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
         }
@@ -223,35 +222,23 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function submitFintechAccount(array $data, string $custRefID)
+    public function submitApplicationData(SubmitApplicationDataRequestContract $request)
     {
-        /*$data = [
-            'SubmitApplicationRq' => [
-                'MsgRqHdr'        => [
-                    'RequestTimestamp' => $this->timestamp,
-                    'CustRefID'        => $custRefID
-                ],
-                'ApplicationInfo' => $data
-            ]
-        ];
-
         try {
-            $response = $this->api->post('appldata_v2/add', $data, $this->header($data));
+            $response = $this->api->handle($request);
 
-            $contents = json_decode($response->getBody()->getContents());
+            $contents = $response->getBody()->getContents();
 
-            if ($response->statusCode() === Response::HTTP_OK) {
-                return new Registration($contents);
-            }
+            return \App::make(SubmitApplicationDataFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
-        }*/
+        }
     }
 
     /**
      * @inheritDoc
      */
-    public function submitRegistrationDocument(array $data, string $custRefID)
+    public function submitRegistrationDocument(array $data)
     {
         /*$data = [
             'SubmitDocumentRq' => [
@@ -268,7 +255,7 @@ class PermatabankService implements ServiceContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            if ($response->statusCode() === Response::HTTP_OK) {
+            if ($response->statusCode() === SubmitApplicationDataResponse::HTTP_OK) {
                 return new Document($contents);
             }
         } catch (HttpException $e) {
@@ -279,7 +266,7 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function inquiryApplicationStatus(string $reffCode, string $custRefID)
+    public function inquiryApplicationStatus(string $reffCode)
     {
         /*$data = [
             'InquiryApplicationRq' => [
@@ -298,7 +285,7 @@ class PermatabankService implements ServiceContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            if ($response->statusCode() === Response::HTTP_OK) {
+            if ($response->statusCode() === SubmitApplicationDataResponse::HTTP_OK) {
                 return new CheckRegistrationStatus($contents);
             }
         } catch (HttpException $e) {
@@ -309,7 +296,7 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function inquiryRiskRating(array $data, string $custRefID)
+    public function inquiryRiskRating(array $data)
     {
         /*$data = [
             'InquiryHighRiskRq' => [
@@ -327,7 +314,7 @@ class PermatabankService implements ServiceContract
             $contents = json_decode($response->getBody()->getContents());
 
             // if status code 200 or success
-            if ($response->statusCode() === Response::HTTP_OK) {
+            if ($response->statusCode() === SubmitApplicationDataResponse::HTTP_OK) {
                 return new InquiryRiskRating($contents);
             }
         } catch (HttpException $e) {
@@ -338,7 +325,7 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function inquiryAccountValidation(array $data, string $custRefID)
+    public function inquiryAccountValidation(array $data)
     {
         /*$data = [
             'InquiryAccountValidationRq' => [
@@ -355,7 +342,7 @@ class PermatabankService implements ServiceContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            if ($response->statusCode() === Response::HTTP_OK) {
+            if ($response->statusCode() === SubmitApplicationDataResponse::HTTP_OK) {
                 return new InquiryAccountValidation($contents);
             }
         } catch (HttpException $e) {
@@ -366,7 +353,7 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function updateKycStatus(array $data, string $custRefID)
+    public function updateKycStatus(array $data)
     {
         /*$data = [
             'UpdateKycFlagRq' => [
@@ -383,7 +370,7 @@ class PermatabankService implements ServiceContract
 
             $contents = json_decode($response->getBody()->getContents());
 
-            if ($response->statusCode() === Response::HTTP_OK) {
+            if ($response->statusCode() === SubmitApplicationDataResponse::HTTP_OK) {
                 return new updateKycStatus($contents);
             }
         } catch (HttpException $e) {
