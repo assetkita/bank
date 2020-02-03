@@ -21,7 +21,8 @@ use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInqu
 use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryResponseContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
-use Assetku\BankService\Contracts\SubmitRegistrationDocument\SubmitRegistrationDocumentRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
 use GuzzleHttp\Exception\RequestException;
@@ -129,10 +130,12 @@ interface ServiceContract
     /**
      * Perform submit registration document
      *
-     * @param  array  $data
-     * @return mixed
+     * @param  SubmitApplicationDocumentRequestContract  $request
+     * @return SubmitApplicationDocumentResponseContract
+     * @throws RequestException
+     * @throws ValidationException
      */
-    public function submitRegistrationDocument(array $data);
+    public function submitApplicationDocument(SubmitApplicationDocumentRequestContract $request);
 
 
     /**

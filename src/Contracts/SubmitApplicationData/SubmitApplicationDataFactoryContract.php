@@ -7,7 +7,7 @@ use Assetku\BankService\Contracts\Subjects\SubmitFintechAccountSubject;
 interface SubmitApplicationDataFactoryContract
 {
     /**
-     * Create a new fintech account request instance
+     * Create a new submit application data request instance
      *
      * @param  array $data
      * @return SubmitApplicationDataRequestContract
@@ -15,7 +15,7 @@ interface SubmitApplicationDataFactoryContract
     public function makeRequest(array $data);
 
     /**
-     * Create a new fintech account response instance
+     * Create a new submit application data response instance
      *
      * @param  SubmitApplicationDataRequestContract  $request
      * @param  string  $contents

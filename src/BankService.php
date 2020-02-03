@@ -12,6 +12,8 @@ use Assetku\BankService\Contracts\Subjects\OverbookingSubject;
 use Assetku\BankService\Contracts\Subjects\RtgsTransferSubject;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
 use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferFactory;
@@ -279,7 +281,7 @@ class BankService
      * Perform submit application data
      *
      * @param  array  $data
-     * @return SubmitApplicationDataResponseContract
+     * @return \Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -295,18 +297,19 @@ class BankService
     }
 
     /**
-     * Investa Document upload
+     * Perform submit application document
      *
      * @param  array  $data
-     * @param  string  $custRefID
-     * @return mixed
+     * @return \Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract
+     * @throws \GuzzleHttp\Exception\RequestException
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function submitDocument(array $data)
     {
-        try {
-            $data = $this->service->submitRegistrationDocument($data);
+        $request = \App::make(SubmitApplicationDocumentFactoryContract::class)->makeRequest($data);
 
-            return $data;
+        try {
+            return $this->service->submitApplicationDocument($request);
         } catch (RequestException $e) {
             throw $e;
         }

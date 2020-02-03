@@ -24,7 +24,8 @@ use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInqu
 use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
-use Assetku\BankService\Contracts\SubmitRegistrationDocument\SubmitRegistrationDocumentRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -238,29 +239,17 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function submitRegistrationDocument(array $data)
+    public function submitApplicationDocument(SubmitApplicationDocumentRequestContract $request)
     {
-        /*$data = [
-            'SubmitDocumentRq' => [
-                'MsgRqHdr'     => [
-                    'RequestTimestamp' => $this->timestamp,
-                    'CustRefID'        => $custRefID
-                ],
-                'DocumentInfo' => $data
-            ]
-        ];
-
         try {
-            $response = $this->api->post('appldoc/add', $data, $this->header($data));
+            $response = $this->api->handle($request);
 
-            $contents = json_decode($response->getBody()->getContents());
+            $contents = $response->getBody()->getContents();
 
-            if ($response->statusCode() === SubmitApplicationDataResponse::HTTP_OK) {
-                return new Document($contents);
-            }
+            return \App::make(SubmitApplicationDocumentFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
-        }*/
+        }
     }
 
     /**

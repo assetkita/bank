@@ -8,14 +8,14 @@ use Assetku\BankService\Contracts\SubmitApplicationData\Request\PersonalInfo;
 interface SubmitApplicationDataRequestContract extends BaseRequestContract
 {
     /**
-     * Get submit fintech account request's referral code
+     * Get submit submit application data request's referral code
      *
      * @return string
      */
     public function referralCode();
 
     /**
-     * Get submit fintech account request's personal info
+     * Get submit submit application data request's personal info
      *
      * @return PersonalInfo
      */

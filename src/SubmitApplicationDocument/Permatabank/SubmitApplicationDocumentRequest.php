@@ -1,34 +1,21 @@
 <?php
 
-namespace Assetku\BankService\FintechAccount\Permatabank;
+namespace Assetku\BankService\SubmitApplicationDocument\Permatabank;
 
 use Assetku\BankService\Base\Permatabank\BaseRequest;
-use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
-use Assetku\BankService\Contracts\SubmitApplicationData\Request\PersonalInfo;
-use Assetku\BankService\Contracts\MustValidated;
-use Assetku\BankService\Contracts\Subjects\SubmitFintechAccountSubject;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
 use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
-class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicationDataRequestContract, MustValidated
+class SubmitApplicationDocumentRequest extends BaseRequest implements SubmitApplicationDocumentRequestContract
 {
-    /**
-     * @var string
-     */
-    protected $referralCode;
-
-    /**
-     * @var PersonalInfo
-     */
-    protected $personalInfo;
-
     /**
      * @var array
      */
     protected $data;
 
     /**
-     * SubmitApplicationDataRequest constructor.
+     * SubmitApplicationDocumentRequest constructor.
      *
      * @param  array  $data
      */
@@ -42,25 +29,9 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function referralCode()
-    {
-        return $this->referralCode;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function personalInfo()
-    {
-        return $this->personalInfo;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function uri()
     {
-        return 'appldata_v2/add';
+        return 'apiservice/appldoc/add';
     }
 
     /**
@@ -77,12 +48,12 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     public function data()
     {
         return [
-            'SubmitApplicationRq' => [
+            'SubmitDocumentRs' => [
                 'MsgRqHdr'        => [
                     'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $this->customerReferralId,
                 ],
-                'ApplicationInfo' => $this->data,
+                'DocumentInfo' => $this->data,
             ],
         ];
     }

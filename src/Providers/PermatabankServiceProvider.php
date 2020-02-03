@@ -35,6 +35,9 @@ use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInqu
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract;
 use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataFactory;
 use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataRequest;
 use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataResponse;
@@ -60,6 +63,9 @@ use Assetku\BankService\Services\PermatabankService;
 use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryFactory;
 use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryRequest;
 use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryResponse;
+use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentFactory;
+use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentRequest;
+use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentResponse;
 use Illuminate\Support\ServiceProvider;
 
 class PermatabankServiceProvider extends ServiceProvider
@@ -121,5 +127,10 @@ class PermatabankServiceProvider extends ServiceProvider
         $this->app->bind(SubmitApplicationDataFactoryContract::class, SubmitApplicationDataFactory::class);
         $this->app->bind(SubmitApplicationDataRequestContract::class, SubmitApplicationDataRequest::class);
         $this->app->bind(SubmitApplicationDataResponseContract::class, SubmitApplicationDataResponse::class);
+
+        // submit document data
+        $this->app->bind(SubmitApplicationDocumentFactoryContract::class, SubmitApplicationDocumentFactory::class);
+        $this->app->bind(SubmitApplicationDocumentRequestContract::class, SubmitApplicationDocumentRequest::class);
+        $this->app->bind(SubmitApplicationDocumentResponseContract::class, SubmitApplicationDocumentResponse::class);
     }
 }
