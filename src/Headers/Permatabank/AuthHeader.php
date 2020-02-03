@@ -2,10 +2,10 @@
 
 namespace Assetku\BankService\Headers\Permatabank;
 
-use Assetku\BankService\Contracts\Header as HeaderContract;
-use Assetku\BankService\Contracts\Requests\Request;
+use Assetku\BankService\Contracts\HeaderContract;
+use Assetku\BankService\Contracts\Base\BaseRequestContract;
 
-class AuthHeader extends Header implements HeaderContract
+class AuthHeader extends BaseHeader implements HeaderContract
 {
     /**
      * @var string
@@ -20,9 +20,9 @@ class AuthHeader extends Header implements HeaderContract
     /**
      * AuthHeader constructor.
      *
-     * @param  Request  $request
+     * @param  BaseRequestContract  $request
      */
-    public function __construct(Request $request)
+    public function __construct(BaseRequestContract $request)
     {
         parent::__construct($request);
 

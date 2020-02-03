@@ -2,9 +2,8 @@
 
 namespace Assetku\BankService\Apis\Guzzle;
 
-use Assetku\BankService\Contracts\Apis\Api as ApiContract;
-use Assetku\BankService\Contracts\Requests\Request;
-use Assetku\BankService\Contracts\Requests\StatusTransactionInquiryRequest;
+use Assetku\BankService\Contracts\Apis\ApiContract as ApiContract;
+use Assetku\BankService\Contracts\Base\BaseRequestContract;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
@@ -36,16 +35,12 @@ class Api implements ApiContract
     /**
      * @inheritDoc
      */
-    public function handle(Request $request)
+    public function handle(BaseRequestContract $request)
     {
         $options = [
             $request->encoder()->type() => $request->data(),
             'headers'                   => $request->header()->content(),
         ];
-
-//        if ($request instanceof StatusTransactionInquiryRequest) {
-//            dd($options);
-//        }
 
         try {
             return $this->client->request($request->method(), $request->uri(), $options);

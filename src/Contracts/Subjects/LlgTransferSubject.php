@@ -5,14 +5,14 @@ namespace Assetku\BankService\Contracts\Subjects;
 interface LlgTransferSubject
 {
     /**
-     * Get llg transfer's from toAccount
+     * Get llg transfer's from account
      *
      * @return string
      */
     public function llgTransferFromAccount();
 
     /**
-     * Get llg transfer's from toAccount name
+     * Get llg transfer's from account name
      *
      * @return string
      */
@@ -54,7 +54,7 @@ interface LlgTransferSubject
     public function llgTransferToBankName();
 
     /**
-     * Get llg transfer's beneficiary toAccount name
+     * Get llg transfer's beneficiary account name
      *
      * @return string
      */

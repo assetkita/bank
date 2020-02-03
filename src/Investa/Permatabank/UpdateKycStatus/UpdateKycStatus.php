@@ -41,11 +41,11 @@ class UpdateKycStatus
     }
 
     /**
-     * GET customer reference ID
+     * GET customer referral ID
      * 
      * @return string
      */
-    public function getCustomerReferenceId()
+    public function getCustomerReferralId()
     {
         return $this->custRefId;
     }

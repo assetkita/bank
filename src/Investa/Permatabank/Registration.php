@@ -62,7 +62,7 @@ class Registration
      * 
      * @return string $custRefID
      */
-    public function getCustomerReferenceId()
+    public function getCustomerReferralId()
     {
         return $this->custRefID;
     }

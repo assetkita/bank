@@ -2,11 +2,11 @@
 
 namespace Assetku\BankService\Headers\Permatabank;
 
-use Assetku\BankService\Contracts\Header as HeaderContract;
-use Assetku\BankService\Contracts\Requests\Request;
+use Assetku\BankService\Contracts\Base\BaseRequestContract;
+use Assetku\BankService\Contracts\HeaderContract;
 use Illuminate\Support\Collection;
 
-class CommonHeader extends Header implements HeaderContract
+class CommonHeader extends BaseHeader implements HeaderContract
 {
     /**
      * @var string
@@ -26,9 +26,9 @@ class CommonHeader extends Header implements HeaderContract
     /**
      * CommonHeader constructor.
      *
-     * @param  Request  $request
+     * @param  BaseRequestContract  $request
      */
-    public function __construct(Request $request)
+    public function __construct(BaseRequestContract $request)
     {
         parent::__construct($request);
 

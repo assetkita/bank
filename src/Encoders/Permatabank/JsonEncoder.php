@@ -2,9 +2,9 @@
 
 namespace Assetku\BankService\Encoders\Permatabank;
 
-use Assetku\BankService\Contracts\Encoder;
+use Assetku\BankService\Contracts\EncoderContract;
 
-class JsonEncoder implements Encoder
+class JsonEncoder implements EncoderContract
 {
     /**
      * @inheritDoc

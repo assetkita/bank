@@ -59,11 +59,11 @@ class CheckRegistrationStatus
     }
 
     /**
-     * get customer reference id
+     * get customer referral id
      * 
      * @return string $custRefId
      */
-    public function getCustomerReferenceId()
+    public function getCustomerReferralId()
     {
         return $this->custRefId;
     }
