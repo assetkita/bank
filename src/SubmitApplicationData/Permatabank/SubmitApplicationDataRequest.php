@@ -1,6 +1,6 @@
 <?php
 
-namespace Assetku\BankService\FintechAccount\Permatabank;
+namespace Assetku\BankService\SubmitApplicationData\Permatabank;
 
 use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
