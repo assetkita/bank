@@ -3,7 +3,7 @@
 namespace Assetku\BankService\tests\Feature;
 
 use Assetku\BankService\tests\TestCase;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 
 class SubmitApplicationDocumentTest extends TestCase
 {
@@ -35,7 +35,7 @@ class SubmitApplicationDocumentTest extends TestCase
                 $submitDocument->getStatusCode() === '00',
                 $submitDocument->getStatusDescription() === 'Success'
             );
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }

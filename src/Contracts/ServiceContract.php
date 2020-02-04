@@ -23,6 +23,8 @@ use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataReq
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
 use GuzzleHttp\Exception\RequestException;
@@ -163,10 +165,12 @@ interface ServiceContract
     public function inquiryAccountValidation(array $data);
 
     /**
-     * Perform update KYC status
+     * Perform update kyc status
      *
-     * @param  array  $data
-     * @return mixed
+     * @param  UpdateKycStatusRequestContract  $request
+     * @return UpdateKycStatusResponseContract
+     * @throws RequestException
+     * @throws ValidationException
      */
-    public function updateKycStatus(array $data);
+    public function updateKycStatus(UpdateKycStatusRequestContract $request);
 }

@@ -21,7 +21,7 @@ class InquiryStatusRegistrationTest extends TestCase
 //            }, $applicationStatus);
 //
 //            $this->assertTrue(! in_array(false, $statuses));
-//        } catch (GuzzleException $e) {
+//        } catch (RequestException $e) {
 //            throw $e;
 //        }
 //    }

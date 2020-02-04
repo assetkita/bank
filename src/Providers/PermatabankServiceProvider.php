@@ -38,6 +38,9 @@ use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRes
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusFactoryContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
 use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataFactory;
 use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataRequest;
 use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataResponse;
@@ -66,6 +69,9 @@ use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionIn
 use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentFactory;
 use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentRequest;
 use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentResponse;
+use Assetku\BankService\UpdateKycStatus\Permatabank\UpdateKycStatusFactory;
+use Assetku\BankService\UpdateKycStatus\Permatabank\UpdateKycStatusRequest;
+use Assetku\BankService\UpdateKycStatus\Permatabank\UpdateKycStatusResponse;
 use Illuminate\Support\ServiceProvider;
 
 class PermatabankServiceProvider extends ServiceProvider
@@ -132,5 +138,10 @@ class PermatabankServiceProvider extends ServiceProvider
         $this->app->bind(SubmitApplicationDocumentFactoryContract::class, SubmitApplicationDocumentFactory::class);
         $this->app->bind(SubmitApplicationDocumentRequestContract::class, SubmitApplicationDocumentRequest::class);
         $this->app->bind(SubmitApplicationDocumentResponseContract::class, SubmitApplicationDocumentResponse::class);
+
+        // update kyc status
+        $this->app->bind(UpdateKycStatusFactoryContract::class, UpdateKycStatusFactory::class);
+        $this->app->bind(UpdateKycStatusRequestContract::class, UpdateKycStatusRequest::class);
+        $this->app->bind(UpdateKycStatusResponseContract::class, UpdateKycStatusResponse::class);
     }
 }

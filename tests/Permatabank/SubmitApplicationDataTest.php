@@ -3,7 +3,7 @@
 namespace Assetku\BankService\Tests\Permatabank;
 
 use Assetku\BankService\Tests\TestCase;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use Assetku\BankService\Investa\Permatabank\PersonalInfo\AddressInfo;
 use Assetku\BankService\Investa\Permatabank\PersonalInfo\Employment;
 use Assetku\BankService\Investa\Permatabank\PersonalInfo\PersonalInfo;
@@ -39,7 +39,7 @@ class SubmitApplicationDataTest extends TestCase
                 $submitApplicationData->statusCode() === '00' &&
                 $submitApplicationData->getStatusDescription() === 'Success'
             );
-        } catch (GuzzleException $e) {
+        } catch (RequestException $e) {
             throw $e;
         }
     }

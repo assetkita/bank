@@ -26,6 +26,8 @@ use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFac
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusFactoryContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -342,28 +344,16 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function updateKycStatus(array $data)
+    public function updateKycStatus(UpdateKycStatusRequestContract $request)
     {
-        /*$data = [
-            'UpdateKycFlagRq' => [
-                'MsgRqHdr'        => [
-                    'RequestTimestamp' => $this->timestamp,
-                    'CustRefID'        => $custRefID,
-                ],
-                'ApplicationInfo' => $data
-            ]
-        ];
-
         try {
-            $response = $this->api->post('appldata_v2/kycstatus/add', $data, $this->header($data));
+            $response = $this->api->handle($request);
 
-            $contents = json_decode($response->getBody()->getContents());
+            $contents = $response->getBody()->getContents();
 
-            if ($response->statusCode() === SubmitApplicationDataResponse::HTTP_OK) {
-                return new updateKycStatus($contents);
-            }
+            return \App::make(UpdateKycStatusFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
-        }*/
+        }
     }
 }

@@ -2,8 +2,6 @@
 
 namespace Assetku\BankService\Contracts\SubmitApplicationData;
 
-use Assetku\BankService\Contracts\Subjects\SubmitFintechAccountSubject;
-
 interface SubmitApplicationDataFactoryContract
 {
     /**

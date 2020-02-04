@@ -3,7 +3,7 @@
 namespace Assetku\BankService\Tests\Permatabank;
 
 use Assetku\BankService\Tests\TestCase;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 
 class InquiryAccountValidationTest extends TestCase
 {
@@ -27,7 +27,7 @@ class InquiryAccountValidationTest extends TestCase
 //                $inquiryAccountValidation->getStatusDescription() === 'Success',
 //                $inquiryAccountValidation->getValidationStatus() === '2'
 //            );
-//        } catch (GuzzleException $e) {
+//        } catch (RequestException $e) {
 //            throw $e;
 //        }
 //    }

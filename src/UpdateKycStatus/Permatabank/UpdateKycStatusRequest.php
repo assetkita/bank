@@ -1,13 +1,14 @@
 <?php
 
-namespace Assetku\BankService\SubmitApplicationDocument\Permatabank;
+namespace Assetku\BankService\UpdateKycStatus\Permatabank;
 
 use Assetku\BankService\Base\Permatabank\BaseRequest;
-use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
+use Assetku\BankService\Contracts\MustValidated;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract;
 use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
-class SubmitApplicationDocumentRequest extends BaseRequest implements SubmitApplicationDocumentRequestContract
+class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusRequestContract, MustValidated
 {
     /**
      * @var array
@@ -15,7 +16,7 @@ class SubmitApplicationDocumentRequest extends BaseRequest implements SubmitAppl
     protected $data;
 
     /**
-     * SubmitApplicationDocumentRequest constructor.
+     * UpdateKycStatusRequest constructor.
      *
      * @param  array  $data
      */
@@ -31,7 +32,7 @@ class SubmitApplicationDocumentRequest extends BaseRequest implements SubmitAppl
      */
     public function uri()
     {
-        return 'appldoc/add';
+        return 'appldata_v2/kycstatus/add';
     }
 
     /**
@@ -48,12 +49,12 @@ class SubmitApplicationDocumentRequest extends BaseRequest implements SubmitAppl
     public function data()
     {
         return [
-            'SubmitDocumentRs' => [
+            'UpdateKycFlagRq' => [
                 'MsgRqHdr'        => [
                     'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $this->customerReferralId,
                 ],
-                'DocumentInfo' => $this->data,
+                'ApplicationInfo' => $this->data,
             ],
         ];
     }

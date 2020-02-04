@@ -14,6 +14,8 @@ use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFac
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusFactoryContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
 use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferFactory;
@@ -350,17 +352,19 @@ class BankService
     }
 
     /**
-     * Investa update KYC Status
+     * Perform update kyc status
      *
      * @param  array  $data
-     * @param  string  $custRefID
+     * @return UpdateKycStatusResponseContract
+     * @throws RequestException
+     * @throws ValidationException
      */
     public function updateKycStatus(array $data)
     {
-        try {
-            $data = $this->service->updateKycStatus($data);
+        $request = \App::make(UpdateKycStatusFactoryContract::class)->makeRequest($data);
 
-            return $data;
+        try {
+            return $this->service->updateKycStatus($request);
         } catch (RequestException $e) {
             throw $e;
         }

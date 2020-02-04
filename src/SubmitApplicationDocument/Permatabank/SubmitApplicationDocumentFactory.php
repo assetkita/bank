@@ -20,9 +20,9 @@ class SubmitApplicationDocumentFactory implements SubmitApplicationDocumentFacto
      */
     public function makeResponse(SubmitApplicationDocumentRequestContract $request, string $contents)
     {
-        $data = json_decode($content, true);
+        $data = json_decode($contents, true);
 
-        $response = $data['SubmitDocumentRs'];
+        $response = $data['SubmitAppDocNotificationRs'];
 
         return new SubmitApplicationDocumentResponse($response['MsgRsHdr']);
     }
