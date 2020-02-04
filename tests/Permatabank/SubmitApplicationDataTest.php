@@ -69,15 +69,15 @@ class SubmitApplicationDataTest extends TestCase
         $staIndividu = new StaIndividu;
 
         $staIndividu->setCustomerName('AGUNG TRILAKSONO');
-        $staIndividu->setCityOfBirth($this->faker->city);
-        $staIndividu->setDateofBirth($this->faker->date);
+        $staIndividu->setCityOfBirth('Surabaya');
+        $staIndividu->setDateofBirth('1997-12-08');
         $staIndividu->setCountryOfBirth('ID');
         $staIndividu->setGender('10');
         $staIndividu->setMaritalStatus('W');
         $staIndividu->setLastEducationStatus('0104');
         $staIndividu->setNoOfDependant('01');
         $staIndividu->setNationality('ID');
-        $staIndividu->setEmailAddress($this->faker->safeEmail);
+        $staIndividu->setEmailAddress('agungtrilaksono123@gmail.com');
         $staIndividu->setMotherMaidenName('Sutatik');
         $staIndividu->setResidentStatus('R');
         $staIndividu->setFlagASCASA('Y');
@@ -272,8 +272,8 @@ class SubmitApplicationDataTest extends TestCase
         $employment = new Employment;
 
         $employment->setEmploymentType('A');
-        $employment->setPosition('Admin');
-        $employment->setDepartment('Kelurahan');
+        $employment->setPosition('Staff');
+        $employment->setDepartment('IT');
         $employment->setEmploymentStatus('1');
         $employment->setEconomySector('074');
         $employment->setEconomySectorOthers('');
@@ -281,7 +281,7 @@ class SubmitApplicationDataTest extends TestCase
         $employment->setLengthOfServiceMonth('02');
         $employment->setMonthlyIncomeCode('1');
         $employment->setMonthlyIncome('100000');
-        $employment->setCompanyName('Kelurahan');
+        $employment->setCompanyName('Assetkita');
         $employment->setSourceOfFound('1');
         $employment->setSourceOfFoundOther('1');
 

@@ -10,7 +10,7 @@ class UpdateKycStatusTest extends TestCase
     public function testSuccessUpdateKycStatus()
     {
         $data = [
-            'ReffCode'        => 'U030220011586',
+            'ReffCode'        => 'U040220011594',
             'IdNumber'        => '1769751406166610',
             'KycStatus'       => '00',
             'KycFailedReason' => ''

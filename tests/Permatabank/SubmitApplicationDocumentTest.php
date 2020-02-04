@@ -16,11 +16,11 @@ class SubmitApplicationDocumentTest extends TestCase
             ],
         ];
 
-        $image = base64_encode(file_get_contents('https://assetkita.test/storage/user/identity_card/8TIr0Ib5faKHl0DhEXVPcnHGBXO6jrmvItCQjQwj.jpeg',
+        $image = base64_encode(file_get_contents('https://assetkita.test/storage/user/identity_card/QBbmFxodTt1zTUznykxEZOfHp4c5LNezjWLgQVJh.jpeg',
             false, stream_context_create($arrContextOptions)));
 
         $payload = [
-            'BankReffId'     => 'U030220011586',
+            'BankReffId'     => 'U040220011594',
             'DocType'        => 'KT',
             'DocName'        => 'KTP.jpg',
             'DocContent'     => urlencode($image),
