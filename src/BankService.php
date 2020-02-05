@@ -4,7 +4,10 @@ namespace Assetku\BankService;
 
 use Assetku\BankService\BalanceInquiry\Permatabank\BalanceInquiryFactory;
 use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
+use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryFactoryContract;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryFactoryContract;
 use Assetku\BankService\Contracts\MustValidated;
+use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryFactoryContract;
 use Assetku\BankService\Contracts\ServiceContract;
 use Assetku\BankService\Contracts\Subjects\LlgTransferSubject;
 use Assetku\BankService\Contracts\Subjects\OnlineTransferSubject;
@@ -318,34 +321,81 @@ class BankService
     }
 
     /**
-     * Investa Check User High Risk Rating
+     * Perform application status inquiry
      *
-     * @param  array  $data
-     * @param  string  $custRefID
+     * @param  string  $referralCode
+     * @return \Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryResponseContract
+     * @throws \GuzzleHttp\Exception\RequestException
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function inquiryRiskRating(array $data)
+    public function applicationStatusInquiry(string $referralCode)
     {
-        try {
-            $data = $this->service->inquiryRiskRating($data);
+        $request = \App::make(ApplicationStatusInquiryFactoryContract::class)->makeRequest($referralCode);
 
-            return $data;
+        try {
+            return $this->service->applicationStatusInquiry($request);
         } catch (RequestException $e) {
             throw $e;
         }
     }
 
     /**
-     * Investa Account Validation
+     * Perform risk status inquiry
      *
-     * @param  array  $data
-     * @param  string  $custRefID
+     * @param  string  $idNumber
+     * @param  string  $employmentType
+     * @param  string  $economySector
+     * @param  string  $position
+     * @return \Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryResponseContract
+     * @throws \GuzzleHttp\Exception\RequestException
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function inquiryAccountValidation(array $data)
+    public function riskRatingInquiry(string $idNumber, string $employmentType, string $economySector, string $position)
     {
-        try {
-            $data = $this->service->inquiryAccountValidation($data);
+        $request = \App::make(RiskRatingInquiryFactoryContract::class)
+            ->makeRequest($idNumber, $employmentType, $economySector, $position);
 
-            return $data;
+        try {
+            return $this->service->riskRatingInquiry($request);
+        } catch (RequestException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Perform account validation inquiry
+     *
+     * @param  string  $accountNumber
+     * @param  string  $idNumber
+     * @param  string  $handPhoneNumber
+     * @param  string  $customerName
+     * @param  string  $dateOfBirth
+     * @param  string  $cityOfBirth
+     * @return \Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryResponseContract
+     * @throws \GuzzleHttp\Exception\RequestException
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function accountValidationInquiry(
+        string $accountNumber,
+        string $idNumber,
+        string $handPhoneNumber,
+        string $customerName,
+        string $dateOfBirth,
+        string $cityOfBirth
+    )
+    {
+        $request = \App::make(AccountValidationInquiryFactoryContract::class)
+            ->makeRequest(
+                $accountNumber,
+                $idNumber,
+                $handPhoneNumber,
+                $customerName,
+                $dateOfBirth,
+                $cityOfBirth
+            );
+
+        try {
+            return $this->service->accountValidationInquiry($request);
         } catch (RequestException $e) {
             throw $e;
         }

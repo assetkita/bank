@@ -18,7 +18,6 @@ class UpdateKycStatusTest extends TestCase
 
         try {
             $updateKycRequest = \BankService::updateKycStatus($data);
-            dd($updateKycRequest);
 
             $this->assertTrue($updateKycRequest->statusCode() === '00');
         } catch (RequestException $e) {

@@ -5,15 +5,15 @@ namespace Assetku\BankService\Contracts\ApplicationStatusInquiry;
 interface ApplicationStatusInquiryFactoryContract
 {
     /**
-     * Create a new inquiry application status request instance
+     * Create a new application status inquiry request instance
      *
-     * @param  array $data
+     * @param  string  $referralCode
      * @return ApplicationStatusInquiryRequestContract
      */
-    public function makeRequest(array $data);
+    public function makeRequest(string $referralCode);
 
     /**
-     * Create a new inquiry application status response instance
+     * Create a new application status inquiry response instance
      *
      * @param  ApplicationStatusInquiryRequestContract  $request
      * @param  string  $contents

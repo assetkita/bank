@@ -16,7 +16,7 @@ class SubmitApplicationDocumentTest extends TestCase
             ],
         ];
 
-        $image = base64_encode(file_get_contents('https://assetkita.test/storage/user/identity_card/QBbmFxodTt1zTUznykxEZOfHp4c5LNezjWLgQVJh.jpeg',
+        $image = base64_encode(file_get_contents('https://assetkita.test/storage/user/identity_card/8TIr0Ib5faKHl0DhEXVPcnHGBXO6jrmvItCQjQwj.jpeg',
             false, stream_context_create($arrContextOptions)));
 
         $payload = [
@@ -29,12 +29,8 @@ class SubmitApplicationDocumentTest extends TestCase
 
         try {
             $submitDocument = \BankService::submitDocument($payload);
-            dd($submitDocument);
 
-            $this->assertTrue(
-                $submitDocument->getStatusCode() === '00',
-                $submitDocument->getStatusDescription() === 'Success'
-            );
+            $this->assertTrue($submitDocument->statusCode() === '00');
         } catch (RequestException $e) {
             throw $e;
         }

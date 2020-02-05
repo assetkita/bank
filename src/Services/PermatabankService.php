@@ -3,8 +3,12 @@
 namespace Assetku\BankService\Services;
 
 use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
+use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryFactoryContract;
+use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryRequestContract;
 use Assetku\BankService\Contracts\Apis\ApiContract;
 use Assetku\BankService\Contracts\Apis\ApiFactoryContract;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryFactoryContract;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryRequestContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryFactoryContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryRequestContract;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferFactoryContract;
@@ -17,6 +21,8 @@ use Assetku\BankService\Contracts\Overbooking\OverbookingFactoryContract;
 use Assetku\BankService\Contracts\Overbooking\OverbookingRequestContract;
 use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryFactoryContract;
 use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryRequestContract;
+use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryFactoryContract;
+use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryRequestContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferFactoryContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferRequestContract;
 use Assetku\BankService\Contracts\ServiceContract;
@@ -257,88 +263,49 @@ class PermatabankService implements ServiceContract
     /**
      * @inheritDoc
      */
-    public function inquiryApplicationStatus(string $reffCode)
+    public function applicationStatusInquiry(ApplicationStatusInquiryRequestContract $request)
     {
-        /*$data = [
-            'InquiryApplicationRq' => [
-                'MsgRqHdr'              => [
-                    'RequestTimestamp' => $this->timestamp,
-                    'CustRefID'        => $custRefID
-                ],
-                'SubmitApplicationInfo' => [
-                    'ReffCode' => $reffCode
-                ]
-            ]
-        ];
-
         try {
-            $response = $this->api->post('appldata_v2/inq', $data, $this->header($data));
+            $response = $this->api->handle($request);
 
-            $contents = json_decode($response->getBody()->getContents());
+            $contents = $response->getBody()->getContents();
 
-            if ($response->statusCode() === SubmitApplicationDataResponse::HTTP_OK) {
-                return new CheckRegistrationStatus($contents);
-            }
+            return \App::make(ApplicationStatusInquiryFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
-        }*/
+        }
     }
 
     /**
      * @inheritDoc
      */
-    public function inquiryRiskRating(array $data)
+    public function riskRatingInquiry(RiskRatingInquiryRequestContract $request)
     {
-        /*$data = [
-            'InquiryHighRiskRq' => [
-                'MsgRqHdr'        => [
-                    'RequestTimestamp' => $this->timestamp,
-                    'CustRefID'        => $custRefID
-                ],
-                'ApplicationInfo' => $data
-            ]
-        ];
-
         try {
-            $response = $this->api->post('appldata_v2/riskrating/inq', $data, $this->header($data));
+            $response = $this->api->handle($request);
 
-            $contents = json_decode($response->getBody()->getContents());
+            $contents = $response->getBody()->getContents();
 
-            // if status code 200 or success
-            if ($response->statusCode() === SubmitApplicationDataResponse::HTTP_OK) {
-                return new InquiryRiskRating($contents);
-            }
+            return \App::make(RiskRatingInquiryFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
-        }*/
+        }
     }
 
     /**
      * @inheritDoc
      */
-    public function inquiryAccountValidation(array $data)
+    public function accountValidationInquiry(AccountValidationInquiryRequestContract $request)
     {
-        /*$data = [
-            'InquiryAccountValidationRq' => [
-                'MsgRqHdr'        => [
-                    'RequestTimestamp' => $this->timestamp,
-                    'CustRefID'        => $custRefID
-                ],
-                'ApplicationInfo' => $data
-            ]
-        ];
-
         try {
-            $response = $this->api->post('appldata_v2/acctvalidation/inq', $data, $this->header($data));
+            $response = $this->api->handle($request);
 
-            $contents = json_decode($response->getBody()->getContents());
+            $contents = $response->getBody()->getContents();
 
-            if ($response->statusCode() === SubmitApplicationDataResponse::HTTP_OK) {
-                return new InquiryAccountValidation($contents);
-            }
+            return \App::make(AccountValidationInquiryFactoryContract::class)->makeResponse($request, $contents);
         } catch (HttpException $e) {
             throw $e;
-        }*/
+        }
     }
 
     /**

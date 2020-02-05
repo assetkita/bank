@@ -2,14 +2,22 @@
 
 namespace Assetku\BankService\Contracts\ApplicationStatusInquiry;
 
-use Assetku\BankService\Contracts\Base\BaseRequestContract;
+use Assetku\BankService\ApplicationStatusInquiry\Permatabank\ApplicationStatusProduct;
+use Assetku\BankService\Contracts\Base\BaseResponseContract;
 
-interface ApplicationStatusInquiryResponseContract extends BaseRequestContract
+interface ApplicationStatusInquiryResponseContract extends BaseResponseContract
 {
     /**
-     * Get refferal code response's.
+     * Get application status inquiry response's referral code
      *
      * @return string
      */
-    public function refferalCode();
+    public function referralCode();
+
+    /**
+     * Get application status inquiry response's application status products
+     *
+     * @return array
+     */
+    public function applicationStatusProducts();
 }

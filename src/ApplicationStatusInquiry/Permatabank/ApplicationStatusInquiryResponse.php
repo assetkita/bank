@@ -2,35 +2,50 @@
 
 namespace Assetku\BankService\ApplicationStatusInquiry\Permatabank;
 
-use Assetku\BankService\ApplicationStatusInquiry\ApplicationStatusProduct;
 use Assetku\BankService\Base\Permatabank\BaseResponse;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryResponseContract;
 
-class ApplicationStatusInquiryResponse extends BaseResponse
+class ApplicationStatusInquiryResponse extends BaseResponse implements ApplicationStatusInquiryResponseContract
 {
     /**
      * @var string
      */
-    protected $refferalCode;
+    protected $referralCode;
+
+    /**
+     * @var array
+     */
+    protected $applicationStatusProducts;
 
     /**
      * ApplicationStatusInquiryResponse constructor.
      *
      * @param  array  $messageResponseHeader
-     * @param  string  $refferalCode
-     * @param  ApplicationStatusProduct  $applicationStatusProducts
+     * @param  string  $referralCode
+     * @param  array  $applicationStatusProducts
      */
-    public function __construct(array $messageResponseHeader, string $refferalCode, $applicationStatusProducts)
+    public function __construct(array $messageResponseHeader, string $referralCode, array $applicationStatusProducts)
     {
         parent::__construct($messageResponseHeader);
 
-        $this->refferalCode = $refferalCode;
+        $this->referralCode = $referralCode;
+
+        $this->applicationStatusProducts = $applicationStatusProducts;
     }
 
     /**
      * @inheritDoc
      */
-    public function refferalCode()
+    public function referralCode()
     {
-        return $this->refferalCode;
+        return $this->referralCode;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function applicationStatusProducts()
+    {
+        return $this->applicationStatusProducts;
     }
 }

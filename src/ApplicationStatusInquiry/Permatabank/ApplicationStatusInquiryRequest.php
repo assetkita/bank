@@ -10,20 +10,20 @@ use Assetku\BankService\Headers\Permatabank\CommonHeader;
 class ApplicationStatusInquiryRequest extends BaseRequest implements ApplicationStatusInquiryRequestContract
 {
     /**
-     * @param array $data
+     * @var string
      */
-    protected $data;
+    protected $referralCode;
 
     /**
      * ApplicationStatusInquiryRequest constructor.
      *
-     * @param  array  $data
+     * @param  string  $referralCode
      */
-    public function __construct(array $data)
+    public function __construct(string $referralCode)
     {
         parent::__construct();
 
-        $this->data = $data;
+        $this->referralCode = $referralCode;
     }
 
     /**
@@ -54,7 +54,7 @@ class ApplicationStatusInquiryRequest extends BaseRequest implements Application
                     'CustRefID'        => $this->customerReferralId
                 ],
                 'SubmitApplicationInfo' => [
-                    'ReffCode' => $this->data
+                    'ReffCode' => $this->referralCode,
                 ]
             ]
         ];
