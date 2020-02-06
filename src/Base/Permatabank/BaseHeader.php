@@ -1,6 +1,6 @@
 <?php
 
-namespace Assetku\BankService\Headers\Permatabank;
+namespace Assetku\BankService\Base\Permatabank;
 
 use Assetku\BankService\Contracts\Base\BaseRequestContract;
 

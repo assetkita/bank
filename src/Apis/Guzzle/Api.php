@@ -4,6 +4,7 @@ namespace Assetku\BankService\Apis\Guzzle;
 
 use Assetku\BankService\Contracts\Apis\ApiContract as ApiContract;
 use Assetku\BankService\Contracts\Base\BaseRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;

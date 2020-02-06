@@ -4,14 +4,20 @@ namespace Assetku\BankService;
 
 use Assetku\BankService\BalanceInquiry\Permatabank\BalanceInquiryFactory;
 use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
+use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryFactoryContract;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryFactoryContract;
 use Assetku\BankService\Contracts\MustValidated;
+use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryFactoryContract;
 use Assetku\BankService\Contracts\ServiceContract;
 use Assetku\BankService\Contracts\Subjects\LlgTransferSubject;
 use Assetku\BankService\Contracts\Subjects\OnlineTransferSubject;
 use Assetku\BankService\Contracts\Subjects\OverbookingSubject;
 use Assetku\BankService\Contracts\Subjects\RtgsTransferSubject;
+use Assetku\BankService\Contracts\Subjects\SubmitApplicationDataSubject;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
-use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusFactoryContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
 use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferFactory;
@@ -278,14 +284,14 @@ class BankService
     /**
      * Perform submit application data
      *
-     * @param  array  $data
-     * @return SubmitApplicationDataResponseContract
+     * @param  \Assetku\BankService\Contracts\Subjects\SubmitApplicationDataSubject  $subject
+     * @return \Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function submitApplicationData(array $data)
+    public function submitApplicationData(SubmitApplicationDataSubject $subject)
     {
-        $request = \App::make(SubmitApplicationDataFactoryContract::class)->makeRequest($data);
+        $request = \App::make(SubmitApplicationDataFactoryContract::class)->makeRequest($subject);
 
         try {
             return $this->service->submitApplicationData($request);
@@ -295,69 +301,118 @@ class BankService
     }
 
     /**
-     * Investa Document upload
+     * Perform submit application document
      *
      * @param  array  $data
-     * @param  string  $custRefID
-     * @return mixed
+     * @return \Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract
+     * @throws \GuzzleHttp\Exception\RequestException
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function submitDocument(array $data)
     {
-        try {
-            $data = $this->service->submitRegistrationDocument($data);
+        $request = \App::make(SubmitApplicationDocumentFactoryContract::class)->makeRequest($data);
 
-            return $data;
+        try {
+            return $this->service->submitApplicationDocument($request);
         } catch (RequestException $e) {
             throw $e;
         }
     }
 
     /**
-     * Investa Check User High Risk Rating
+     * Perform application status inquiry
      *
-     * @param  array  $data
-     * @param  string  $custRefID
+     * @param  string  $referralCode
+     * @return \Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryResponseContract
+     * @throws \GuzzleHttp\Exception\RequestException
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function inquiryRiskRating(array $data)
+    public function applicationStatusInquiry(string $referralCode)
     {
-        try {
-            $data = $this->service->inquiryRiskRating($data);
+        $request = \App::make(ApplicationStatusInquiryFactoryContract::class)->makeRequest($referralCode);
 
-            return $data;
+        try {
+            return $this->service->applicationStatusInquiry($request);
         } catch (RequestException $e) {
             throw $e;
         }
     }
 
     /**
-     * Investa Account Validation
+     * Perform risk status inquiry
      *
-     * @param  array  $data
-     * @param  string  $custRefID
+     * @param  string  $idNumber
+     * @param  string  $employmentType
+     * @param  string  $economySector
+     * @param  string  $position
+     * @return \Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryResponseContract
+     * @throws \GuzzleHttp\Exception\RequestException
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function inquiryAccountValidation(array $data)
+    public function riskRatingInquiry(string $idNumber, string $employmentType, string $economySector, string $position)
     {
-        try {
-            $data = $this->service->inquiryAccountValidation($data);
+        $request = \App::make(RiskRatingInquiryFactoryContract::class)
+            ->makeRequest($idNumber, $employmentType, $economySector, $position);
 
-            return $data;
+        try {
+            return $this->service->riskRatingInquiry($request);
         } catch (RequestException $e) {
             throw $e;
         }
     }
 
     /**
-     * Investa update KYC Status
+     * Perform account validation inquiry
+     *
+     * @param  string  $accountNumber
+     * @param  string  $idNumber
+     * @param  string  $handPhoneNumber
+     * @param  string  $customerName
+     * @param  string  $dateOfBirth
+     * @param  string  $cityOfBirth
+     * @return \Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryResponseContract
+     * @throws \GuzzleHttp\Exception\RequestException
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function accountValidationInquiry(
+        string $accountNumber,
+        string $idNumber,
+        string $handPhoneNumber,
+        string $customerName,
+        string $dateOfBirth,
+        string $cityOfBirth
+    ) {
+        $request = \App::make(AccountValidationInquiryFactoryContract::class)
+            ->makeRequest(
+                $accountNumber,
+                $idNumber,
+                $handPhoneNumber,
+                $customerName,
+                $dateOfBirth,
+                $cityOfBirth
+            );
+
+        try {
+            return $this->service->accountValidationInquiry($request);
+        } catch (RequestException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Perform update kyc status
      *
      * @param  array  $data
-     * @param  string  $custRefID
+     * @return UpdateKycStatusResponseContract
+     * @throws RequestException
+     * @throws ValidationException
      */
     public function updateKycStatus(array $data)
     {
-        try {
-            $data = $this->service->updateKycStatus($data);
+        $request = \App::make(UpdateKycStatusFactoryContract::class)->makeRequest($data);
 
-            return $data;
+        try {
+            return $this->service->updateKycStatus($request);
         } catch (RequestException $e) {
             throw $e;
         }

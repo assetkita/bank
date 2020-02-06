@@ -3,10 +3,22 @@
 namespace Assetku\BankService\Providers;
 
 use Assetku\BankService\AccessToken\Permatabank\AccessTokenRequest;
+use Assetku\BankService\AccountValidationInquiry\Permatabank\AccountValidationInquiryFactory;
+use Assetku\BankService\AccountValidationInquiry\Permatabank\AccountValidationInquiryRequest;
+use Assetku\BankService\AccountValidationInquiry\Permatabank\AccountValidationInquiryResponse;
+use Assetku\BankService\ApplicationStatusInquiry\Permatabank\ApplicationStatusInquiryFactory;
+use Assetku\BankService\ApplicationStatusInquiry\Permatabank\ApplicationStatusInquiryRequest;
+use Assetku\BankService\ApplicationStatusInquiry\Permatabank\ApplicationStatusInquiryResponse;
 use Assetku\BankService\BalanceInquiry\Permatabank\BalanceInquiryFactory;
 use Assetku\BankService\BalanceInquiry\Permatabank\BalanceInquiryRequest;
 use Assetku\BankService\BalanceInquiry\Permatabank\BalanceInquiryResponse;
 use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
+use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryFactoryContract;
+use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryRequestContract;
+use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryResponseContract;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryFactoryContract;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryRequestContract;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryResponseContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryFactoryContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryRequestContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryResponseContract;
@@ -25,6 +37,9 @@ use Assetku\BankService\Contracts\Overbooking\OverbookingResponseContract;
 use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryFactoryContract;
 use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryRequestContract;
 use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryResponseContract;
+use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryFactoryContract;
+use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryRequestContract;
+use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryResponseContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferFactoryContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferRequestContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferResponseContract;
@@ -35,9 +50,12 @@ use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInqu
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
-use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataFactory;
-use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataRequest;
-use Assetku\BankService\FintechAccount\Permatabank\SubmitApplicationDataResponse;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusFactoryContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
 use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferFactory;
 use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferRequest;
 use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferResponse;
@@ -53,6 +71,9 @@ use Assetku\BankService\Overbooking\Permatabank\OverbookingResponse;
 use Assetku\BankService\OverbookingInquiry\Permatabank\OverbookingInquiryFactory;
 use Assetku\BankService\OverbookingInquiry\Permatabank\OverbookingInquiryRequest;
 use Assetku\BankService\OverbookingInquiry\Permatabank\OverbookingInquiryResponse;
+use Assetku\BankService\RiskRatingInquiry\Permatabank\RiskRatingInquiryFactory;
+use Assetku\BankService\RiskRatingInquiry\Permatabank\RiskRatingInquiryRequest;
+use Assetku\BankService\RiskRatingInquiry\Permatabank\RiskRatingInquiryResponse;
 use Assetku\BankService\RtgsTransfer\Permatabank\RtgsTransferFactory;
 use Assetku\BankService\RtgsTransfer\Permatabank\RtgsTransferRequest;
 use Assetku\BankService\RtgsTransfer\Permatabank\RtgsTransferResponse;
@@ -60,6 +81,15 @@ use Assetku\BankService\Services\PermatabankService;
 use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryFactory;
 use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryRequest;
 use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryResponse;
+use Assetku\BankService\SubmitApplicationData\Permatabank\SubmitApplicationDataFactory;
+use Assetku\BankService\SubmitApplicationData\Permatabank\SubmitApplicationDataRequest;
+use Assetku\BankService\SubmitApplicationData\Permatabank\SubmitApplicationDataResponse;
+use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentFactory;
+use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentRequest;
+use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentResponse;
+use Assetku\BankService\UpdateKycStatus\Permatabank\UpdateKycStatusFactory;
+use Assetku\BankService\UpdateKycStatus\Permatabank\UpdateKycStatusRequest;
+use Assetku\BankService\UpdateKycStatus\Permatabank\UpdateKycStatusResponse;
 use Illuminate\Support\ServiceProvider;
 
 class PermatabankServiceProvider extends ServiceProvider
@@ -121,5 +151,30 @@ class PermatabankServiceProvider extends ServiceProvider
         $this->app->bind(SubmitApplicationDataFactoryContract::class, SubmitApplicationDataFactory::class);
         $this->app->bind(SubmitApplicationDataRequestContract::class, SubmitApplicationDataRequest::class);
         $this->app->bind(SubmitApplicationDataResponseContract::class, SubmitApplicationDataResponse::class);
+
+        // submit application document
+        $this->app->bind(SubmitApplicationDocumentFactoryContract::class, SubmitApplicationDocumentFactory::class);
+        $this->app->bind(SubmitApplicationDocumentRequestContract::class, SubmitApplicationDocumentRequest::class);
+        $this->app->bind(SubmitApplicationDocumentResponseContract::class, SubmitApplicationDocumentResponse::class);
+
+        // application status inquiry
+        $this->app->bind(ApplicationStatusInquiryFactoryContract::class, ApplicationStatusInquiryFactory::class);
+        $this->app->bind(ApplicationStatusInquiryRequestContract::class, ApplicationStatusInquiryRequest::class);
+        $this->app->bind(ApplicationStatusInquiryResponseContract::class, ApplicationStatusInquiryResponse::class);
+
+        // risk rating inquiry
+        $this->app->bind(RiskRatingInquiryFactoryContract::class, RiskRatingInquiryFactory::class);
+        $this->app->bind(RiskRatingInquiryRequestContract::class, RiskRatingInquiryRequest::class);
+        $this->app->bind(RiskRatingInquiryResponseContract::class, RiskRatingInquiryResponse::class);
+
+        // account validation inquiry
+        $this->app->bind(AccountValidationInquiryFactoryContract::class, AccountValidationInquiryFactory::class);
+        $this->app->bind(AccountValidationInquiryRequestContract::class, AccountValidationInquiryRequest::class);
+        $this->app->bind(AccountValidationInquiryResponseContract::class, AccountValidationInquiryResponse::class);
+
+        // update kyc status
+        $this->app->bind(UpdateKycStatusFactoryContract::class, UpdateKycStatusFactory::class);
+        $this->app->bind(UpdateKycStatusRequestContract::class, UpdateKycStatusRequest::class);
+        $this->app->bind(UpdateKycStatusResponseContract::class, UpdateKycStatusResponse::class);
     }
 }

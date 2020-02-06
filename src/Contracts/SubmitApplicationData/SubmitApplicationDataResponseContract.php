@@ -7,7 +7,7 @@ use Assetku\BankService\Contracts\Base\BaseResponseContract;
 interface SubmitApplicationDataResponseContract extends BaseResponseContract
 {
     /**
-     * Get submit fintech account response's referral code
+     * Get submit application data response's referral code
      *
      * @return string
      */

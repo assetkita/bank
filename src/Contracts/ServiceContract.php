@@ -3,6 +3,11 @@
 namespace Assetku\BankService\Contracts;
 
 use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
+use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryRequestContract;
+use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryResponseContract;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryFactoryContract;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryRequestContract;
+use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryResponseContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryRequestContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryResponseContract;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferRequestContract;
@@ -15,13 +20,18 @@ use Assetku\BankService\Contracts\Overbooking\OverbookingRequestContract;
 use Assetku\BankService\Contracts\Overbooking\OverbookingResponseContract;
 use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryRequestContract;
 use Assetku\BankService\Contracts\OverbookingInquiry\OverbookingInquiryResponseContract;
+use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryRequestContract;
+use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryResponseContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferRequestContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferResponseContract;
 use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryRequestContract;
 use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryResponseContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
-use Assetku\BankService\Contracts\SubmitRegistrationDocument\SubmitRegistrationDocumentRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract;
+use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
 use GuzzleHttp\Exception\RequestException;
@@ -129,41 +139,50 @@ interface ServiceContract
     /**
      * Perform submit registration document
      *
-     * @param  array  $data
-     * @return mixed
+     * @param  SubmitApplicationDocumentRequestContract  $request
+     * @return SubmitApplicationDocumentResponseContract
+     * @throws RequestException
+     * @throws ValidationException
      */
-    public function submitRegistrationDocument(array $data);
-
-
-    /**
-     * Perform inquiry application status
-     *
-     * @param  string  $reffCode
-     * @return mixed
-     */
-    public function inquiryApplicationStatus(string $reffCode);
+    public function submitApplicationDocument(SubmitApplicationDocumentRequestContract $request);
 
     /**
-     * Perform inquiry risk rating
+     * Perform application status inquiry
      *
-     * @param  array  $data
-     * @return mixed
+     * @param  ApplicationStatusInquiryRequestContract  $request
+     * @return ApplicationStatusInquiryResponseContract
+     * @throws RequestException
+     * @throws ValidationException
      */
-    public function inquiryRiskRating(array $data);
+    public function applicationStatusInquiry(ApplicationStatusInquiryRequestContract $request);
 
     /**
-     * Perform inquiry account validation
+     * Perform risk rating inquiry
      *
-     * @param  array  $data
-     * @return mixed
+     * @param  RiskRatingInquiryRequestContract  $request
+     * @return RiskRatingInquiryResponseContract
+     * @throws RequestException
+     * @throws ValidationException
      */
-    public function inquiryAccountValidation(array $data);
+    public function riskRatingInquiry(RiskRatingInquiryRequestContract $request);
 
     /**
-     * Perform update KYC status
+     * Perform account validation inquiry
      *
-     * @param  array  $data
-     * @return mixed
+     * @param  AccountValidationInquiryRequestContract  $request
+     * @return AccountValidationInquiryResponseContract
+     * @throws RequestException
+     * @throws ValidationException
      */
-    public function updateKycStatus(array $data);
+    public function accountValidationInquiry(AccountValidationInquiryRequestContract $request);
+
+    /**
+     * Perform update kyc status
+     *
+     * @param  UpdateKycStatusRequestContract  $request
+     * @return UpdateKycStatusResponseContract
+     * @throws RequestException
+     * @throws ValidationException
+     */
+    public function updateKycStatus(UpdateKycStatusRequestContract $request);
 }

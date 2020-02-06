@@ -2,20 +2,20 @@
 
 namespace Assetku\BankService\Contracts\SubmitApplicationData;
 
-use Assetku\BankService\Contracts\Subjects\SubmitFintechAccountSubject;
+use Assetku\BankService\Contracts\Subjects\SubmitApplicationDataSubject;
 
 interface SubmitApplicationDataFactoryContract
 {
     /**
-     * Create a new fintech account request instance
+     * Create a new submit application data request instance
      *
-     * @param  array $data
+     * @param  SubmitApplicationDataSubject  $subject
      * @return SubmitApplicationDataRequestContract
      */
-    public function makeRequest(array $data);
+    public function makeRequest(SubmitApplicationDataSubject $subject);
 
     /**
-     * Create a new fintech account response instance
+     * Create a new submit application data response instance
      *
      * @param  SubmitApplicationDataRequestContract  $request
      * @param  string  $contents

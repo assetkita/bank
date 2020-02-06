@@ -3,30 +3,26 @@
 namespace Assetku\BankService\Tests\Permatabank;
 
 use Assetku\BankService\Tests\TestCase;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 
 class UpdateKycStatusTest extends TestCase
 {
-//    public function testSuccessUpdateKycStatus()
-//    {
-//        $custRefId = \mt_rand(00000, 99999);
-//
-//        $data = [
-//            'ReffCode' => 'U061219011270',
-//            'IdNumber' => '4610815675045937',
-//            'KycStatus' => '00',
-//            'KycFailedReason' => ''
-//        ];
-//
-//        try {
-//            $updateKycRequest = \BankService::updateKycStatus($data, $custRefId);
-//
-//            $this->assertTrue(
-//                $updateKycRequest->statusCode() === '00',
-//                $updateKycRequest->getCustomerReferralId() === $custRefId
-//            );
-//        } catch (GuzzleException $e) {
-//            throw $e;
-//        }
-//    }
+    public function testSuccessUpdateKycStatus()
+    {
+        $data = [
+            'ReffCode'        => 'U060220011636',
+            'IdNumber'        => '3578070812970001',
+            'KycStatus'       => '00',
+            'KycFailedReason' => ''
+        ];
+
+        try {
+            $updateKycRequest = \BankService::updateKycStatus($data);
+            dd($updateKycRequest);
+
+            $this->assertTrue($updateKycRequest->statusCode() === '00');
+        } catch (RequestException $e) {
+            throw $e;
+        }
+    }
 }

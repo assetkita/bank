@@ -2,6 +2,7 @@
 
 namespace Assetku\BankService\Headers\Permatabank;
 
+use Assetku\BankService\Base\Permatabank\BaseHeader;
 use Assetku\BankService\Contracts\HeaderContract;
 use Assetku\BankService\Contracts\Base\BaseRequestContract;
 
