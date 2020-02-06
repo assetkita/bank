@@ -2,7 +2,7 @@
 
 namespace Assetku\BankService\SubmitApplicationData\Permatabank;
 
-use Assetku\BankService\Contracts\Subjects\SubmitFintechAccountSubject;
+use Assetku\BankService\Contracts\Subjects\SubmitApplicationDataSubject;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
 
@@ -11,9 +11,9 @@ class SubmitApplicationDataFactory implements SubmitApplicationDataFactoryContra
     /**
      * @inheritDoc
      */
-    public function makeRequest(array $data)
+    public function makeRequest(SubmitApplicationDataSubject $subject)
     {
-        return new SubmitApplicationDataRequest($data);
+        return new SubmitApplicationDataRequest($subject);
     }
 
     /**
@@ -22,6 +22,7 @@ class SubmitApplicationDataFactory implements SubmitApplicationDataFactoryContra
     public function makeResponse(SubmitApplicationDataRequestContract $request, string $content)
     {
         $data = json_decode($content, true);
+        dd($data);
 
         $response = $data['SubmitApplicationRs'];
 

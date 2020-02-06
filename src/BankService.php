@@ -13,10 +13,9 @@ use Assetku\BankService\Contracts\Subjects\LlgTransferSubject;
 use Assetku\BankService\Contracts\Subjects\OnlineTransferSubject;
 use Assetku\BankService\Contracts\Subjects\OverbookingSubject;
 use Assetku\BankService\Contracts\Subjects\RtgsTransferSubject;
+use Assetku\BankService\Contracts\Subjects\SubmitApplicationDataSubject;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
-use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
-use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract;
 use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusFactoryContract;
 use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
@@ -285,14 +284,14 @@ class BankService
     /**
      * Perform submit application data
      *
-     * @param  array  $data
+     * @param  \Assetku\BankService\Contracts\Subjects\SubmitApplicationDataSubject  $subject
      * @return \Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataResponseContract
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function submitApplicationData(array $data)
+    public function submitApplicationData(SubmitApplicationDataSubject $subject)
     {
-        $request = \App::make(SubmitApplicationDataFactoryContract::class)->makeRequest($data);
+        $request = \App::make(SubmitApplicationDataFactoryContract::class)->makeRequest($subject);
 
         try {
             return $this->service->submitApplicationData($request);
@@ -382,8 +381,7 @@ class BankService
         string $customerName,
         string $dateOfBirth,
         string $cityOfBirth
-    )
-    {
+    ) {
         $request = \App::make(AccountValidationInquiryFactoryContract::class)
             ->makeRequest(
                 $accountNumber,

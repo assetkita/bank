@@ -2,15 +2,17 @@
 
 namespace Assetku\BankService\Contracts\SubmitApplicationData;
 
+use Assetku\BankService\Contracts\Subjects\SubmitApplicationDataSubject;
+
 interface SubmitApplicationDataFactoryContract
 {
     /**
      * Create a new submit application data request instance
      *
-     * @param  array $data
+     * @param  SubmitApplicationDataSubject  $subject
      * @return SubmitApplicationDataRequestContract
      */
-    public function makeRequest(array $data);
+    public function makeRequest(SubmitApplicationDataSubject $subject);
 
     /**
      * Create a new submit application data response instance

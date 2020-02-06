@@ -22,7 +22,7 @@ class CommonHeader extends BaseHeader implements HeaderContract
     /**
      * @var string
      */
-    protected $organizationName;
+    protected $groupId;
 
     /**
      * CommonHeader constructor.
@@ -31,11 +31,13 @@ class CommonHeader extends BaseHeader implements HeaderContract
      */
     public function __construct(BaseRequestContract $request)
     {
+        $environment = \App::environment('production') ? 'production' : 'development';
+
         parent::__construct($request);
 
         $this->instcode = \Config::get('bank.providers.permatabank.instcode');
 
-        $this->organizationName = \Config::get('bank.providers.permatabank.organization_name');
+        $this->groupId = \Config::get("bank.providers.permatabank.{$environment}.group_id");
 
         $this->accessToken = \BankService::accessToken();
     }
@@ -48,7 +50,7 @@ class CommonHeader extends BaseHeader implements HeaderContract
         return [
             'Authorization'     => "Bearer {$this->accessToken}",
             'permata-signature' => $this->signature(),
-            'organizationname'  => $this->organizationName,
+            'organizationname'  => $this->groupId,
             'permata-timestamp' => $this->request->timestamp(),
         ];
     }

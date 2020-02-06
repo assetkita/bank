@@ -20,7 +20,7 @@ class SubmitApplicationDocumentTest extends TestCase
             false, stream_context_create($arrContextOptions)));
 
         $payload = [
-            'BankReffId'     => 'U040220011594',
+            'BankReffId'     => 'U060220011636',
             'DocType'        => 'KT',
             'DocName'        => 'KTP.jpg',
             'DocContent'     => urlencode($image),
