@@ -4,10 +4,11 @@ namespace Assetku\BankService\ApplicationStatusInquiry\Permatabank;
 
 use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryRequestContract;
+use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
-class ApplicationStatusInquiryRequest extends BaseRequest implements ApplicationStatusInquiryRequestContract
+class ApplicationStatusInquiryRequest extends BaseRequest implements ApplicationStatusInquiryRequestContract, MustValidated
 {
     /**
      * @var string
@@ -68,13 +69,18 @@ class ApplicationStatusInquiryRequest extends BaseRequest implements Application
         return new CommonHeader($this);
     }
 
-        /**
+    /**
      * @inheritDoc
      */
     public function rules()
     {
         return [
-
+            'InquiryApplicationRq'                                => 'required|array|size:2',
+            'InquiryApplicationRq.MsgRqHdr'                       => 'required|array|size:2',
+            'InquiryApplicationRq.MsgRqHdr.RequestTimestamp'      => 'required|string|date',
+            'InquiryApplicationRq.MsgRqHdr.CustRefID'             => 'required|string|size:20',
+            'InquiryApplicationRq.SubmitApplicationInfo'          => 'required|array|size:1',
+            'InquiryApplicationRq.SubmitApplicationInfo.ReffCode' => 'required|string',
         ];
     }
 
@@ -92,7 +98,12 @@ class ApplicationStatusInquiryRequest extends BaseRequest implements Application
     public function customAttributes()
     {
         return [
-
+            'InquiryApplicationRq'                                => 'inquiry application request',
+            'InquiryApplicationRq.MsgRqHdr'                       => 'header permintaan pesan',
+            'InquiryApplicationRq.MsgRqHdr.RequestTimestamp'      => 'timestamp',
+            'InquiryApplicationRq.MsgRqHdr.CustRefID'             => 'id referral pelanggan',
+            'InquiryApplicationRq.SubmitApplicationInfo'          => 'info aplikasi pengajuan',
+            'InquiryApplicationRq.SubmitApplicationInfo.ReffCode' => 'kode referral',
         ];
     }
 }

@@ -7,6 +7,13 @@ use Assetku\BankService\Contracts\Base\BaseRequestContract;
 interface SubmitApplicationDataRequestContract extends BaseRequestContract
 {
     /**
+     * Get submit application data request's referral code
+     *
+     * @return string
+     */
+    public function referralCode();
+
+    /**
      * Get submit application data request's customer name
      *
      * @return string
@@ -49,20 +56,6 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function maritalStatus();
 
     /**
-     * Get submit application data request's last education status
-     *
-     * @return string
-     */
-    public function lastEducationStatus();
-
-    /**
-     * Get submit application data request's no of dependant
-     *
-     * @return string
-     */
-    public function noOfDependant();
-
-    /**
      * Get submit application data request's nationality
      *
      * @return string
@@ -82,6 +75,18 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
      * @return string
      */
     public function motherMaidenName();
+
+    /**
+     * Get submit application data request's last education status
+     *
+     * @return string
+     */
+    public function lastEducationStatus();
+
+    /**
+     * Get submit application data request's no of dependant
+     */
+    public function noOfDependant();
 
     /**
      * Get submit application data request's resident status
@@ -126,13 +131,6 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function withdrawalTransactionAmount();
 
     /**
-     * Get submit application data request's promo code
-     *
-     * @return string
-     */
-    public function promoCode();
-
-    /**
      * Get submit application data request's id address line 1
      *
      * @return string
@@ -152,13 +150,6 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
      * @return string
      */
     public function idAddressLine2();
-
-    /**
-     * Get submit application data request's id address line 3
-     *
-     * @return string
-     */
-    public function idAddressLine3();
 
     /**
      * Get submit application data request's id rt
@@ -217,25 +208,11 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function idCountry();
 
     /**
-     * Get submit application data request's id ownership status
-     *
-     * @return string
-     */
-    public function idOwnershipStatus();
-
-    /**
      * Get submit application data request's id length of stay year
      *
      * @return string
      */
     public function idLengthOfStayYear();
-
-    /**
-     * Get submit application data request's id length of stay month
-     *
-     * @return string
-     */
-    public function idLengthOfStayMonth();
 
     /**
      * Get submit application data request's domicile address line 1
@@ -257,13 +234,6 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
      * @return string
      */
     public function domicileAddressLine2();
-
-    /**
-     * Get submit application data request's domicile address line 3
-     *
-     * @return string
-     */
-    public function domicileAddressLine3();
 
     /**
      * Get submit application data request's domicile rt
@@ -322,25 +292,11 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function domicileCountry();
 
     /**
-     * Get submit application data request's domicile ownership status
-     *
-     * @return string
-     */
-    public function domicileOwnershipStatus();
-
-    /**
      * Get submit application data request's domicile length of stay year
      *
      * @return string
      */
     public function domicileLengthOfStayYear();
-
-    /**
-     * Get submit application data request's domicile length of stay month
-     *
-     * @return string
-     */
-    public function domicileLengthOfStayMonth();
 
     /**
      * Get submit application data request's work address line 1
@@ -362,13 +318,6 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
      * @return string
      */
     public function workAddressLine2();
-
-    /**
-     * Get submit application data request's work address line 3
-     *
-     * @return string
-     */
-    public function workAddressLine3();
 
     /**
      * Get submit application data request's work rt
@@ -427,25 +376,11 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function workCountry();
 
     /**
-     * Get submit application data request's work ownership status
-     *
-     * @return string
-     */
-    public function workOwnershipStatus();
-
-    /**
      * Get submit application data request's work length of stay year
      *
      * @return string
      */
     public function workLengthOfStayYear();
-
-    /**
-     * Get submit application data request's work length of stay month
-     *
-     * @return string
-     */
-    public function workLengthOfStayMonth();
 
     /**
      * Get submit application data request's home phone type
@@ -581,13 +516,6 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function purpose();
 
     /**
-     * Get submit application data request's purpose other
-     *
-     * @return string
-     */
-    public function purposeOther();
-
-    /**
      * Get submit application data request's opening
      *
      * @return string
@@ -595,39 +523,11 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function opening();
 
     /**
-     * Get submit application data request's opening other
-     *
-     * @return string
-     */
-    public function openingOther();
-
-    /**
      * Get submit application data request's addressStatement
      *
      * @return string
      */
     public function addressStatement();
-
-    /**
-     * Get submit application data request's SID
-     *
-     * @return string
-     */
-    public function SID();
-
-    /**
-     * Get submit application data request's sub account efek
-     *
-     * @return string
-     */
-    public function subAccountEfek();
-
-    /**
-     * Get submit application data request's corp efek penerima kuasa
-     *
-     * @return string
-     */
-    public function corpEfekPenerimaKuasa();
 
     /**
      * Get submit application data request's currency type
@@ -665,18 +565,11 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function position();
 
     /**
-     * Get submit application data request's department
+     * Get submit application data request's company name
      *
      * @return string
      */
-    public function department();
-
-    /**
-     * Get submit application data request's employment status
-     *
-     * @return string
-     */
-    public function employmentStatus();
+    public function companyName();
 
     /**
      * Get submit application data request's economy sector
@@ -684,13 +577,6 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
      * @return string
      */
     public function economySector();
-
-    /**
-     * Get submit application data request's economy sector others
-     *
-     * @return string
-     */
-    public function economySectorOthers();
 
     /**
      * Get submit application data request's length of service year
@@ -721,25 +607,11 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function monthlyIncome();
 
     /**
-     * Get submit application data request's company name
-     *
-     * @return string
-     */
-    public function companyName();
-
-    /**
      * Get submit application data request's source of fund
      *
      * @return string
      */
     public function sourceOfFund();
-
-    /**
-     * Get submit application data request's source of fund other
-     *
-     * @return string
-     */
-    public function sourceOfFundOther();
 
     /**
      * Get submit application data request's id type
@@ -756,13 +628,6 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function idExpiryDate();
 
     /**
-     * Get submit application data request's id name
-     *
-     * @return string
-     */
-    public function idName();
-
-    /**
      * Get submit application data request's id number
      *
      * @return string
@@ -770,23 +635,16 @@ interface SubmitApplicationDataRequestContract extends BaseRequestContract
     public function idNumber();
 
     /**
+     * Get submit application data request's id name
+     *
+     * @return string
+     */
+    public function idName();
+
+    /**
      * Get submit application data request's kyc type
      *
      * @return string
      */
     public function kycType();
-
-    /**
-     * Get submit application data request's kyc status
-     *
-     * @return string
-     */
-    public function kycStatus();
-
-    /**
-     * Get submit application data request's additional data
-     *
-     * @return string
-     */
-    public function additionalData();
 }

@@ -361,14 +361,6 @@ class SubmitApplicationDataMock implements SubmitApplicationDataSubject
     /**
      * @inheritDoc
      */
-    public function department()
-    {
-        return 'IT';
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function monthlyIncomeCode()
     {
         return '1';

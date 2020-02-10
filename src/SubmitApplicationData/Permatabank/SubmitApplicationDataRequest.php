@@ -104,11 +104,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @var string
      */
-    protected $promoCode = '';
-
-    /**
-     * @var string
-     */
     protected $idAddressType = '01';
 
     /**
@@ -120,11 +115,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
      * @var string
      */
     protected $idAddressLine2;
-
-    /**
-     * @var string
-     */
-    protected $idAddressLine3 = '';
 
     /**
      * @var string
@@ -169,17 +159,7 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @var string
      */
-    protected $idOwnershipStatus = '1';
-
-    /**
-     * @var string
-     */
     protected $idLengthOfStayYear = '25';
-
-    /**
-     * @var string
-     */
-    protected $idLengthOfStayMonth = '12';
 
     /**
      * @var string
@@ -195,11 +175,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
      * @var string
      */
     protected $domicileAddressLine2;
-
-    /**
-     * @var string
-     */
-    protected $domicileAddressLine3 = '';
 
     /**
      * @var string
@@ -244,17 +219,7 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @var string
      */
-    protected $domicileOwnershipStatus = '1';
-
-    /**
-     * @var string
-     */
     protected $domicileLengthOfStayYear = '25';
-
-    /**
-     * @var string
-     */
-    protected $domicileLengthOfStayMonth = '12';
 
     /**
      * @var string
@@ -270,11 +235,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
      * @var string
      */
     protected $workAddressLine2;
-
-    /**
-     * @var string
-     */
-    protected $workAddressLine3 = '';
 
     /**
      * @var string
@@ -319,17 +279,7 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @var string
      */
-    protected $workOwnershipStatus = '1';
-
-    /**
-     * @var string
-     */
     protected $workLengthOfStayYear = '25';
-
-    /**
-     * @var string
-     */
-    protected $workLengthOfStayMonth = '12';
 
     /**
      * @var string
@@ -429,42 +379,12 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @var string
      */
-    protected $purposeOther = '';
-
-    /**
-     * @var string
-     */
     protected $opening = '3';
 
     /**
      * @var string
      */
-    protected $openingOther = '';
-
-    /**
-     * @var string
-     */
     protected $addressStatement = '02';
-
-    /**
-     * @var string
-     */
-    protected $SID = '';
-
-    /**
-     * @var string
-     */
-    protected $subAccountEfek = '';
-
-    /**
-     * @var string
-     */
-    protected $corpEfekPenerimaKuasa = '';
-
-    /**
-     * @var string
-     */
-    protected $currencyType = '';
 
     /**
      * @var string
@@ -489,22 +409,12 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @var string
      */
-    protected $department;
-
-    /**
-     * @var string
-     */
-    protected $employmentStatus = '1';
+    protected $companyName;
 
     /**
      * @var string
      */
     protected $economySector;
-
-    /**
-     * @var string
-     */
-    protected $economySectorOthers = '';
 
     /**
      * @var string
@@ -519,27 +429,17 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @var string
      */
-    protected $monthlyIncomeCode;
-
-    /**
-     * @var string
-     */
     protected $monthlyIncome;
 
     /**
      * @var string
      */
-    protected $companyName;
+    protected $monthlyIncomeCode;
 
     /**
      * @var string
      */
     protected $sourceOfFund;
-
-    /**
-     * @var string
-     */
-    protected $sourceOfFundOther = '';
 
     /**
      * @var string
@@ -554,27 +454,17 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @var string
      */
-    protected $idName;
-
-    /**
-     * @var string
-     */
     protected $idNumber;
 
     /**
      * @var string
      */
+    protected $idName;
+
+    /**
+     * @var string
+     */
     protected $kycType = '7';
-
-    /**
-     * @var string
-     */
-    protected $kycStatus = 'Success';
-
-    /**
-     * @var string
-     */
-    protected $additionalData = '';
 
     /**
      * SubmitApplicationDataRequest constructor.
@@ -676,8 +566,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
         $this->economySector = $subject->economySector();
 
         $this->position = $subject->position();
-
-        $this->department = $subject->department();
 
         $this->monthlyIncomeCode = $subject->monthlyIncomeCode();
 
@@ -839,14 +727,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function promoCode()
-    {
-        return $this->promoCode;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function idAddressType()
     {
         return $this->idAddressType;
@@ -866,14 +746,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     public function idAddressLine2()
     {
         return $this->idAddressLine2;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function idAddressLine3()
-    {
-        return $this->idAddressLine3;
     }
 
     /**
@@ -943,25 +815,9 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function idOwnershipStatus()
-    {
-        return $this->idOwnershipStatus;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function idLengthOfStayYear()
     {
         return $this->idLengthOfStayYear;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function idLengthOfStayMonth()
-    {
-        return $this->idLengthOfStayMonth;
     }
 
     /**
@@ -986,14 +842,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     public function domicileAddressLine2()
     {
         return $this->domicileAddressLine2;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function domicileAddressLine3()
-    {
-        return $this->domicileAddressLine3;
     }
 
     /**
@@ -1063,25 +911,9 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function domicileOwnershipStatus()
-    {
-        return $this->domicileOwnershipStatus;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function domicileLengthOfStayYear()
     {
         return $this->domicileLengthOfStayYear;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function domicileLengthOfStayMonth()
-    {
-        return $this->domicileLengthOfStayMonth;
     }
 
     /**
@@ -1106,14 +938,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     public function workAddressLine2()
     {
         return $this->workAddressLine2;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function workAddressLine3()
-    {
-        return $this->workAddressLine3;
     }
 
     /**
@@ -1183,25 +1007,9 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function workOwnershipStatus()
-    {
-        return $this->workOwnershipStatus;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function workLengthOfStayYear()
     {
         return $this->workLengthOfStayYear;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function workLengthOfStayMonth()
-    {
-        return $this->workLengthOfStayMonth;
     }
 
     /**
@@ -1359,14 +1167,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function purposeOther()
-    {
-        return $this->purposeOther;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function opening()
     {
         return $this->opening;
@@ -1375,41 +1175,9 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function openingOther()
-    {
-        return $this->openingOther;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function addressStatement()
     {
         return $this->addressStatement;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function SID()
-    {
-        return $this->SID;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function subAccountEfek()
-    {
-        return $this->subAccountEfek;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function corpEfekPenerimaKuasa()
-    {
-        return $this->corpEfekPenerimaKuasa;
     }
 
     /**
@@ -1455,17 +1223,9 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function department()
+    public function companyName()
     {
-        return $this->department;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function employmentStatus()
-    {
-        return $this->employmentStatus;
+        return $this->companyName;
     }
 
     /**
@@ -1474,14 +1234,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     public function economySector()
     {
         return $this->economySector;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function economySectorOthers()
-    {
-        return $this->economySectorOthers;
     }
 
     /**
@@ -1503,14 +1255,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function monthlyIncomeCode()
-    {
-        return $this->monthlyIncomeCode;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function monthlyIncome()
     {
         return $this->monthlyIncome;
@@ -1519,9 +1263,9 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function companyName()
+    public function monthlyIncomeCode()
     {
-        return $this->companyName;
+        return $this->monthlyIncomeCode;
     }
 
     /**
@@ -1530,14 +1274,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     public function sourceOfFund()
     {
         return $this->sourceOfFund;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sourceOfFundOther()
-    {
-        return $this->sourceOfFundOther;
     }
 
     /**
@@ -1559,14 +1295,6 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
-    public function idName()
-    {
-        return $this->idName;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function idNumber()
     {
         return $this->idNumber;
@@ -1575,25 +1303,17 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     /**
      * @inheritDoc
      */
+    public function idName()
+    {
+        return $this->idName;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function kycType()
     {
         return $this->kycType;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function kycStatus()
-    {
-        return $this->kycStatus;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function additionalData()
-    {
-        return $this->additionalData;
     }
 
     /**
@@ -1644,59 +1364,49 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
                             'DepositTrxAmount'    => $this->depositTransactionAmount,
                             'WithdrawalTrxCount'  => $this->withdrawalTransactionCount,
                             'WithdrawalTrxAmount' => $this->withdrawalTransactionAmount,
-                            'PromoCode'           => $this->promoCode,
                         ],
                         'AddressInfo' => [
                             [
-                                'AddressType'       => $this->idAddressType,
-                                'AddressLine1'      => $this->idAddressLine1,
-                                'AddressLine2'      => $this->idAddressLine2,
-                                'AddressLine3'      => $this->idAddressLine3,
-                                'Rt'                => $this->idRt,
-                                'Rw'                => $this->idRw,
-                                'Village'           => $this->idVillage,
-                                'Subdistrict'       => $this->idSubDistrict,
-                                'CityRegencyCode'   => $this->idCityRegencyCode,
-                                'Province'          => $this->idProvince,
-                                'Zipcode'           => $this->idZipCode,
-                                'Country'           => $this->idCountry,
-                                'OwnershipStatus'   => $this->idOwnershipStatus,
-                                'LengthOfStayYear'  => $this->idLengthOfStayYear,
-                                'LengthOfStayMonth' => $this->idLengthOfStayMonth,
+                                'AddressType'      => $this->idAddressType,
+                                'AddressLine1'     => $this->idAddressLine1,
+                                'AddressLine2'     => $this->idAddressLine2,
+                                'Rt'               => $this->idRt,
+                                'Rw'               => $this->idRw,
+                                'Village'          => $this->idVillage,
+                                'Subdistrict'      => $this->idSubDistrict,
+                                'CityRegencyCode'  => $this->idCityRegencyCode,
+                                'Province'         => $this->idProvince,
+                                'Zipcode'          => $this->idZipCode,
+                                'Country'          => $this->idCountry,
+                                'LengthOfStayYear' => $this->idLengthOfStayYear,
                             ],
                             [
-                                'AddressType'       => $this->domicileAddressType,
-                                'AddressLine1'      => $this->domicileAddressLine1,
-                                'AddressLine2'      => $this->domicileAddressLine2,
-                                'AddressLine3'      => $this->domicileAddressLine3,
-                                'Rt'                => $this->domicileRt,
-                                'Rw'                => $this->domicileRw,
-                                'Village'           => $this->domicileVillage,
-                                'Subdistrict'       => $this->domicileSubDistrict,
-                                'CityRegencyCode'   => $this->domicileCityRegencyCode,
-                                'Province'          => $this->domicileProvince,
-                                'Zipcode'           => $this->domicileZipCode,
-                                'Country'           => $this->domicileCountry,
-                                'OwnershipStatus'   => $this->domicileOwnershipStatus,
-                                'LengthOfStayYear'  => $this->domicileLengthOfStayYear,
-                                'LengthOfStayMonth' => $this->domicileLengthOfStayMonth,
+                                'AddressType'      => $this->domicileAddressType,
+                                'AddressLine1'     => $this->domicileAddressLine1,
+                                'AddressLine2'     => $this->domicileAddressLine2,
+                                'Rt'               => $this->domicileRt,
+                                'Rw'               => $this->domicileRw,
+                                'Village'          => $this->domicileVillage,
+                                'Subdistrict'      => $this->domicileSubDistrict,
+                                'CityRegencyCode'  => $this->domicileCityRegencyCode,
+                                'Province'         => $this->domicileProvince,
+                                'Zipcode'          => $this->domicileZipCode,
+                                'Country'          => $this->domicileCountry,
+                                'LengthOfStayYear' => $this->domicileLengthOfStayYear,
                             ],
                             [
-                                'AddressType'       => $this->workAddressType,
-                                'AddressLine1'      => $this->workAddressLine1,
-                                'AddressLine2'      => $this->workAddressLine2,
-                                'AddressLine3'      => $this->workAddressLine3,
-                                'Rt'                => $this->workRt,
-                                'Rw'                => $this->workRw,
-                                'Village'           => $this->workVillage,
-                                'Subdistrict'       => $this->workSubDistrict,
-                                'CityRegencyCode'   => $this->workCityRegencyCode,
-                                'Province'          => $this->workProvince,
-                                'Zipcode'           => $this->workZipCode,
-                                'Country'           => $this->workCountry,
-                                'OwnershipStatus'   => $this->workOwnershipStatus,
-                                'LengthOfStayYear'  => $this->workLengthOfStayYear,
-                                'LengthOfStayMonth' => $this->workLengthOfStayMonth,
+                                'AddressType'      => $this->workAddressType,
+                                'AddressLine1'     => $this->workAddressLine1,
+                                'AddressLine2'     => $this->workAddressLine2,
+                                'Rt'               => $this->workRt,
+                                'Rw'               => $this->workRw,
+                                'Village'          => $this->workVillage,
+                                'Subdistrict'      => $this->workSubDistrict,
+                                'CityRegencyCode'  => $this->workCityRegencyCode,
+                                'Province'         => $this->workProvince,
+                                'Zipcode'          => $this->workZipCode,
+                                'Country'          => $this->workCountry,
+                                'LengthOfStayYear' => $this->workLengthOfStayYear,
                             ],
                         ],
                         'PhoneInfo'   => [
@@ -1730,17 +1440,11 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
                                         'BranchId'           => $this->branchId,
                                         'Source'             => $this->source,
                                         'Purpose'            => $this->purpose,
-                                        'PurposeOther'       => $this->purposeOther,
                                         'Opening'            => $this->opening,
-                                        'OpeningOther'       => $this->openingOther,
                                         'AddressStatement'   => $this->addressStatement,
                                         'AdditionalCasaInfo' => [
-                                            'SID'                   => $this->SID,
-                                            'SubAcctEfek'           => $this->subAccountEfek,
-                                            'CorpEfekPenerimaKuasa' => $this->corpEfekPenerimaKuasa,
-                                            'CurrencyType'          => $this->currencyType,
-                                            'GroupIdH2H'            => $this->groupIdHeadToHead,
-                                            'GroupIdPEB'            => $this->groupIdPEB,
+                                            'GroupIdH2H' => $this->groupIdHeadToHead,
+                                            'GroupIdPEB' => $this->groupIdPEB,
                                         ],
                                     ],
                                 ],
@@ -1750,17 +1454,13 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
                             'EmploymentInfo' => [
                                 'EmploymentType'       => $this->employmentType,
                                 'Position'             => $this->position,
-                                'Department'           => $this->department,
-                                'EmploymentStatus'     => $this->employmentStatus,
+                                'CompanyName'          => $this->companyName,
                                 'EconomySector'        => $this->economySector,
-                                'EconomySectorOthers'  => $this->economySectorOthers,
                                 'LengthOfServiceYear'  => $this->lengthOfServiceYear,
                                 'LengthOfServiceMonth' => $this->lengthOfServiceMonth,
-                                'MonthlyIncomeCode'    => $this->monthlyIncomeCode,
                                 'MonthlyIncome'        => $this->monthlyIncome,
-                                'CompanyName'          => $this->companyName,
+                                'MonthlyIncomeCode'    => $this->monthlyIncomeCode,
                                 'SourceOfFund'         => $this->sourceOfFund,
-                                'SourceOfFundOther'    => $this->sourceOfFundOther,
                             ],
                         ],
                         'Identities'  => [
@@ -1774,9 +1474,7 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
                             ],
                         ],
                         'KYCOption'   => [
-                            'KycType'        => $this->kycType,
-                            'KYCStatus'      => $this->kycStatus,
-                            'AdditionalData' => $this->additionalData,
+                            'KycType' => $this->kycType,
                         ],
                     ],
                 ],
@@ -1798,7 +1496,86 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     public function rules()
     {
         return [
-
+            'SubmitApplicationRq'                                                                                      => 'required|array|size:2',
+            'SubmitApplicationRq.MsgRqHdr'                                                                             => 'required|array|size:2',
+            'SubmitApplicationRq.MsgRqHdr.RequestTimestamp'                                                            => 'required|string|date',
+            'SubmitApplicationRq.MsgRqHdr.CustRefID'                                                                   => 'required|string|size:20',
+            'SubmitApplicationRq.ApplicationInfo'                                                                      => 'required|array|size:2',
+            'SubmitApplicationRq.ApplicationInfo.ReffCode'                                                             => 'present|string',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo'                                                         => 'required|array|size:7',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu'                                             => 'required|array|size:17',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.CustomerName'                                => [
+                'required', 'string', 'between:3,40', 'regex:/^[A-Z ]+$/',
+            ],
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.CityOfBirth'                                 => 'required|string|min:3,50',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.DateOfBirth'                                 => 'required|string|date',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.CountryOfBirth'                              => 'required|string|in:ID',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.Gender'                                      => 'required|string|in:10,20',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.MaritalStatus'                               => 'required|string|in:M,S,W',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.LastEducationStatus'                         => 'required|string|in:0100,0101,0102,0103,0104,0105,0106',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.NoOfDependant'                               => 'required|string|in:01',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.Nationality'                                 => 'required|string|in:ID',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.EmailAddress'                                => 'required|string|email|between:6,40',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.MotherMaidenName'                            => 'required|string|between:3,40',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.ResidentStatus'                              => 'required|string|in:R,NR',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.FlagASCASA'                                  => 'required|string|in:Y,N',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.DepositTrxCount'                             => 'required|string|in:010,020,030',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.DepositTrxAmount'                            => 'required|string|in:010,020,030',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.WithdrawalTrxCount'                          => 'required|string|in:010,020,030',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.WithdrawalTrxAmount'                         => 'required|string|in:010,020,030',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo'                                             => 'required|array|size:3',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.AddressType'                               => 'required|string|in:01,02,03,04,05,06,07,08',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.AddressLine1'                              => 'required|string|between:3,40',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.AddressLine2'                              => 'required|string|between:3,40',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Rt'                                        => 'required|string|between:2,3',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Rw'                                        => 'required|string|between:2,3',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Village'                                   => 'required|string|between:3,50',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Subdistrict'                               => 'required|string|between:3,50',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.CityRegencyCode'                           => 'required|string|size:4',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Province'                                  => 'required|string|between:3,50',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Zipcode'                                   => 'required|string|size:5',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Country'                                   => 'required|string|size:2',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.LengthOfStayYear'                          => 'required|string|max:4',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.PhoneInfo'                                               => 'required|array|size:3',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.PhoneInfo.*.PhoneType'                                   => 'required|string|in:HOMEPHONE1,HOMEPHONE2,HP1,HP2,HP3,OFFICEPHONE1',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.PhoneInfo.*.PhoneAreaCode'                               => 'required|string|between:4,5',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.PhoneInfo.*.PhoneNumber1'                                => 'required|string|between:6,10',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.PhoneInfo.*.PhoneExt'                                    => 'required|string|between:4,5',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products'                                                => 'required|array|size:1',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts'                                 => 'required|array|size:1',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.SeqNo'                         => 'required|string|in:1,2,3,4,5,6,7,8,9',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.StaProductCode'                => 'required|string|in:TR016,TR012',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.ProductFamily'                 => 'required|string|in:SavingO',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.ProductType'                   => 'required|string|in:UI,GV,UJ',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.BranchId'                      => 'required|string|in:0204',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.Source'                        => 'required|string|in:U',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.Purpose'                       => 'required|string|in:1,2,3,4,5',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.Opening'                       => 'required|string|in:1,2,3,4,5,6',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.AddressStatement'              => 'required|string|in:02,06',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.AdditionalCasaInfo'            => 'required|array|size:2',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.AdditionalCasaInfo.GroupIdH2H' => 'required|string',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.AdditionalCasaInfo.GroupIdPEB' => 'required|string',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments'                                             => 'required|array|size:1',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo'                              => 'required|array|size:9',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.EmploymentType'               => 'required|string|in:A,B,C,D,E,F,G,H,I',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.Position'                     => 'required|string|min:3',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.CompanyName'                  => 'required|string|between:3,50',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.EconomySector'                => 'required|string|size:3',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.LengthOfServiceYear'          => 'required|string|size:2',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.LengthOfServiceMonth'         => 'required|string|size:2',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.MonthlyIncome'                => 'required|string|between:5,10',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.MonthlyIncomeCode'            => 'required|string|in:1,2,3,4',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.SourceOfFund'                 => 'required|string|in:1,2,3,4',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities'                                              => 'required|array|size:1',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo'                               => 'required|array|size:1',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo.*.IDType'                      => 'required|string|in:KT',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo.*.IDExpiryDate'                => 'required|string|date',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo.*.IDNumber'                    => 'required|string|size:16',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo.*.IDName'                      => [
+                'required', 'string', 'between:3,40', 'regex:/^[A-Z ]+$/',
+            ],
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.KYCOption'                                               => 'required|array|size:1',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.KYCOption.KycType'                                       => 'required|string|in:1,2,3,4,5,6,7',
         ];
     }
 
@@ -1807,7 +1584,10 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
      */
     public function messages()
     {
-        return [];
+        return [
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.CustomerName.regex'           => ':attribute harus terdiri atas huruf kapital.',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo.*.IDName.regex' => ':attribute harus terdiri atas huruf kapital.'
+        ];
     }
 
     /**
@@ -1816,7 +1596,82 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
     public function customAttributes()
     {
         return [
-
+            'SubmitApplicationRq'                                                                                      => 'submit application request',
+            'SubmitApplicationRq.MsgRqHdr'                                                                             => 'header permintaan pesan',
+            'SubmitApplicationRq.MsgRqHdr.RequestTimestamp'                                                            => 'timestamp',
+            'SubmitApplicationRq.MsgRqHdr.CustRefID'                                                                   => 'id referral pelanggan',
+            'SubmitApplicationRq.ApplicationInfo'                                                                      => 'info aplikasi',
+            'SubmitApplicationRq.ApplicationInfo.ReffCode'                                                             => 'kode referral',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo'                                                         => 'info pribadi',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu'                                             => 'sta individu',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.CustomerName'                                => 'nama pelanggan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.CityOfBirth'                                 => 'kota lahir',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.DateOfBirth'                                 => 'tanggal lahir',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.CountryOfBirth'                              => 'negara lahir',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.Gender'                                      => 'jenis kelamin',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.MaritalStatus'                               => 'status kawin',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.LastEducationStatus'                         => 'status pendidikan terakhir',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.NoOfDependant'                               => 'jumlah tanggungan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.Nationality'                                 => 'kewarganegaraan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.EmailAddress'                                => 'alamat email',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.MotherMaidenName'                            => 'nama gadis ibu',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.ResidentStatus'                              => 'status kependudukan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.FlagASCASA'                                  => 'flag AS CASA',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.DepositTrxCount'                             => 'hitungan transaksi deposit',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.DepositTrxAmount'                            => 'jumlah transaksi deposit',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.WithdrawalTrxCount'                          => 'hitungan transaksi penarikan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.StaIndividu.WithdrawalTrxAmount'                         => 'hitungan transaksi penarikan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo'                                             => 'info alamat',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.AddressType'                               => 'jenis alamat',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.AddressLine1'                              => 'alamat baris 1',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.AddressLine2'                              => 'alamat baris 2',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Rt'                                        => 'rt',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Rw'                                        => 'rw',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Village'                                   => 'kelurahan/desa',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Subdistrict'                               => 'kecamatan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.CityRegencyCode'                           => 'kode kabupaten/kota',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Province'                                  => 'provinsi',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Zipcode'                                   => 'kode pos',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Country'                                   => 'negara',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.LengthOfStayYear'                          => 'lamanya tahun tinggal',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.PhoneInfo'                                               => 'info telepon',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.PhoneInfo.*.PhoneType'                                   => 'jenis telepon',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.PhoneInfo.*.PhoneAreaCode'                               => 'kode area telepon',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.PhoneInfo.*.PhoneNumber1'                                => 'nomor telepon',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.PhoneInfo.*.PhoneExt'                                    => 'ekstensi telepon',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products'                                                => 'produk',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts'                                 => 'produk CASA',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.SeqNo'                         => 'nomor urut',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.StaProductCode'                => 'kode produk sta',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.ProductFamily'                 => 'keluarga produk',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.ProductType'                   => 'jenis produk',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.BranchId'                      => 'id cabang',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.Source'                        => 'sumber',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.Purpose'                       => 'tujuan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.Opening'                       => 'pembukaan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.AddressStatement'              => 'pernyataan alamat',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.AdditionalCasaInfo'            => 'info CASA tambahan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.AdditionalCasaInfo.GroupIdH2H' => 'id kelompok head to head',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Products.*.CasaProducts.*.AdditionalCasaInfo.GroupIdPEB' => 'id grup permata e-business',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments'                                             => 'pekerjaan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo'                              => 'info pekerjaan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.EmploymentType'               => 'jenis pekerjaan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.Position'                     => 'jabatan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.CompanyName'                  => 'nama perusahaan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.EconomySector'                => 'sektor ekonomi',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.LengthOfServiceYear'          => 'lamanya tahun layanan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.LengthOfServiceMonth'         => 'lamanya bulan layanan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.MonthlyIncome'                => 'pendapatan bulanan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.MonthlyIncomeCode'            => 'kode pendapatan bulanan',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.SourceOfFund'                 => 'sumber dana',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities'                                              => 'identitas',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo'                               => 'info identitas',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo.*.IDType'                      => 'jenis identitas',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo.*.IDExpiryDate'                => 'tanggal kadaluwarsa identitas',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo.*.IDNumber'                    => 'nomor identitas',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo.*.IDName'                      => 'nama identitas',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.KYCOption'                                               => 'pilihan KYC',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.KYCOption.KycType'                                       => 'jenis KYC',
         ];
     }
 }

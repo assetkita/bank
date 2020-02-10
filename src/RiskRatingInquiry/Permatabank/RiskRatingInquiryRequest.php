@@ -3,11 +3,12 @@
 namespace Assetku\BankService\RiskRatingInquiry\Permatabank;
 
 use Assetku\BankService\Base\Permatabank\BaseRequest;
+use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryRequestContract;
 use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
-class RiskRatingInquiryRequest extends BaseRequest implements RiskRatingInquiryRequestContract
+class RiskRatingInquiryRequest extends BaseRequest implements RiskRatingInquiryRequestContract, MustValidated
 {
     /**
      * @var string
@@ -133,7 +134,15 @@ class RiskRatingInquiryRequest extends BaseRequest implements RiskRatingInquiryR
     public function rules()
     {
         return [
-
+            'InquiryHighRiskRq'                                => 'required|array|size:2',
+            'InquiryHighRiskRq.MsgRqHdr'                       => 'required|array|size:2',
+            'InquiryHighRiskRq.MsgRqHdr.RequestTimestamp'      => 'required|string|date',
+            'InquiryHighRiskRq.MsgRqHdr.CustRefID'             => 'required|string|size:20',
+            'InquiryHighRiskRq.ApplicationInfo'                => 'required|array|size:4',
+            'InquiryHighRiskRq.ApplicationInfo.IdNumber'       => 'required|string|size:16',
+            'InquiryHighRiskRq.ApplicationInfo.EmploymentType' => 'required|string|in:A,B,C,D,E,F',
+            'InquiryHighRiskRq.ApplicationInfo.EconomySector'  => 'required|string|size:3',
+            'InquiryHighRiskRq.ApplicationInfo.Position'       => 'required|string|min:3',
         ];
     }
 
@@ -151,7 +160,15 @@ class RiskRatingInquiryRequest extends BaseRequest implements RiskRatingInquiryR
     public function customAttributes()
     {
         return [
-
+            'InquiryHighRiskRq'                                => 'inquiry high risk request',
+            'InquiryHighRiskRq.MsgRqHdr'                       => 'header permintaan pesan',
+            'InquiryHighRiskRq.MsgRqHdr.RequestTimestamp'      => 'timestamp',
+            'InquiryHighRiskRq.MsgRqHdr.CustRefID'             => 'id referral pelanggan',
+            'InquiryHighRiskRq.ApplicationInfo'                => 'info aplikasi',
+            'InquiryHighRiskRq.ApplicationInfo.IdNumber'       => 'nomor identifikasi',
+            'InquiryHighRiskRq.ApplicationInfo.EmploymentType' => 'jenis kepegawaian',
+            'InquiryHighRiskRq.ApplicationInfo.EconomySector'  => 'sektor ekonomi',
+            'InquiryHighRiskRq.ApplicationInfo.Position'       => 'jabatan',
         ];
     }
 }

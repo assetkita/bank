@@ -313,13 +313,6 @@ interface SubmitApplicationDataSubject
     public function position();
 
     /**
-     * Get submit application data subject's department
-     *
-     * @return string
-     */
-    public function department();
-
-    /**
      * Get submit application data subject's monthly income code
      *
      * @return string
@@ -348,16 +341,16 @@ interface SubmitApplicationDataSubject
     public function sourceOfFund();
 
     /**
-     * Get submit application data subject's id name
-     *
-     * @return string
-     */
-    public function idName();
-
-    /**
      * Get submit application data subject's id number
      *
      * @return string
      */
     public function idNumber();
+
+    /**
+     * Get submit application data subject's id name
+     *
+     * @return string
+     */
+    public function idName();
 }

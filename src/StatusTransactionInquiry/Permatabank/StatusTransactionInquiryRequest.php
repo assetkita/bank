@@ -13,6 +13,11 @@ class StatusTransactionInquiryRequest extends BaseRequest implements StatusTrans
     /**
      * @var string
      */
+    protected $corporationId;
+
+    /**
+     * @var string
+     */
     protected $customerReferralId;
 
     /**
@@ -22,9 +27,21 @@ class StatusTransactionInquiryRequest extends BaseRequest implements StatusTrans
      */
     public function __construct(string $customerReferralId)
     {
+        $environment = \App::environment('production') ? 'production' : 'development';
+
         parent::__construct();
 
+        $this->corporationId = \Config::get("bank.providers.permatabank.{$environment}.group_id");
+
         $this->customerReferralId = $customerReferralId;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function corporationId()
+    {
+        return $this->corporationId;
     }
 
     /**
@@ -58,7 +75,7 @@ class StatusTransactionInquiryRequest extends BaseRequest implements StatusTrans
     {
         return [
             'StatusTransactionRq' => [
-                'CorpID'    => \Config::get('bank.providers.permatabank.organization_name'),
+                'CorpID'    => $this->corporationId,
                 'CustRefID' => $this->customerReferralId,
             ],
         ];

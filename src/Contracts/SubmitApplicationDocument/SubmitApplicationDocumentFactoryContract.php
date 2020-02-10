@@ -7,10 +7,11 @@ interface SubmitApplicationDocumentFactoryContract
     /**
      * Create a new submit registration document request instance
      *
-     * @param  array  $data
+     * @param  string  $bankReferralId
+     * @param  string  $url
      * @return SubmitApplicationDocumentRequestContract
      */
-    public function makeRequest(array $data);
+    public function makeRequest(string $bankReferralId, string $url);
 
     /**
      * Create a new submit registration document response instance
