@@ -294,6 +294,12 @@ class BankService
         $request = \App::make(SubmitApplicationDataFactoryContract::class)->makeRequest($subject);
 
         try {
+            $this->validate($request);
+        } catch (ValidationException $e) {
+            throw $e;
+        }
+
+        try {
             return $this->service->submitApplicationData($request);
         } catch (RequestException $e) {
             throw $e;
@@ -303,14 +309,22 @@ class BankService
     /**
      * Perform submit application document
      *
-     * @param  array  $data
+     * @param  string  $bankReferralId
+     * @param  string  $url
      * @return \Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract
      * @throws \GuzzleHttp\Exception\RequestException
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function submitDocument(array $data)
+    public function submitApplicationDocument(string $bankReferralId, string $url)
     {
-        $request = \App::make(SubmitApplicationDocumentFactoryContract::class)->makeRequest($data);
+        $request = \App::make(SubmitApplicationDocumentFactoryContract::class)
+            ->makeRequest($bankReferralId, $url);
+
+        try {
+            $this->validate($request);
+        } catch (ValidationException $e) {
+            throw $e;
+        }
 
         try {
             return $this->service->submitApplicationDocument($request);
@@ -330,6 +344,12 @@ class BankService
     public function applicationStatusInquiry(string $referralCode)
     {
         $request = \App::make(ApplicationStatusInquiryFactoryContract::class)->makeRequest($referralCode);
+
+        try {
+            $this->validate($request);
+        } catch (ValidationException $e) {
+            throw $e;
+        }
 
         try {
             return $this->service->applicationStatusInquiry($request);
@@ -353,6 +373,12 @@ class BankService
     {
         $request = \App::make(RiskRatingInquiryFactoryContract::class)
             ->makeRequest($idNumber, $employmentType, $economySector, $position);
+
+        try {
+            $this->validate($request);
+        } catch (ValidationException $e) {
+            throw $e;
+        }
 
         try {
             return $this->service->riskRatingInquiry($request);
@@ -393,6 +419,12 @@ class BankService
             );
 
         try {
+            $this->validate($request);
+        } catch (ValidationException $e) {
+            throw $e;
+        }
+
+        try {
             return $this->service->accountValidationInquiry($request);
         } catch (RequestException $e) {
             throw $e;
@@ -402,14 +434,22 @@ class BankService
     /**
      * Perform update kyc status
      *
-     * @param  array  $data
+     * @param  string  $referralCode
+     * @param  string  $idNumber
+     * @param  string  $kycStatus
      * @return UpdateKycStatusResponseContract
      * @throws RequestException
      * @throws ValidationException
      */
-    public function updateKycStatus(array $data)
+    public function updateKycStatus(string $referralCode, string $idNumber, string $kycStatus)
     {
-        $request = \App::make(UpdateKycStatusFactoryContract::class)->makeRequest($data);
+        $request = \App::make(UpdateKycStatusFactoryContract::class)->makeRequest($referralCode, $idNumber, $kycStatus);
+
+        try {
+            $this->validate($request);
+        } catch (ValidationException $e) {
+            throw $e;
+        }
 
         try {
             return $this->service->updateKycStatus($request);
@@ -435,7 +475,7 @@ class BankService
         $customAttributes = $request->customAttributes();
 
         try {
-            \App::make(Factory::class)->make($data, $rules, $messages, $customAttributes)->validate();
+            \Validator::make($data, $rules, $messages, $customAttributes)->validate();
         } catch (ValidationException $e) {
             throw $e;
         }

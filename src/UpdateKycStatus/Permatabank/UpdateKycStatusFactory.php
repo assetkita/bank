@@ -10,9 +10,9 @@ class UpdateKycStatusFactory implements UpdateKycStatusFactoryContract
     /**
      * @inheritDoc
      */
-    public function makeRequest(array $data)
+    public function makeRequest(string $referralCode, string $idNumber, string $kycStatus)
     {
-        return new UpdateKycStatusRequest($data);
+        return new UpdateKycStatusRequest($referralCode, $idNumber, $kycStatus);
     }
 
     /**

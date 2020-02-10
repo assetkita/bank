@@ -22,7 +22,6 @@ class SubmitApplicationDataFactory implements SubmitApplicationDataFactoryContra
     public function makeResponse(SubmitApplicationDataRequestContract $request, string $content)
     {
         $data = json_decode($content, true);
-        dd($data);
 
         $response = $data['SubmitApplicationRs'];
 

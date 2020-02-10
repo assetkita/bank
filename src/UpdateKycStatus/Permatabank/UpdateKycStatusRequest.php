@@ -11,20 +11,60 @@ use Assetku\BankService\Headers\Permatabank\CommonHeader;
 class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusRequestContract, MustValidated
 {
     /**
-     * @var array
+     * @var string
      */
-    protected $data;
+    protected $referralCode;
+
+    /**
+     * @var string
+     */
+    protected $idNumber;
+
+    /**
+     * @var string
+     */
+    protected $kycStatus;
 
     /**
      * UpdateKycStatusRequest constructor.
      *
-     * @param  array  $data
+     * @param  string  $referralCode
+     * @param  string  $idNumber
+     * @param  string  $kycStatus
      */
-    public function __construct(array $data)
+    public function __construct(string $referralCode, string $idNumber, string $kycStatus)
     {
         parent::__construct();
 
-        $this->data = $data;
+        $this->referralCode = $referralCode;
+
+        $this->idNumber = $idNumber;
+
+        $this->kycStatus = $kycStatus;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function referralCode()
+    {
+        return $this->referralCode;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function idNumber()
+    {
+        return $this->idNumber;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function kycStatus()
+    {
+        return $this->kycStatus;
     }
 
     /**
@@ -54,7 +94,11 @@ class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusReque
                     'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $this->customerReferralId,
                 ],
-                'ApplicationInfo' => $this->data,
+                'ApplicationInfo' => [
+                    'ReffCode'  => $this->referralCode,
+                    'IdNumber'  => $this->idNumber,
+                    'KycStatus' => $this->kycStatus,
+                ],
             ],
         ];
     }
@@ -73,7 +117,14 @@ class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusReque
     public function rules()
     {
         return [
-
+            'UpdateKycFlagRq'                           => 'required|array|size:2',
+            'UpdateKycFlagRq.MsgRqHdr'                  => 'required|array|size:2',
+            'UpdateKycFlagRq.MsgRqHdr.RequestTimestamp' => 'required|string|date',
+            'UpdateKycFlagRq.MsgRqHdr.CustRefID'        => 'required|string|size:20',
+            'UpdateKycFlagRq.ApplicationInfo'           => 'required|array|size:3',
+            'UpdateKycFlagRq.ApplicationInfo.ReffCode'  => 'required|string',
+            'UpdateKycFlagRq.ApplicationInfo.IdNumber'  => 'required|string|size:16',
+            'UpdateKycFlagRq.ApplicationInfo.KycStatus' => 'required|string|in:00',
         ];
     }
 
@@ -91,7 +142,14 @@ class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusReque
     public function customAttributes()
     {
         return [
-
+            'UpdateKycFlagRq'                           => 'update kyc status request',
+            'UpdateKycFlagRq.MsgRqHdr'                  => 'header permintaan pesan',
+            'UpdateKycFlagRq.MsgRqHdr.RequestTimestamp' => 'timestamp',
+            'UpdateKycFlagRq.MsgRqHdr.CustRefID'        => 'id referral pelanggan',
+            'UpdateKycFlagRq.ApplicationInfo'           => 'info aplikasi',
+            'UpdateKycFlagRq.ApplicationInfo.ReffCode'  => 'referral code',
+            'UpdateKycFlagRq.ApplicationInfo.IdNumber'  => 'nomor identifikasi',
+            'UpdateKycFlagRq.ApplicationInfo.KycStatus' => 'status kyc',
         ];
     }
 }

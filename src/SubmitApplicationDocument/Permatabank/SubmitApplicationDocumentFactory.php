@@ -10,9 +10,9 @@ class SubmitApplicationDocumentFactory implements SubmitApplicationDocumentFacto
     /**
      * @inheritDoc
      */
-    public function makeRequest(array $data)
+    public function makeRequest(string $bankReferralId, string $url)
     {
-        return new SubmitApplicationDocumentRequest($data);
+        return new SubmitApplicationDocumentRequest($bankReferralId, $url);
     }
 
     /**

@@ -4,35 +4,37 @@ namespace Assetku\BankService\AccountValidationInquiry\Permatabank;
 
 use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryRequestContract;
+use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
-class AccountValidationInquiryRequest extends BaseRequest implements AccountValidationInquiryRequestContract
+class AccountValidationInquiryRequest extends BaseRequest implements AccountValidationInquiryRequestContract, MustValidated
 {
     /**
      * @var string
      */
-    protected $referralCode;
-    /**
-     * @var string
-     */
     protected $accountNumber;
+
     /**
      * @var string
      */
     protected $idNumber;
+
     /**
      * @var string
      */
     protected $handPhoneNumber;
+
     /**
      * @var string
      */
     protected $customerName;
+
     /**
      * @var string
      */
     protected $dateOfBirth;
+
     /**
      * @var string
      */
@@ -172,7 +174,17 @@ class AccountValidationInquiryRequest extends BaseRequest implements AccountVali
     public function rules()
     {
         return [
-
+            'InquiryAccountValidationRq'                               => 'required|array|size:2',
+            'InquiryAccountValidationRq.MsgRqHdr'                      => 'required|array|size:2',
+            'InquiryAccountValidationRq.MsgRqHdr.RequestTimestamp'     => 'required|string|date',
+            'InquiryAccountValidationRq.MsgRqHdr.CustRefID'            => 'required|string|size:20',
+            'InquiryAccountValidationRq.ApplicationInfo'               => 'required|array|size:6',
+            'InquiryAccountValidationRq.ApplicationInfo.AccountNumber' => 'required|string',
+            'InquiryAccountValidationRq.ApplicationInfo.IdNumber'      => 'required|string|size:16',
+            'InquiryAccountValidationRq.ApplicationInfo.HandphoneNo'   => 'required|string|between:10,15',
+            'InquiryAccountValidationRq.ApplicationInfo.CustomerName'  => 'required|string|between:3,40',
+            'InquiryAccountValidationRq.ApplicationInfo.DateOfBirth'   => 'required|string|date',
+            'InquiryAccountValidationRq.ApplicationInfo.CityOfBirth'   => 'required|string|between:3,50',
         ];
     }
 
@@ -190,7 +202,17 @@ class AccountValidationInquiryRequest extends BaseRequest implements AccountVali
     public function customAttributes()
     {
         return [
-
+            'InquiryAccountValidationRq'                               => 'account validation inquiry request',
+            'InquiryAccountValidationRq.MsgRqHdr'                      => 'header permintaan pesan',
+            'InquiryAccountValidationRq.MsgRqHdr.RequestTimestamp'     => 'timestamp',
+            'InquiryAccountValidationRq.MsgRqHdr.CustRefID'            => 'id referral pelanggan',
+            'InquiryAccountValidationRq.ApplicationInfo'               => 'info aplikasi',
+            'InquiryAccountValidationRq.ApplicationInfo.AccountNumber' => 'nomor rekening',
+            'InquiryAccountValidationRq.ApplicationInfo.IdNumber'      => 'nomor identitas',
+            'InquiryAccountValidationRq.ApplicationInfo.HandphoneNo'   => 'nomor telepon seluler',
+            'InquiryAccountValidationRq.ApplicationInfo.CustomerName'  => 'nama pelanggan',
+            'InquiryAccountValidationRq.ApplicationInfo.DateOfBirth'   => 'tanggal lahir',
+            'InquiryAccountValidationRq.ApplicationInfo.CityOfBirth'   => 'kota lahir',
         ];
     }
 }

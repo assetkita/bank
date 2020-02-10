@@ -7,10 +7,12 @@ interface UpdateKycStatusFactoryContract
     /**
      * Create a new update kyc status request instance
      *
-     * @param  array $data
+     * @param  string  $referralCode
+     * @param  string  $idNumber
+     * @param  string  $kycStatus
      * @return UpdateKycStatusRequestContract
      */
-    public function makeRequest(array $data);
+    public function makeRequest(string $referralCode, string $idNumber, string $kycStatus);
 
     /**
      * Create a new update kyc status response instance

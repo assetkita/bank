@@ -4,6 +4,7 @@ namespace Assetku\BankService\Tests\Permatabank;
 
 use Assetku\BankService\Tests\TestCase;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Validation\ValidationException;
 
 class AccountValidationInquiryTest extends TestCase
 {
@@ -20,6 +21,8 @@ class AccountValidationInquiryTest extends TestCase
             );
 
             $this->assertTrue($applicationStatusInquiry->statusCode() === '00');
+        } catch (ValidationException $e) {
+            dd($e->errors());
         } catch (RequestException $e) {
             throw $e;
         }
