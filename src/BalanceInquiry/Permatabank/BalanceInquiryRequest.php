@@ -5,7 +5,7 @@ namespace Assetku\BankService\BalanceInquiry\Permatabank;
 use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryRequestContract;
 use Assetku\BankService\Contracts\MustValidated;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class BalanceInquiryRequest extends BaseRequest implements BalanceInquiryRequestContract, MustValidated
@@ -48,7 +48,7 @@ class BalanceInquiryRequest extends BaseRequest implements BalanceInquiryRequest
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**

@@ -6,7 +6,7 @@ use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferRequestContract;
 use Assetku\BankService\Contracts\Subjects\OnlineTransferSubject;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class OnlineTransferRequest extends BaseRequest implements OnlineTransferRequestContract, MustValidated
@@ -197,7 +197,7 @@ class OnlineTransferRequest extends BaseRequest implements OnlineTransferRequest
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**

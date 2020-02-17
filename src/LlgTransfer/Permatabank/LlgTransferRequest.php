@@ -6,7 +6,7 @@ use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferRequestContract;
 use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Contracts\Subjects\LlgTransferSubject;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class LlgTransferRequest extends BaseRequest implements LlgTransferRequestContract, MustValidated
@@ -275,7 +275,7 @@ class LlgTransferRequest extends BaseRequest implements LlgTransferRequestContra
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**

@@ -5,7 +5,7 @@ namespace Assetku\BankService\RiskRatingInquiry\Permatabank;
 use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryRequestContract;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class RiskRatingInquiryRequest extends BaseRequest implements RiskRatingInquiryRequestContract, MustValidated
@@ -96,7 +96,7 @@ class RiskRatingInquiryRequest extends BaseRequest implements RiskRatingInquiryR
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**

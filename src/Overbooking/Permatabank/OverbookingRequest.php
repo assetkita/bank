@@ -6,7 +6,7 @@ use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Contracts\Overbooking\OverbookingRequestContract;
 use Assetku\BankService\Contracts\Subjects\OverbookingSubject;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class OverbookingRequest extends BaseRequest implements OverbookingRequestContract, MustValidated
@@ -195,7 +195,7 @@ class OverbookingRequest extends BaseRequest implements OverbookingRequestContra
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**
