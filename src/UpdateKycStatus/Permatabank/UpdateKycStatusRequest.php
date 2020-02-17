@@ -5,7 +5,7 @@ namespace Assetku\BankService\UpdateKycStatus\Permatabank;
 use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusRequestContract, MustValidated
@@ -80,7 +80,7 @@ class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusReque
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**

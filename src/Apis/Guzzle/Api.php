@@ -7,6 +7,7 @@ use Assetku\BankService\Contracts\Base\BaseRequestContract;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferRequestContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
+use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;

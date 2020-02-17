@@ -6,7 +6,7 @@ use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Contracts\Subjects\SubmitApplicationDataSubject;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicationDataRequestContract, MustValidated
@@ -1329,7 +1329,7 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**

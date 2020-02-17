@@ -65,6 +65,12 @@ class BankServiceProvider extends ServiceProvider
             });
         });
 
+        Collection::macro('recursiveUrlEncode', function () {
+            return $this->map(function ($value) {
+                return urlencode($value);
+            });
+        });
+
         $this->bootValidator();
     }
 
@@ -100,12 +106,8 @@ class BankServiceProvider extends ServiceProvider
      */
     protected function bootValidator()
     {
-        \Validator::extend('url_base64_encoded_content', function ($attribute, $value, $parameters) {
-            return validate_url_base64_encoded_content($value, $parameters);
-        });
-
-        \Validator::extend('url_encoded_content_type', function ($attribute, $value, $parameters, $validator) {
-            return validate_url_encoded_content_type($value, $parameters);
+        \Validator::extend('base64_encoded_content', function ($attribute, $value, $parameters) {
+            return validate_base64_encoded_content($value, $parameters);
         });
     }
 }

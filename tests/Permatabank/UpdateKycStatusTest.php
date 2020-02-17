@@ -11,7 +11,7 @@ class UpdateKycStatusTest extends TestCase
     public function testSuccessUpdateKycStatus()
     {
         try {
-            $updateKycRequest = \BankService::updateKycStatus('U060220011636', '3578070812970001', '00');
+            $updateKycRequest = \BankService::updateKycStatus('U100220011679', '3578070812970001', '00');
 
             $this->assertTrue($updateKycRequest->statusCode() === '00');
         } catch (ValidationException $e) {
