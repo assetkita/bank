@@ -2,10 +2,10 @@
 
 namespace Assetku\BankService\Contracts;
 
-interface Product
+interface ProductInterface
 {
     /**
-     * Get product's product type
+     * Get product's type
      *
      * @return string
      */

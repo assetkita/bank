@@ -5,13 +5,14 @@ namespace Assetku\BankService\Contracts;
 use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
 use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryRequestContract;
 use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryResponseContract;
-use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryFactoryContract;
 use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryRequestContract;
 use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryResponseContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryRequestContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryResponseContract;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferRequestContract;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferResponseContract;
+use Assetku\BankService\Contracts\NotifAccountOpeningStatus\NotifAccountOpeningStatusHandlerInterface;
+use Assetku\BankService\Contracts\NotifAccountOpeningStatus\NotifAccountOpeningStatusResponseInterface;
 use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferRequestContract;
 use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferResponseContract;
 use Assetku\BankService\Contracts\OnlineTransferInquiry\OnlineTransferInquiryRequestContract;
@@ -34,10 +35,11 @@ use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract
 use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
+use Exception;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Validation\ValidationException;
 
-interface ServiceContract
+interface ServiceInterface
 {
     /**
      * Perform get access token
@@ -185,4 +187,14 @@ interface ServiceContract
      * @throws ValidationException
      */
     public function updateKycStatus(UpdateKycStatusRequestContract $request);
+
+    /**
+     * Perform notif account opening status
+     *
+     * @param  NotifAccountOpeningStatusHandlerInterface  $handler
+     * @param  callable  $callback
+     * @return string
+     * @throws Exception
+     */
+    public function notifAccountOpeningStatus(NotifAccountOpeningStatusHandlerInterface $handler, callable $callback);
 }

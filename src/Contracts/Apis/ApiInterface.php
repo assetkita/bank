@@ -6,7 +6,7 @@ use Assetku\BankService\Contracts\Base\BaseRequestContract;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 
-interface ApiContract
+interface ApiInterface
 {
     /**
      * Handle an outgoing request.

@@ -2,7 +2,7 @@
 
 namespace Assetku\BankService\Contracts;
 
-interface EncoderContract
+interface EncoderInterface
 {
     /**
      * Get encoder's type

@@ -3,10 +3,10 @@
 namespace Assetku\BankService\Headers\Permatabank;
 
 use Assetku\BankService\Base\Permatabank\BaseHeader;
-use Assetku\BankService\Contracts\HeaderContract;
+use Assetku\BankService\Contracts\HeaderInterface;
 use Assetku\BankService\Contracts\Base\BaseRequestContract;
 
-class AuthHeader extends BaseHeader implements HeaderContract
+class AuthHeader extends BaseHeader implements HeaderInterface
 {
     /**
      * @var string

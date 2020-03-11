@@ -2,8 +2,8 @@
 
 namespace Assetku\BankService\Contracts\Base;
 
-use Assetku\BankService\Contracts\EncoderContract;
-use Assetku\BankService\Contracts\HeaderContract;
+use Assetku\BankService\Contracts\EncoderInterface;
+use Assetku\BankService\Contracts\HeaderInterface;
 
 interface BaseRequestContract
 {
@@ -24,14 +24,14 @@ interface BaseRequestContract
     /**
      * Get base request's encoder
      *
-     * @return EncoderContract
+     * @return EncoderInterface
      */
     public function encoder();
 
     /**
      * Get base request's header
      *
-     * @return HeaderContract
+     * @return HeaderInterface
      */
     public function header();
 

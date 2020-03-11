@@ -39,10 +39,19 @@ abstract class BaseResponse implements BaseResponseContract
      */
     public function __construct(array $messageResponseHeader)
     {
-        $this->responseTimestamp = $messageResponseHeader['ResponseTimestamp'] ?? null;
+        if (isset($messageResponseHeader['ResponseTimestamp'])) {
+            $this->responseTimestamp = $messageResponseHeader['ResponseTimestamp'];
+        } elseif (isset($messageResponseHeader['RequestTimestamp'])) {
+            $this->responseTimestamp = $messageResponseHeader['RequestTimestamp'];
+        } else {
+            $this->responseTimestamp = null;
+        }
+
         $this->customerReferralId = $messageResponseHeader['CustRefID'];
+
         $this->statusCode = $messageResponseHeader['StatusCode'];
-        $this->statusDescription = $messageResponseHeader['StatusDesc'];
+
+        $this->statusDescription = isset($messageResponseHeader['StatusDesc']) ? $messageResponseHeader['StatusDesc'] : null;
 
         if ($this->statusCode !== '00') {
             $this->error = PermatabankException::translate($this->statusCode);

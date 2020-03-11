@@ -5,7 +5,7 @@ namespace Assetku\BankService\Contracts\Base;
 interface BaseResponseContract
 {
     /**
-     * Get base response's response timestamp
+     * Get base response's timestamp
      *
      * @return string
      */
