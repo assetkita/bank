@@ -2,9 +2,9 @@
 
 namespace Assetku\BankService\Encoders\Permatabank;
 
-use Assetku\BankService\Contracts\EncoderContract;
+use Assetku\BankService\Contracts\EncoderInterface;
 
-class FormParamsEncoder implements EncoderContract
+class FormParamsEncoder implements EncoderInterface
 {
     /**
      * @inheritDoc

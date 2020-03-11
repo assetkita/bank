@@ -5,14 +5,15 @@ namespace Assetku\BankService\Services;
 use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
 use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryFactoryContract;
 use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryRequestContract;
-use Assetku\BankService\Contracts\Apis\ApiContract;
-use Assetku\BankService\Contracts\Apis\ApiFactoryContract;
+use Assetku\BankService\Contracts\Apis\ApiInterface;
+use Assetku\BankService\Contracts\Apis\ApiFactoryInterface;
 use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryFactoryContract;
 use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryRequestContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryFactoryContract;
 use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryRequestContract;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferFactoryContract;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferRequestContract;
+use Assetku\BankService\Contracts\NotifAccountOpeningStatus\NotifAccountOpeningStatusHandlerInterface;
 use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferFactoryContract;
 use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferRequestContract;
 use Assetku\BankService\Contracts\OnlineTransferInquiry\OnlineTransferInquiryFactoryContract;
@@ -25,7 +26,7 @@ use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryFactoryCont
 use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryRequestContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferFactoryContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferRequestContract;
-use Assetku\BankService\Contracts\ServiceContract;
+use Assetku\BankService\Contracts\ServiceInterface;
 use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryFactoryContract;
 use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
@@ -36,12 +37,13 @@ use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusFactoryContract
 use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
+use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class PermatabankService implements ServiceContract
+class PermatabankService implements ServiceInterface
 {
     /**
-     * @var ApiContract
+     * @var ApiInterface
      */
     protected $api;
 
@@ -52,7 +54,7 @@ class PermatabankService implements ServiceContract
     {
         $environment = \App::environment('production') ? 'production' : 'development';
 
-        $this->api = \App::make(ApiFactoryContract::class)
+        $this->api = \App::make(ApiFactoryInterface::class)
             ->make(\Config::get("bank.providers.permatabank.{$environment}.base_url"));
     }
 
@@ -179,7 +181,8 @@ class PermatabankService implements ServiceContract
             $onlineTransferInquiry = $this->onlineTransferInquiry($onlineTransferInquiryRequest);
 
             if (! $onlineTransferInquiry->isSuccess()) {
-                throw new OnlineTransferInquiryException($onlineTransferInquiry->error(), $onlineTransferInquiry->statusCode());
+                throw new OnlineTransferInquiryException($onlineTransferInquiry->error(),
+                    $onlineTransferInquiry->statusCode());
             }
         } catch (HttpException $e) {
             throw $e;
@@ -322,5 +325,19 @@ class PermatabankService implements ServiceContract
         } catch (HttpException $e) {
             throw $e;
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function notifAccountOpeningStatus(NotifAccountOpeningStatusHandlerInterface $handler, callable $callback)
+    {
+        try {
+            $callback($handler->products());
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return $handler->response();
     }
 }

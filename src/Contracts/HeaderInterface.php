@@ -2,7 +2,7 @@
 
 namespace Assetku\BankService\Contracts;
 
-interface HeaderContract
+interface HeaderInterface
 {
     /**
      * Get header's content

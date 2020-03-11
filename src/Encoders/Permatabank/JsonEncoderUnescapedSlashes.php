@@ -2,16 +2,16 @@
 
 namespace Assetku\BankService\Encoders\Permatabank;
 
-use Assetku\BankService\Contracts\EncoderContract;
+use Assetku\BankService\Contracts\EncoderInterface;
 
-class JsonEncoderUnescapedSlashes implements EncoderContract
+class JsonEncoderUnescapedSlashes implements EncoderInterface
 {
     /**
      * @inheritDoc
      */
     public function type()
     {
-        return 'json';
+        return 'data';
     }
 
     /**
