@@ -11,7 +11,7 @@ class JsonEncoder  implements EncoderInterface
      */
     public function type()
     {
-        return 'data';
+        return 'json';
     }
 
     /**

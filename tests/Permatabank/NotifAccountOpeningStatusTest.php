@@ -48,9 +48,7 @@ class NotifAccountOpeningStatusTest extends TestCase
             ],
         ]);
 
-        $callback = function ($products) {
-            var_dump($products);
-        };
+        $callback = function ($products) {};
 
         try {
             $actual = \BankService::notifAccountOpeningStatus($contents, $callback);

@@ -6,7 +6,6 @@ use Assetku\BankService\Contracts\Apis\ApiInterface;
 use Assetku\BankService\Contracts\Base\BaseRequestContract;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use Psr\Http\Message\RequestInterface;
 
 class Api implements ApiInterface
 {
@@ -16,19 +15,16 @@ class Api implements ApiInterface
     protected $client;
 
     /**
-     * @var RequestInterface
-     */
-    protected $request;
-
-    /**
      * Api constructor.
      *
      * @param  string  $baseUri
+     * @param  int  $timeout
      */
-    public function __construct(string $baseUri)
+    public function __construct(string $baseUri, int $timeout)
     {
         $this->client = new Client([
             'base_uri' => $baseUri,
+            'timeout'  => $timeout,
         ]);
     }
 
