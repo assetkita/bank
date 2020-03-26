@@ -48,4 +48,20 @@ class RiskRatingInquiryResponse extends BaseResponse implements RiskRatingInquir
     {
         return $this->riskStatusDescription;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function isMediumRisk()
+    {
+        return $this->riskStatus() === '1';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isHighRisk()
+    {
+        return $this->riskStatus() === '2';
+    }
 }

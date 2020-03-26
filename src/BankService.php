@@ -7,8 +7,9 @@ use Assetku\BankService\Contracts\AccessToken\AccessTokenRequestContract;
 use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInquiryFactoryContract;
 use Assetku\BankService\Contracts\ApplicationStatusInquiry\ApplicationStatusInquiryFactoryContract;
 use Assetku\BankService\Contracts\MustValidated;
+use Assetku\BankService\Contracts\NotifAccountOpeningStatus\NotifAccountOpeningStatusFactoryInterface;
 use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryFactoryContract;
-use Assetku\BankService\Contracts\ServiceContract;
+use Assetku\BankService\Contracts\ServiceInterface;
 use Assetku\BankService\Contracts\Subjects\LlgTransferSubject;
 use Assetku\BankService\Contracts\Subjects\OnlineTransferSubject;
 use Assetku\BankService\Contracts\Subjects\OverbookingSubject;
@@ -16,8 +17,7 @@ use Assetku\BankService\Contracts\Subjects\RtgsTransferSubject;
 use Assetku\BankService\Contracts\Subjects\SubmitApplicationDataSubject;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataFactoryContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
-use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusFactoryContract;
-use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
+use Assetku\BankService\Contracts\UpdateKYCStatus\UpdateKYCStatusFactoryContract;
 use Assetku\BankService\Exceptions\OnlineTransferInquiryException;
 use Assetku\BankService\Exceptions\OverbookingInquiryException;
 use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferFactory;
@@ -27,23 +27,23 @@ use Assetku\BankService\Overbooking\Permatabank\OverbookingFactory;
 use Assetku\BankService\OverbookingInquiry\Permatabank\OverbookingInquiryFactory;
 use Assetku\BankService\RtgsTransfer\Permatabank\RtgsTransferFactory;
 use Assetku\BankService\StatusTransactionInquiry\Permatabank\StatusTransactionInquiryFactory;
+use Exception;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\ValidationException;
 
 class BankService
 {
     /**
-     * @var ServiceContract
+     * @var ServiceInterface
      */
     protected $service;
 
     /**
      * BankService constructor.
      *
-     * @param  ServiceContract  $service
+     * @param  ServiceInterface  $service
      */
-    public function __construct(ServiceContract $service)
+    public function __construct(ServiceInterface $service)
     {
         $this->service = $service;
     }
@@ -58,8 +58,8 @@ class BankService
     public function accessToken()
     {
         try {
-            // remember the access token in cache for 150 minutes (2.5 hours)
-            return \Cache::remember('permatabank.access_token', 150, function () {
+            // remember the access token in cache for an hour
+            return \Cache::remember('bank.access_token', 60, function () {
                 $request = \App::make(AccessTokenRequestContract::class);
 
                 $this->validate($request);
@@ -436,14 +436,14 @@ class BankService
      *
      * @param  string  $referralCode
      * @param  string  $idNumber
-     * @param  string  $kycStatus
-     * @return UpdateKycStatusResponseContract
-     * @throws RequestException
-     * @throws ValidationException
+     * @param  bool  $isKYCSuccess
+     * @return \Assetku\BankService\Contracts\UpdateKYCStatus\UpdateKYCStatusResponseContract
+     * @throws \GuzzleHttp\Exception\RequestException
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function updateKycStatus(string $referralCode, string $idNumber, string $kycStatus)
+    public function UpdateKYCStatus(string $referralCode, string $idNumber, bool $isKYCSuccess = true)
     {
-        $request = \App::make(UpdateKycStatusFactoryContract::class)->makeRequest($referralCode, $idNumber, $kycStatus);
+        $request = \App::make(UpdateKYCStatusFactoryContract::class)->makeRequest($referralCode, $idNumber, $isKYCSuccess);
 
         try {
             $this->validate($request);
@@ -452,8 +452,27 @@ class BankService
         }
 
         try {
-            return $this->service->updateKycStatus($request);
+            return $this->service->UpdateKYCStatus($request);
         } catch (RequestException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Perform notif account opening status
+     *
+     * @param  string  $contents
+     * @param  callable  $callback
+     * @return string
+     * @throws Exception
+     */
+    public function notifAccountOpeningStatus(string $contents, callable $callback)
+    {
+        $handler = \App::make(NotifAccountOpeningStatusFactoryInterface::class)->makeHandler($contents);
+
+        try {
+            return $this->service->notifAccountOpeningStatus($handler, $callback);
+        } catch (Exception $e) {
             throw $e;
         }
     }

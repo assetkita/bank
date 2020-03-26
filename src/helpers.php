@@ -24,36 +24,34 @@ if (! function_exists('random_alphanumeric')) {
     }
 }
 
-if (! function_exists('validate_url_base64_encoded_content')) {
+if (! function_exists('validate_base64_encoded_content')) {
     /**
-     * Validate a url base64 encoded content.
+     * Validate a base64 encoded content.
      *
-     * @param  string  $urlEncodedData
+     * @param  string  $base64EncodedData
      * @param  array  $mimes  example ['png', 'jpg', 'jpeg']
      * @return bool
      */
-    function validate_url_base64_encoded_content(string $urlEncodedData, array $mimes)
+    function validate_base64_encoded_content(string $base64EncodedData, array $mimes)
     {
-        $base64DecodedData = urldecode($urlEncodedData);
-
         // strip out data uri scheme information (see RFC 2397)
-        if (strpos($base64DecodedData, ';base64') !== false) {
-            list(, $base64DecodedData) = explode(';', $base64DecodedData);
+        if (strpos($base64EncodedData, ';base64') !== false) {
+            list(, $base64EncodedData) = explode(';', $base64EncodedData);
 
-            list(, $base64DecodedData) = explode(',', $base64DecodedData);
+            list(, $base64EncodedData) = explode(',', $base64EncodedData);
         }
 
         // strict mode filters for non-base64 alphabet characters
-        if (base64_decode($base64DecodedData, true) === false) {
+        if (base64_decode($base64EncodedData, true) === false) {
             return false;
         }
 
         // decoding and then re-encoding should not change the data
-        if (base64_encode(base64_decode($base64DecodedData)) !== $base64DecodedData) {
+        if (base64_encode(base64_decode($base64EncodedData)) !== $base64EncodedData) {
             return false;
         }
 
-        $binaryData = base64_decode($base64DecodedData);
+        $binaryData = base64_decode($base64EncodedData);
 
         // temporarily store the decoded data on the filesystem to be able to pass it to the fileAdder
         $tmpFile = tempnam(sys_get_temp_dir(), 'medialibrary');
@@ -75,21 +73,5 @@ if (! function_exists('validate_url_base64_encoded_content')) {
         );
 
         return ! $validation->fails();
-    }
-}
-
-if (! function_exists('validate_url_encoded_content_type')) {
-    /**
-     * Validate a url encoded content type.
-     *
-     * @param  string  $urlEncodedData
-     * @param  array  $contentType  example 'image/jpeg'
-     * @return bool
-     */
-    function validate_url_encoded_content_type(string $urlEncodedData, array $contentType)
-    {
-        $data = urldecode($urlEncodedData);
-
-        return in_array($data, $contentType);
     }
 }

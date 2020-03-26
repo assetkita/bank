@@ -1,17 +1,13 @@
 <?php
 
-namespace Assetku\BankService\Apis\Guzzle;
+namespace Assetku\BankService\Apis\GuzzleHttp;
 
-use Assetku\BankService\Contracts\Apis\ApiContract as ApiContract;
+use Assetku\BankService\Contracts\Apis\ApiInterface;
 use Assetku\BankService\Contracts\Base\BaseRequestContract;
-use Assetku\BankService\Contracts\LlgTransfer\LlgTransferRequestContract;
-use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferRequestContract;
-use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use Psr\Http\Message\RequestInterface;
 
-class Api implements ApiContract
+class Api implements ApiInterface
 {
     /**
      * @var Client
@@ -19,19 +15,16 @@ class Api implements ApiContract
     protected $client;
 
     /**
-     * @var RequestInterface
-     */
-    protected $request;
-
-    /**
      * Api constructor.
      *
      * @param  string  $baseUri
+     * @param  int  $timeout
      */
-    public function __construct(string $baseUri)
+    public function __construct(string $baseUri, int $timeout)
     {
         $this->client = new Client([
             'base_uri' => $baseUri,
+            'timeout'  => $timeout,
         ]);
     }
 

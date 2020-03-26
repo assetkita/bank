@@ -1,10 +1,10 @@
 <?php
 
-namespace Assetku\BankService\Contracts\UpdateKycStatus;
+namespace Assetku\BankService\Contracts\UpdateKYCStatus;
 
 use Assetku\BankService\Contracts\Base\BaseRequestContract;
 
-interface UpdateKycStatusRequestContract extends BaseRequestContract
+interface UpdateKYCStatusRequestContract extends BaseRequestContract
 {
     /**
      * Get update kyc status request's referral code
@@ -21,9 +21,9 @@ interface UpdateKycStatusRequestContract extends BaseRequestContract
     public function idNumber();
 
     /**
-     * Get update kyc status request's kyc status
+     * Get update kyc status request's KYC status
      *
      * @return string
      */
-    public function kycStatus();
+    public function KYCStatus();
 }

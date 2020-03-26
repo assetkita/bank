@@ -39,6 +39,6 @@ class AccountValidationInquiryFactory implements AccountValidationInquiryFactory
 
         $applicationInfo = $response['ApplicationInfo'];
 
-        return new AccountValidationInquiryResponse($response['MsgRsHdr'], $applicationInfo['ValidationStatus'] === '1');
+        return new AccountValidationInquiryResponse($response['MsgRsHdr'], $applicationInfo['ValidationStatus']);
     }
 }

@@ -19,4 +19,18 @@ interface RiskRatingInquiryResponseContract extends BaseResponseContract
      * @return string
      */
     public function riskStatusDescription();
+
+    /**
+     * Determine whether risk rating inquiry response is medium risk
+     *
+     * @return bool
+     */
+    public function isMediumRisk();
+
+    /**
+     * Determine whether risk rating inquiry response is high risk
+     *
+     * @return bool
+     */
+    public function isHighRisk();
 }

@@ -6,7 +6,7 @@ use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferRequestContract;
 use Assetku\BankService\Contracts\Subjects\RtgsTransferSubject;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class RtgsTransferRequest extends BaseRequest implements RtgsTransferRequestContract, MustValidated
@@ -283,7 +283,7 @@ class RtgsTransferRequest extends BaseRequest implements RtgsTransferRequestCont
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**

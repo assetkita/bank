@@ -1,10 +1,10 @@
 <?php
 
-namespace Assetku\BankService\Contracts\UpdateKycStatus;
+namespace Assetku\BankService\Contracts\UpdateKYCStatus;
 
 use Assetku\BankService\Contracts\Base\BaseResponseContract;
 
-interface UpdateKycStatusResponseContract extends BaseResponseContract
+interface UpdateKYCStatusResponseContract extends BaseResponseContract
 {
 
 }

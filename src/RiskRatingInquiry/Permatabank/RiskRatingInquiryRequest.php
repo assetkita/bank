@@ -5,7 +5,7 @@ namespace Assetku\BankService\RiskRatingInquiry\Permatabank;
 use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryRequestContract;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class RiskRatingInquiryRequest extends BaseRequest implements RiskRatingInquiryRequestContract, MustValidated
@@ -96,7 +96,7 @@ class RiskRatingInquiryRequest extends BaseRequest implements RiskRatingInquiryR
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**
@@ -140,7 +140,7 @@ class RiskRatingInquiryRequest extends BaseRequest implements RiskRatingInquiryR
             'InquiryHighRiskRq.MsgRqHdr.CustRefID'             => 'required|string|size:20',
             'InquiryHighRiskRq.ApplicationInfo'                => 'required|array|size:4',
             'InquiryHighRiskRq.ApplicationInfo.IdNumber'       => 'required|string|size:16',
-            'InquiryHighRiskRq.ApplicationInfo.EmploymentType' => 'required|string|in:A,B,C,D,E,F',
+            'InquiryHighRiskRq.ApplicationInfo.EmploymentType' => 'required|string|in:A,B,C,D,E,F,G,H,I',
             'InquiryHighRiskRq.ApplicationInfo.EconomySector'  => 'required|string|size:3',
             'InquiryHighRiskRq.ApplicationInfo.Position'       => 'required|string|min:3',
         ];

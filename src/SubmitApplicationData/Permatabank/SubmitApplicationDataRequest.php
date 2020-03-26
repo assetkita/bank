@@ -6,7 +6,7 @@ use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\MustValidated;
 use Assetku\BankService\Contracts\Subjects\SubmitApplicationDataSubject;
 use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRequestContract;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
 class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicationDataRequestContract, MustValidated
@@ -1329,7 +1329,7 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**
@@ -1531,7 +1531,7 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Rw'                                        => 'required|string|between:2,3',
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Village'                                   => 'required|string|between:3,50',
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Subdistrict'                               => 'required|string|between:3,50',
-            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.CityRegencyCode'                           => 'required|string|size:4',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.CityRegencyCode'                           => 'required|string|between:3,4',
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Province'                                  => 'required|string|between:3,50',
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Zipcode'                                   => 'required|string|size:5',
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.AddressInfo.*.Country'                                   => 'required|string|size:2',
@@ -1565,7 +1565,7 @@ class SubmitApplicationDataRequest extends BaseRequest implements SubmitApplicat
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.LengthOfServiceMonth'         => 'required|string|size:2',
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.MonthlyIncome'                => 'required|string|between:5,10',
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.MonthlyIncomeCode'            => 'required|string|in:1,2,3,4',
-            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.SourceOfFund'                 => 'required|string|in:1,2,3,4',
+            'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Employments.EmploymentInfo.SourceOfFund'                 => 'required|string|in:1,2,3,4,5,6,7,8',
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities'                                              => 'required|array|size:1',
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo'                               => 'required|array|size:1',
             'SubmitApplicationRq.ApplicationInfo.PersonalInfo.Identities.IdentitiesInfo.*.IDType'                      => 'required|string|in:KT',

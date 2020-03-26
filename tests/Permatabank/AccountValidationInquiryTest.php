@@ -8,7 +8,7 @@ use Illuminate\Validation\ValidationException;
 
 class AccountValidationInquiryTest extends TestCase
 {
-    public function testSuccessAccountValidationInquiry()
+    public function testNotMatchAccountValidationInquiry()
     {
         try {
             $applicationStatusInquiry = \BankService::accountValidationInquiry(
@@ -20,7 +20,7 @@ class AccountValidationInquiryTest extends TestCase
                 'Surabaya'
             );
 
-            $this->assertTrue($applicationStatusInquiry->statusCode() === '00');
+            $this->assertTrue($applicationStatusInquiry->validationStatus() === 2);
         } catch (ValidationException $e) {
             dd($e->errors());
         } catch (RequestException $e) {

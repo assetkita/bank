@@ -8,7 +8,7 @@ use Assetku\BankService\Contracts\AccountValidationInquiry\AccountValidationInqu
 class AccountValidationInquiryResponse extends BaseResponse implements AccountValidationInquiryResponseContract
 {
     /**
-     * @var bool
+     * @var string
      */
     protected $validationStatus;
 
@@ -16,9 +16,9 @@ class AccountValidationInquiryResponse extends BaseResponse implements AccountVa
      * ApplicationStatusInquiryResponse constructor.
      *
      * @param  array  $messageResponseHeader
-     * @param  bool  $validationStatus
+     * @param  string  $validationStatus
      */
-    public function __construct(array $messageResponseHeader, bool $validationStatus)
+    public function __construct(array $messageResponseHeader, string $validationStatus)
     {
         parent::__construct($messageResponseHeader);
 
@@ -31,5 +31,37 @@ class AccountValidationInquiryResponse extends BaseResponse implements AccountVa
     public function validationStatus()
     {
         return $this->validationStatus;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isMatch()
+    {
+        return $this->validationStatus === '1';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isNTB()
+    {
+        return $this->validationStatus === '1';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isNotMatch()
+    {
+        return $this->validationStatus === '2';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isETB()
+    {
+        return $this->validationStatus === '2';
     }
 }

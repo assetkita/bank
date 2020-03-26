@@ -2,12 +2,12 @@
 
 namespace Assetku\BankService\Providers;
 
-use Assetku\BankService\Apis\Guzzle\Api;
-use Assetku\BankService\Apis\Guzzle\ApiFactory;
+use Assetku\BankService\Apis\GuzzleHttp\Api;
+use Assetku\BankService\Apis\GuzzleHttp\ApiFactory;
 use Assetku\BankService\BankService;
-use Assetku\BankService\Contracts\Apis\ApiContract;
-use Assetku\BankService\Contracts\Apis\ApiFactoryContract;
-use Assetku\BankService\Contracts\ServiceContract;
+use Assetku\BankService\Contracts\Apis\ApiInterface;
+use Assetku\BankService\Contracts\Apis\ApiFactoryInterface;
+use Assetku\BankService\Contracts\ServiceInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,7 +36,7 @@ class BankServiceProvider extends ServiceProvider
         $this->registerThirdPartyServiceProvider();
 
         $this->app->bind('bank_service', function () {
-            return new BankService($this->app->make(ServiceContract::class));
+            return new BankService($this->app->make(ServiceInterface::class));
         });
     }
 
@@ -65,6 +65,12 @@ class BankServiceProvider extends ServiceProvider
             });
         });
 
+        Collection::macro('recursiveUrlEncode', function () {
+            return $this->map(function ($value) {
+                return urlencode($value);
+            });
+        });
+
         $this->bootValidator();
     }
 
@@ -75,9 +81,8 @@ class BankServiceProvider extends ServiceProvider
      */
     protected function registerApi()
     {
-        $this->app->singleton(ApiFactoryContract::class, ApiFactory::class);
-
-        $this->app->singleton(ApiContract::class, Api::class);
+        $this->app->singleton(ApiFactoryInterface::class, ApiFactory::class);
+        $this->app->singleton(ApiInterface::class, Api::class);
     }
 
     /**
@@ -97,15 +102,12 @@ class BankServiceProvider extends ServiceProvider
     /**
      * Boot extended validator
      *
+     * @return void
      */
     protected function bootValidator()
     {
-        \Validator::extend('url_base64_encoded_content', function ($attribute, $value, $parameters) {
-            return validate_url_base64_encoded_content($value, $parameters);
-        });
-
-        \Validator::extend('url_encoded_content_type', function ($attribute, $value, $parameters, $validator) {
-            return validate_url_encoded_content_type($value, $parameters);
+        \Validator::extend('base64_encoded_content', function ($attribute, $value, $parameters) {
+            return validate_base64_encoded_content($value, $parameters);
         });
     }
 }

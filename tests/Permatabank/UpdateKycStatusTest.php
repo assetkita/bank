@@ -6,12 +6,25 @@ use Assetku\BankService\Tests\TestCase;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Validation\ValidationException;
 
-class UpdateKycStatusTest extends TestCase
+class UpdateKYCStatusTest extends TestCase
 {
-    public function testSuccessUpdateKycStatus()
+    public function testSuccessUpdateKYCStatusWithSuccessStatus()
     {
         try {
-            $updateKycRequest = \BankService::updateKycStatus('U060220011636', '3578070812970001', '00');
+            $updateKycRequest = \BankService::UpdateKYCStatus('U100220011679', '3578070812970001');
+
+            $this->assertTrue($updateKycRequest->statusCode() === '00');
+        } catch (ValidationException $e) {
+            dd($e->errors());
+        } catch (RequestException $e) {
+            throw $e;
+        }
+    }
+
+    public function testSuccessUpdateKYCStatusWithFailedStatus()
+    {
+        try {
+            $updateKycRequest = \BankService::UpdateKYCStatus('U100220011679', '3578070812970001', false);
 
             $this->assertTrue($updateKycRequest->statusCode() === '00');
         } catch (ValidationException $e) {

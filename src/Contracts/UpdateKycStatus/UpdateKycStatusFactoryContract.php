@@ -1,25 +1,25 @@
 <?php
 
-namespace Assetku\BankService\Contracts\UpdateKycStatus;
+namespace Assetku\BankService\Contracts\UpdateKYCStatus;
 
-interface UpdateKycStatusFactoryContract
+interface UpdateKYCStatusFactoryContract
 {
     /**
      * Create a new update kyc status request instance
      *
      * @param  string  $referralCode
      * @param  string  $idNumber
-     * @param  string  $kycStatus
-     * @return UpdateKycStatusRequestContract
+     * @param  bool  $isKYCSuccess
+     * @return UpdateKYCStatusRequestContract
      */
-    public function makeRequest(string $referralCode, string $idNumber, string $kycStatus);
+    public function makeRequest(string $referralCode, string $idNumber, bool $isKYCSuccess);
 
     /**
      * Create a new update kyc status response instance
      *
-     * @param  UpdateKycStatusRequestContract  $request
+     * @param  UpdateKYCStatusRequestContract  $request
      * @param  string  $contents
-     * @return UpdateKycStatusResponseContract
+     * @return UpdateKYCStatusResponseContract
      */
-    public function makeResponse(UpdateKycStatusRequestContract $request, string $contents);
+    public function makeResponse(UpdateKYCStatusRequestContract $request, string $contents);
 }

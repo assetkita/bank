@@ -4,7 +4,7 @@ namespace Assetku\BankService\Encoders\Permatabank;
 
 use Assetku\BankService\Contracts\EncoderInterface;
 
-class JsonEncoder implements EncoderInterface
+class JsonEncoderUnescapedSlashes implements EncoderInterface
 {
     /**
      * @inheritDoc
@@ -19,6 +19,6 @@ class JsonEncoder implements EncoderInterface
      */
     public function encode(array $data)
     {
-        return json_encode($data);
+        return json_encode($data, JSON_UNESCAPED_SLASHES);
     }
 }

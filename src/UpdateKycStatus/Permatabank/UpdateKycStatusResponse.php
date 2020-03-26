@@ -1,14 +1,14 @@
 <?php
 
-namespace Assetku\BankService\UpdateKycStatus\Permatabank;
+namespace Assetku\BankService\UpdateKYCStatus\Permatabank;
 
 use Assetku\BankService\Base\Permatabank\BaseResponse;
-use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
+use Assetku\BankService\Contracts\UpdateKYCStatus\UpdateKYCStatusResponseContract;
 
-class UpdateKycStatusResponse extends BaseResponse implements UpdateKycStatusResponseContract
+class UpdateKYCStatusResponse extends BaseResponse implements UpdateKYCStatusResponseContract
 {
     /**
-     * UpdateKycStatusResponse constructor.
+     * UpdateKYCStatusResponse constructor.
      *
      * @param  array  $messageResponseHeader
      */

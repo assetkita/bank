@@ -67,9 +67,9 @@ class SubmitApplicationDocumentRequest extends BaseRequest implements SubmitAppl
             )
         );
 
-        $this->documentContent = urlencode($documentContent);
+        $this->documentContent = $documentContent;
 
-        $this->documentContentType = urlencode('image/jpeg');
+        $this->documentContentType = 'image/jpeg';
     }
 
     /**
@@ -134,7 +134,7 @@ class SubmitApplicationDocumentRequest extends BaseRequest implements SubmitAppl
     public function data()
     {
         return [
-            'SubmitDocumentRs' => [
+            'SubmitDocumentRq' => [
                 'MsgRqHdr'     => [
                     'RequestTimestamp' => $this->timestamp,
                     'CustRefID'        => $this->customerReferralId,
@@ -164,15 +164,15 @@ class SubmitApplicationDocumentRequest extends BaseRequest implements SubmitAppl
     public function rules()
     {
         return [
-            'SubmitDocumentRs'                             => 'required|array|size:2',
-            'SubmitDocumentRs.MsgRqHdr'                    => 'required|array|size:2',
-            'SubmitDocumentRs.MsgRqHdr.RequestTimestamp'   => 'required|string|date',
-            'SubmitDocumentRs.MsgRqHdr.CustRefID'          => 'required|string|size:20',
-            'SubmitDocumentRs.DocumentInfo'                => 'required|array|size:5',
-            'SubmitDocumentRs.DocumentInfo.BankReffId'     => 'required|string',
-            'SubmitDocumentRs.DocumentInfo.DocType'        => 'required|string|in:KT,NPW,IN',
-            'SubmitDocumentRs.DocumentInfo.DocContent'     => 'required|string|url_base64_encoded_content:jpg,jpeg',
-            'SubmitDocumentRs.DocumentInfo.DocContentType' => 'required|string|url_encoded_content_type:image/jpeg',
+            'SubmitDocumentRq'                             => 'required|array|size:2',
+            'SubmitDocumentRq.MsgRqHdr'                    => 'required|array|size:2',
+            'SubmitDocumentRq.MsgRqHdr.RequestTimestamp'   => 'required|string|date',
+            'SubmitDocumentRq.MsgRqHdr.CustRefID'          => 'required|string|size:20',
+            'SubmitDocumentRq.DocumentInfo'                => 'required|array|size:5',
+            'SubmitDocumentRq.DocumentInfo.BankReffId'     => 'required|string',
+            'SubmitDocumentRq.DocumentInfo.DocType'        => 'required|string|in:KT,NPW,IN',
+            'SubmitDocumentRq.DocumentInfo.DocContent'     => 'required|string|base64_encoded_content:jpg,jpeg',
+            'SubmitDocumentRq.DocumentInfo.DocContentType' => 'required|string|in:image/jpeg',
         ];
     }
 
@@ -182,8 +182,8 @@ class SubmitApplicationDocumentRequest extends BaseRequest implements SubmitAppl
     public function messages()
     {
         return [
-            'SubmitDocumentRs.DocumentInfo.DocContent.url_base64_encoded_content'   => ':attribute harus berupa url sebuah gambar dengan ekstensi .jpg atau .jpeg.',
-            'SubmitDocumentRs.DocumentInfo.DocContentType.url_encoded_content_type' => ':attribute harus berupa image/jpeg.',
+            'SubmitDocumentRq.DocumentInfo.DocContent.url_base64_encoded_content'   => ':attribute harus berupa url sebuah gambar dengan ekstensi .jpg atau .jpeg.',
+            'SubmitDocumentRq.DocumentInfo.DocContentType.url_encoded_content_type' => ':attribute harus berupa image/jpeg.',
         ];
     }
 
@@ -193,15 +193,15 @@ class SubmitApplicationDocumentRequest extends BaseRequest implements SubmitAppl
     public function customAttributes()
     {
         return [
-            'SubmitDocumentRs'                             => 'submit document request',
-            'SubmitDocumentRs.MsgRqHdr'                    => 'header permintaan pesan',
-            'SubmitDocumentRs.MsgRqHdr.RequestTimestamp'   => 'timestamp',
-            'SubmitDocumentRs.MsgRqHdr.CustRefID'          => 'id referral pelanggan',
-            'SubmitDocumentRs.DocumentInfo'                => 'info dokumen',
-            'SubmitDocumentRs.DocumentInfo.BankReffId'     => 'id referral bank',
-            'SubmitDocumentRs.DocumentInfo.DocType'        => 'jenis dokumen',
-            'SubmitDocumentRs.DocumentInfo.DocContent'     => 'konten dokumen',
-            'SubmitDocumentRs.DocumentInfo.DocContentType' => 'jenis konten dokumen',
+            'SubmitDocumentRq'                             => 'submit document request',
+            'SubmitDocumentRq.MsgRqHdr'                    => 'header permintaan pesan',
+            'SubmitDocumentRq.MsgRqHdr.RequestTimestamp'   => 'timestamp',
+            'SubmitDocumentRq.MsgRqHdr.CustRefID'          => 'id referral pelanggan',
+            'SubmitDocumentRq.DocumentInfo'                => 'info dokumen',
+            'SubmitDocumentRq.DocumentInfo.BankReffId'     => 'id referral bank',
+            'SubmitDocumentRq.DocumentInfo.DocType'        => 'jenis dokumen',
+            'SubmitDocumentRq.DocumentInfo.DocContent'     => 'konten dokumen',
+            'SubmitDocumentRq.DocumentInfo.DocContentType' => 'jenis konten dokumen',
         ];
     }
 }

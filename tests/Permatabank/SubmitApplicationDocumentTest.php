@@ -11,7 +11,7 @@ class SubmitApplicationDocumentTest extends TestCase
     public function testSuccessSubmitApplicationDocument()
     {
         try {
-            $submitDocument = \BankService::submitApplicationDocument('U070220011664', 'https://picsum.photos/200/200?random=1');
+            $submitDocument = \BankService::submitApplicationDocument('U100220011679', 'https://picsum.photos/200/200?random=1');
 
             $this->assertTrue($submitDocument->statusCode() === '00');
         } catch (ValidationException $e) {

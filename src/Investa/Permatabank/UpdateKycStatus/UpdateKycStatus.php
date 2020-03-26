@@ -1,8 +1,8 @@
 <?php
 
-namespace Assetku\BankService\Investa\Permatabank\UpdateKycStatus;
+namespace Assetku\BankService\Investa\Permatabank\UpdateKYCStatus;
 
-class UpdateKycStatus
+class UpdateKYCStatus
 {
     /**
      * @var string

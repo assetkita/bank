@@ -2,13 +2,14 @@
 
 namespace Assetku\BankService\Contracts\Apis;
 
-interface ApiFactoryContract
+interface ApiFactoryInterface
 {
     /**
      * Create a new instance of api
      *
      * @param  string  $baseUri
-     * @return ApiContract
+     * @param  int  $timeout
+     * @return ApiInterface
      */
-    public function make(string $baseUri);
+    public function make(string $baseUri, int $timeout);
 }

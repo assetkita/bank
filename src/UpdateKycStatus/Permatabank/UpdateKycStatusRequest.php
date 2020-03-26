@@ -1,14 +1,14 @@
 <?php
 
-namespace Assetku\BankService\UpdateKycStatus\Permatabank;
+namespace Assetku\BankService\UpdateKYCStatus\Permatabank;
 
 use Assetku\BankService\Base\Permatabank\BaseRequest;
 use Assetku\BankService\Contracts\MustValidated;
-use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract;
-use Assetku\BankService\Encoders\Permatabank\JsonEncoder;
+use Assetku\BankService\Contracts\UpdateKYCStatus\UpdateKYCStatusRequestContract;
+use Assetku\BankService\Encoders\Permatabank\JsonEncoderUnescapedSlashes;
 use Assetku\BankService\Headers\Permatabank\CommonHeader;
 
-class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusRequestContract, MustValidated
+class UpdateKYCStatusRequest extends BaseRequest implements UpdateKYCStatusRequestContract, MustValidated
 {
     /**
      * @var string
@@ -23,16 +23,16 @@ class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusReque
     /**
      * @var string
      */
-    protected $kycStatus;
+    protected $KYCStatus;
 
     /**
-     * UpdateKycStatusRequest constructor.
+     * UpdateKYCStatusRequest constructor.
      *
      * @param  string  $referralCode
      * @param  string  $idNumber
-     * @param  string  $kycStatus
+     * @param  string  $KYCStatus
      */
-    public function __construct(string $referralCode, string $idNumber, string $kycStatus)
+    public function __construct(string $referralCode, string $idNumber, string $KYCStatus)
     {
         parent::__construct();
 
@@ -40,7 +40,7 @@ class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusReque
 
         $this->idNumber = $idNumber;
 
-        $this->kycStatus = $kycStatus;
+        $this->KYCStatus = $KYCStatus;
     }
 
     /**
@@ -62,9 +62,9 @@ class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusReque
     /**
      * @inheritDoc
      */
-    public function kycStatus()
+    public function KYCStatus()
     {
-        return $this->kycStatus;
+        return $this->KYCStatus;
     }
 
     /**
@@ -80,7 +80,7 @@ class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusReque
      */
     public function encoder()
     {
-        return new JsonEncoder;
+        return new JsonEncoderUnescapedSlashes;
     }
 
     /**
@@ -97,7 +97,7 @@ class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusReque
                 'ApplicationInfo' => [
                     'ReffCode'  => $this->referralCode,
                     'IdNumber'  => $this->idNumber,
-                    'KycStatus' => $this->kycStatus,
+                    'KycStatus' => $this->KYCStatus,
                 ],
             ],
         ];
@@ -124,7 +124,7 @@ class UpdateKycStatusRequest extends BaseRequest implements UpdateKycStatusReque
             'UpdateKycFlagRq.ApplicationInfo'           => 'required|array|size:3',
             'UpdateKycFlagRq.ApplicationInfo.ReffCode'  => 'required|string',
             'UpdateKycFlagRq.ApplicationInfo.IdNumber'  => 'required|string|size:16',
-            'UpdateKycFlagRq.ApplicationInfo.KycStatus' => 'required|string|in:00',
+            'UpdateKycFlagRq.ApplicationInfo.KycStatus' => 'required|string|in:00,01',
         ];
     }
 

@@ -25,6 +25,8 @@ use Assetku\BankService\Contracts\BalanceInquiry\BalanceInquiryResponseContract;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferFactoryContract;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferRequestContract;
 use Assetku\BankService\Contracts\LlgTransfer\LlgTransferResponseContract;
+use Assetku\BankService\Contracts\NotifAccountOpeningStatus\NotifAccountOpeningStatusFactoryInterface;
+use Assetku\BankService\Contracts\NotifAccountOpeningStatus\NotifAccountOpeningStatusHandlerInterface;
 use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferFactoryContract;
 use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferRequestContract;
 use Assetku\BankService\Contracts\OnlineTransfer\OnlineTransferResponseContract;
@@ -43,7 +45,7 @@ use Assetku\BankService\Contracts\RiskRatingInquiry\RiskRatingInquiryResponseCon
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferFactoryContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferRequestContract;
 use Assetku\BankService\Contracts\RtgsTransfer\RtgsTransferResponseContract;
-use Assetku\BankService\Contracts\ServiceContract;
+use Assetku\BankService\Contracts\ServiceInterface;
 use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryFactoryContract;
 use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryRequestContract;
 use Assetku\BankService\Contracts\StatusTransactionInquiry\StatusTransactionInquiryResponseContract;
@@ -53,12 +55,14 @@ use Assetku\BankService\Contracts\SubmitApplicationData\SubmitApplicationDataRes
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentFactoryContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentRequestContract;
 use Assetku\BankService\Contracts\SubmitApplicationDocument\SubmitApplicationDocumentResponseContract;
-use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusFactoryContract;
-use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusRequestContract;
-use Assetku\BankService\Contracts\UpdateKycStatus\UpdateKycStatusResponseContract;
+use Assetku\BankService\Contracts\UpdateKYCStatus\UpdateKYCStatusFactoryContract;
+use Assetku\BankService\Contracts\UpdateKYCStatus\UpdateKYCStatusRequestContract;
+use Assetku\BankService\Contracts\UpdateKYCStatus\UpdateKYCStatusResponseContract;
 use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferFactory;
 use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferRequest;
 use Assetku\BankService\LlgTransfer\Permatabank\LlgTransferResponse;
+use Assetku\BankService\NotifAccountOpeningStatus\Permatabank\NotifAccountOpeningStatusFactory;
+use Assetku\BankService\NotifAccountOpeningStatus\Permatabank\NotifAccountOpeningStatusHandler;
 use Assetku\BankService\OnlineTransfer\Permatabank\OnlineTransferFactory;
 use Assetku\BankService\OnlineTransfer\Permatabank\OnlineTransferRequest;
 use Assetku\BankService\OnlineTransfer\Permatabank\OnlineTransferResponse;
@@ -87,9 +91,9 @@ use Assetku\BankService\SubmitApplicationData\Permatabank\SubmitApplicationDataR
 use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentFactory;
 use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentRequest;
 use Assetku\BankService\SubmitApplicationDocument\Permatabank\SubmitApplicationDocumentResponse;
-use Assetku\BankService\UpdateKycStatus\Permatabank\UpdateKycStatusFactory;
-use Assetku\BankService\UpdateKycStatus\Permatabank\UpdateKycStatusRequest;
-use Assetku\BankService\UpdateKycStatus\Permatabank\UpdateKycStatusResponse;
+use Assetku\BankService\UpdateKYCStatus\Permatabank\UpdateKYCStatusFactory;
+use Assetku\BankService\UpdateKYCStatus\Permatabank\UpdateKYCStatusRequest;
+use Assetku\BankService\UpdateKYCStatus\Permatabank\UpdateKYCStatusResponse;
 use Illuminate\Support\ServiceProvider;
 
 class PermatabankServiceProvider extends ServiceProvider
@@ -102,7 +106,7 @@ class PermatabankServiceProvider extends ServiceProvider
     public function register()
     {
         // service
-        $this->app->singleton(ServiceContract::class, PermatabankService::class);
+        $this->app->singleton(ServiceInterface::class, PermatabankService::class);
 
         // access token
         $this->app->bind(AccessTokenRequestContract::class, AccessTokenRequest::class);
@@ -173,8 +177,12 @@ class PermatabankServiceProvider extends ServiceProvider
         $this->app->bind(AccountValidationInquiryResponseContract::class, AccountValidationInquiryResponse::class);
 
         // update kyc status
-        $this->app->bind(UpdateKycStatusFactoryContract::class, UpdateKycStatusFactory::class);
-        $this->app->bind(UpdateKycStatusRequestContract::class, UpdateKycStatusRequest::class);
-        $this->app->bind(UpdateKycStatusResponseContract::class, UpdateKycStatusResponse::class);
+        $this->app->bind(UpdateKYCStatusFactoryContract::class, UpdateKYCStatusFactory::class);
+        $this->app->bind(UpdateKYCStatusRequestContract::class, UpdateKYCStatusRequest::class);
+        $this->app->bind(UpdateKYCStatusResponseContract::class, UpdateKYCStatusResponse::class);
+
+        // notif account opening status
+        $this->app->bind(NotifAccountOpeningStatusFactoryInterface::class, NotifAccountOpeningStatusFactory::class);
+        $this->app->bind(NotifAccountOpeningStatusHandlerInterface::class, NotifAccountOpeningStatusHandler::class);
     }
 }
